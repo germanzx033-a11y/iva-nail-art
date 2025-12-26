@@ -14,12 +14,16 @@ type SkinTone = "fair" | "medium" | "tan" | "deep";
 type NailShape = "almond" | "stiletto" | "square" | "coffin";
 type Finish = "glossy" | "matte" | "chrome";
 
-// Placeholder URLs for different skin tones (user will replace with real photos)
-const HAND_IMAGES = {
-  fair: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800&q=80", // Fair skin elegant hand
-  medium: "https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=800&q=80", // Medium skin tone hand
-  tan: "https://images.unsplash.com/photo-1515688594390-b649af70d282?w=800&q=80", // Tan skin hand
-  deep: "https://images.unsplash.com/photo-1598452963314-b09f397a5c48?w=800&q=80", // Deep skin tone hand
+// High-quality hand image optimized for nail visualization
+// Using a single professional hand photo with adjustable filter for skin tones
+const BASE_HAND_IMAGE = "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1200&q=90&fit=crop&crop=focalpoint&fp-x=0.5&fp-y=0.4";
+
+// Skin tone simulation using CSS filters over base image
+const SKIN_TONE_FILTERS = {
+  fair: "brightness(1.1) saturate(0.9)",
+  medium: "brightness(1.0) saturate(1.0)", // Default, no filter
+  tan: "brightness(0.95) saturate(1.1) hue-rotate(-5deg)",
+  deep: "brightness(0.85) saturate(1.2) hue-rotate(-10deg)",
 };
 
 const NAIL_COLORS = [
@@ -33,36 +37,36 @@ const NAIL_COLORS = [
   { name: "Lavender", color: "#B19CD9" },
 ];
 
-// Precise SVG clipPath masks for each nail (coordinates adjusted to match hand photo)
-// These paths will be positioned to overlay exactly on the nail areas of the photo
+// Precise SVG clipPath masks - Positioned for standard hand pose (palm facing camera, fingers up)
+// Coordinates optimized for 400x500 viewBox matching typical manicure photo composition
 const NAIL_MASKS = {
   almond: {
-    thumb: "M85,195 Q95,185 105,195 L105,225 Q95,235 85,225 Z",
-    index: "M145,95 Q155,85 165,95 L165,135 Q155,145 145,135 Z",
-    middle: "M195,75 Q205,65 215,75 L215,125 Q205,135 195,125 Z",
-    ring: "M245,85 Q255,75 265,85 L265,130 Q255,140 245,130 Z",
-    pinky: "M295,115 Q305,105 315,115 L315,150 Q305,160 295,150 Z",
+    thumb: "M50,280 Q60,270 70,280 L72,315 Q60,325 48,315 Z",
+    index: "M120,120 Q130,110 140,120 L142,170 Q130,180 118,170 Z",
+    middle: "M175,80 Q185,70 195,80 L197,140 Q185,150 173,140 Z",
+    ring: "M235,95 Q245,85 255,95 L257,150 Q245,160 233,150 Z",
+    pinky: "M300,135 Q308,125 316,135 L318,180 Q308,190 298,180 Z",
   },
   stiletto: {
-    thumb: "M85,195 L105,195 L95,240 Z",
-    index: "M145,95 L165,95 L155,150 Z",
-    middle: "M195,75 L215,75 L205,140 Z",
-    ring: "M245,85 L265,85 L255,145 Z",
-    pinky: "M295,115 L315,115 L305,165 Z",
+    thumb: "M50,280 L70,280 L60,335 Z",
+    index: "M120,120 L140,120 L130,190 Z",
+    middle: "M175,80 L195,80 L185,160 Z",
+    ring: "M235,95 L255,95 L245,170 Z",
+    pinky: "M300,135 L316,135 L308,200 Z",
   },
   square: {
-    thumb: "M85,195 L105,195 L105,230 L85,230 Z",
-    index: "M145,95 L165,95 L165,140 L145,140 Z",
-    middle: "M195,75 L215,75 L215,130 L195,130 Z",
-    ring: "M245,85 L265,85 L265,135 L245,135 Z",
-    pinky: "M295,115 L315,115 L315,155 L295,155 Z",
+    thumb: "M50,280 L70,280 L70,320 L50,320 Z",
+    index: "M120,120 L140,120 L140,175 L120,175 Z",
+    middle: "M175,80 L195,80 L195,145 L175,145 Z",
+    ring: "M235,95 L255,95 L255,155 L235,155 Z",
+    pinky: "M300,135 L316,135 L316,185 L300,185 Z",
   },
   coffin: {
-    thumb: "M85,195 L105,195 L103,228 L95,235 L87,228 Z",
-    index: "M145,95 L165,95 L163,133 L155,145 L147,133 Z",
-    middle: "M195,75 L215,75 L213,123 L205,135 L197,123 Z",
-    ring: "M245,85 L265,85 L263,128 L255,140 L247,128 Z",
-    pinky: "M295,115 L315,115 L313,148 L305,160 L297,148 Z",
+    thumb: "M50,280 L70,280 L68,318 L60,325 L52,318 Z",
+    index: "M120,120 L140,120 L138,172 L130,180 L122,172 Z",
+    middle: "M175,80 L195,80 L193,142 L185,150 L177,142 Z",
+    ring: "M235,95 L255,95 L253,152 L245,160 L237,152 Z",
+    pinky: "M300,135 L316,135 L314,182 L308,190 L302,182 Z",
   },
 };
 
@@ -185,16 +189,17 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
             {/* Photorealistic Hand with SVG Mask Overlay */}
             <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-2xl border border-[#4A0404]/10">
               <div className="relative w-full aspect-[4/5] max-w-md mx-auto overflow-hidden rounded-2xl bg-gradient-to-br from-[#FDF8F6] to-white">
-                {/* Base: Real Hand Photo */}
+                {/* Base: Real Hand Photo with Skin Tone Filter */}
                 <motion.div
                   key={skinTone}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
                   className="absolute inset-0"
+                  style={{ filter: SKIN_TONE_FILTERS[skinTone] }}
                 >
                   <Image
-                    src={HAND_IMAGES[skinTone]}
+                    src={BASE_HAND_IMAGE}
                     alt="Elegant hand"
                     fill
                     className="object-cover object-center"
@@ -316,7 +321,7 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
             <div>
               <label className="block font-medium text-[#4A0404] mb-4">{text.skinTone}</label>
               <div className="grid grid-cols-4 gap-3">
-                {(Object.keys(HAND_IMAGES) as SkinTone[]).map((tone) => (
+                {(Object.keys(SKIN_TONE_FILTERS) as SkinTone[]).map((tone) => (
                   <button
                     key={tone}
                     onClick={() => setSkinTone(tone)}
@@ -326,9 +331,9 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
                         : "border-[#4A0404]/20 hover:border-[#D4AF37]/50"
                     }`}
                   >
-                    <div className="relative w-full h-16 rounded-lg overflow-hidden">
+                    <div className="relative w-full h-16 rounded-lg overflow-hidden" style={{ filter: SKIN_TONE_FILTERS[tone] }}>
                       <Image
-                        src={HAND_IMAGES[tone]}
+                        src={BASE_HAND_IMAGE}
                         alt={tone}
                         fill
                         className="object-cover"
