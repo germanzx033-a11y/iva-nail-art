@@ -35,6 +35,7 @@ import PriceCalculator from "./components/PriceCalculator";
 import IVAPromise from "./components/IVAPromise";
 import SignatureDesigns from "./components/SignatureDesigns";
 import TrustBadges from "./components/TrustBadges";
+import PregnancySafe from "./components/PregnancySafe";
 import BeforeAfter from "./components/BeforeAfter";
 import Testimonials from "./components/Testimonials";
 import GiftCards from "./components/GiftCards";
@@ -539,80 +540,106 @@ export default function Home() {
         )}
       </header>
 
-      {/* ==================== HERO ==================== */}
+      {/* ==================== HERO - LUXURY GLASSMORPHISM ==================== */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background */}
-        <div className="absolute inset-0">
+        {/* Background Image con Overlay Dinámico */}
+        <div className="absolute inset-0 z-0">
           <Image
             src={IMAGES.hero}
-            alt="IVA Nail Art"
+            alt="IVA Nail Art Studio"
             fill
-            className="object-cover"
             priority
-            quality={90}
+            quality={95}
+            className="object-cover scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#4A0404]/50 via-[#4A0404]/30 to-[#FDF8F6]" />
+          {/* Gradient Overlay Sofisticado */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#4A0404]/80 via-[#4A0404]/60 to-transparent" />
+
+          {/* Floating Particles Effect */}
+          <div className="absolute inset-0 opacity-30">
+            <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-[#D4AF37] rounded-full animate-pulse" />
+            <div className="absolute top-1/3 right-1/3 w-3 h-3 bg-white rounded-full animate-ping" style={{ animationDuration: '3s' }} />
+            <div className="absolute bottom-1/4 right-1/4 w-2 h-2 bg-[#D4AF37] rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+          </div>
         </div>
 
-        {/* Content */}
-        <div className="relative z-10 text-center px-6 pt-20 max-w-4xl mx-auto">
-          <p className="text-[#F7E7CE] text-xs sm:text-sm tracking-[0.3em] mb-4 font-medium uppercase">
-            {t.hero.tagline}
-          </p>
-          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white mb-6 leading-tight">
-            {t.hero.title}
-          </h1>
-          <p className="text-white/80 text-sm sm:text-base md:text-lg max-w-2xl mx-auto mb-8 font-light">
-            {t.hero.subtitle}
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={() => openBooking()}
-              className="group flex items-center gap-2 bg-white text-[#4A0404] px-8 py-4 rounded-full font-medium hover:bg-[#F7E7CE] transition-all shadow-lg"
-            >
+        {/* Content con Glassmorphism */}
+        <div className="relative z-10 text-center px-4 sm:px-6 max-w-4xl mx-auto pt-20">
+          {/* Glass Card Container */}
+          <div className="backdrop-blur-md bg-white/10 rounded-3xl p-8 sm:p-12 border border-white/20 shadow-2xl">
+            {/* Premium Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#D4AF37]/20 backdrop-blur-sm border border-[#D4AF37]/30 text-[#F7E7CE] text-xs sm:text-sm mb-6 animate-fade-in">
               <Sparkles className="w-4 h-4" />
-              {t.hero.cta}
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+              <span className="font-medium tracking-wider uppercase">
+                {lang === "en" ? "Accepting Limited Bookings" : "Aceptando Reservas Limitadas"}
+              </span>
+            </div>
+
+            <p className="text-[#F7E7CE] text-xs sm:text-sm tracking-[0.3em] mb-4 font-medium uppercase">
+              {t.hero.tagline}
+            </p>
+
+            <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl text-white mb-4 tracking-tight leading-tight">
+              {t.hero.title}
+            </h1>
+
+            <p className="text-lg sm:text-xl md:text-2xl text-[#F7E7CE] mb-8 font-light tracking-wide max-w-2xl mx-auto">
+              {t.hero.subtitle}
+            </p>
+
+            {/* CTA Buttons con efecto hover mejorado */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => openBooking()}
+                className="group relative px-8 py-4 bg-[#D4AF37] text-white rounded-xl font-medium text-base sm:text-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              >
+                {/* Shimmer Effect */}
+                <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                <span className="relative flex items-center justify-center gap-2">
+                  <Calendar className="w-5 h-5" />
+                  {t.hero.cta}
+                </span>
+              </button>
+
+              <a
+                href="#gallery"
+                className="px-8 py-4 border-2 border-white/40 text-white rounded-xl font-medium text-base sm:text-lg backdrop-blur-sm hover:bg-white/10 hover:border-white/60 transition-all duration-300 hover:scale-105"
+              >
+                {lang === "en" ? "View Portfolio" : "Ver Portafolio"}
+              </a>
+            </div>
           </div>
 
-          {/* Info Pills */}
-          <div className="flex flex-wrap justify-center gap-3 mt-8">
-            <span className="flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white text-xs sm:text-sm px-4 py-2 rounded-full">
-              <MapPin className="w-4 h-4" />
-              {CONFIG.location}
-            </span>
-            <span className="flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white text-xs sm:text-sm px-4 py-2 rounded-full">
-              <Clock className="w-4 h-4" />
-              {CONFIG.hours}
-            </span>
-          </div>
-
-          {/* Social */}
-          <div className="flex justify-center gap-3 mt-8">
-            <a
-              href={CONFIG.instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white text-sm hover:bg-white/20 transition-all"
-            >
-              <Instagram className="w-4 h-4" />
-              @{CONFIG.instagram}
-            </a>
+          {/* Trust Indicators debajo del hero */}
+          <div className="flex flex-wrap justify-center gap-6 mt-10 text-white/80 text-sm">
+            <div className="flex items-center gap-2 backdrop-blur-sm bg-white/5 px-4 py-2 rounded-full border border-white/10">
+              <Shield className="w-4 h-4 text-[#D4AF37]" />
+              <span>{lang === "en" ? "Hospital-Grade Sterilization" : "Esterilización Hospitalaria"}</span>
+            </div>
+            <div className="flex items-center gap-2 backdrop-blur-sm bg-white/5 px-4 py-2 rounded-full border border-white/10">
+              <Star className="w-4 h-4 text-[#D4AF37]" fill="#D4AF37" />
+              <span>{lang === "en" ? "5-Star Rated" : "Calificación 5 Estrellas"}</span>
+            </div>
+            <div className="flex items-center gap-2 backdrop-blur-sm bg-white/5 px-4 py-2 rounded-full border border-white/10">
+              <Sparkles className="w-4 h-4 text-[#D4AF37]" />
+              <span>{lang === "en" ? "Max 3 Clients Daily" : "Máx. 3 Clientas al Día"}</span>
+            </div>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
+        {/* Scroll Indicator mejorado */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-2">
-            <div className="w-1 h-2 bg-white/50 rounded-full" />
+          <div className="w-6 h-10 rounded-full border-2 border-white/50 backdrop-blur-sm flex items-start justify-center p-2">
+            <div className="w-1 h-2 bg-[#D4AF37] rounded-full animate-pulse" />
           </div>
         </div>
       </section>
 
       {/* ==================== TRUST BADGES ==================== */}
       <TrustBadges lang={lang} />
+
+      {/* ==================== PREGNANCY-SAFE SANCTUARY ==================== */}
+      <PregnancySafe lang={lang} />
 
       {/* ==================== IVA PROMISE ==================== */}
       <IVAPromise lang={lang} />

@@ -8,8 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-playfair);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,10 +23,21 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Premium Typography - Magazine Style */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+/* Serif for headings - Vogue/Harper's Bazaar style */
+.font-serif {
+  font-family: var(--font-playfair), Georgia, serif;
+  letter-spacing: -0.02em;
+  font-weight: 500;
 }
 
 /* Smooth transitions for all interactive elements */
@@ -102,4 +113,140 @@ body {
 
 .animate-loading-bar {
   animation: loading-bar 1.5s ease-in-out infinite;
+}
+
+/* ========================================== */
+/* LUXURY MICRO-INTERACTIONS - Paintbox Style */
+/* ========================================== */
+
+/* Micro-interacción: Underline animado estilo Vogue */
+.luxury-link {
+  position: relative;
+  display: inline-block;
+  transition: color 0.3s ease;
+}
+
+.luxury-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #D4AF37, #4A0404);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.luxury-link:hover::after {
+  width: 100%;
+}
+
+/* Efecto Shimmer para CTAs premium */
+@keyframes shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+.btn-luxury {
+  background: linear-gradient(
+    120deg,
+    #D4AF37 0%,
+    #F7E7CE 50%,
+    #D4AF37 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-luxury:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+}
+
+/* Glassmorphism para cards premium */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover effect para service cards - estilo Paintbox */
+.service-card {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.service-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow:
+    0 20px 40px rgba(74, 4, 4, 0.15),
+    0 0 0 1px rgba(212, 175, 55, 0.2);
+}
+
+/* Animación de entrada suave para secciones */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Efecto parallax sutil para backgrounds */
+.parallax-bg {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Premium Button Glow Effect */
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(212, 175, 55, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.4), 0 0 30px rgba(212, 175, 55, 0.2);
+  }
+}
+
+.btn-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Smooth Image Reveal */
+@keyframes imageReveal {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.image-reveal {
+  animation: imageReveal 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Text Gradient Effect - Editorial Style */
+.text-gradient-luxury {
+  background: linear-gradient(135deg, #4A0404 0%, #D4AF37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

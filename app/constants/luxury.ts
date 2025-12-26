@@ -158,6 +158,66 @@ export const TRUST_BADGES: TrustBadge[] = [
 ];
 
 // =============================================
+// PREGNANCY-SAFE SANCTUARY - Townhouse Inspired
+// =============================================
+export const PREGNANCY_SAFE_FEATURES = {
+  en: {
+    title: "Pregnancy-Safe Sanctuary",
+    subtitle: "The only NYC nail studio certified for expecting mothers",
+    badge: "Medical-Grade Safety",
+    features: [
+      {
+        icon: "🤰",
+        title: "Pregnancy-Approved Products",
+        description: "100% non-toxic, formaldehyde-free polishes tested for maternal safety",
+      },
+      {
+        icon: "🧪",
+        title: "Hospital-Grade Sterilization",
+        description: "Autoclave sterilization (same as surgical instruments) between every client",
+      },
+      {
+        icon: "🌿",
+        title: "Ventilation Excellence",
+        description: "Medical-grade air filtration system removes 99.9% of fume particles",
+      },
+      {
+        icon: "⏰",
+        title: "Extended Rest Periods",
+        description: "4-hour gaps ensure your artist is never fatigued, only 3 clients daily",
+      },
+    ],
+  },
+  es: {
+    title: "Santuario Seguro para Embarazadas",
+    subtitle: "El único estudio de uñas en NYC certificado para madres en gestación",
+    badge: "Seguridad Médica",
+    features: [
+      {
+        icon: "🤰",
+        title: "Productos Aprobados para Embarazo",
+        description: "Esmaltes 100% no tóxicos, sin formaldehído, probados para seguridad materna",
+      },
+      {
+        icon: "🧪",
+        title: "Esterilización Hospitalaria",
+        description: "Esterilización en autoclave (igual que instrumentos quirúrgicos) entre cada clienta",
+      },
+      {
+        icon: "🌿",
+        title: "Ventilación Excelente",
+        description: "Sistema de filtración de aire médico elimina 99.9% de partículas de vapores",
+      },
+      {
+        icon: "⏰",
+        title: "Períodos de Descanso Extendidos",
+        description: "Intervalos de 4 horas garantizan que tu artista nunca esté fatigada, solo 3 clientas diarias",
+      },
+    ],
+  },
+};
+
+// =============================================
 // PRESS & FEATURES (Placeholder)
 // =============================================
 export const PRESS_FEATURES = {
