@@ -197,30 +197,64 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
                   <filter id="nailShadow">
                     <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.2" />
                   </filter>
+
+                  {/* Soft shadow for hand depth */}
+                  <filter id="handShadow">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+                    <feOffset dx="0" dy="2" result="offsetblur" />
+                    <feComponentTransfer>
+                      <feFuncA type="linear" slope="0.2" />
+                    </feComponentTransfer>
+                    <feMerge>
+                      <feMergeNode />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+
+                  {/* Radial gradient for hand shading */}
+                  <radialGradient id="handShading" cx="50%" cy="40%">
+                    <stop offset="0%" stopColor={SKIN_TONES[skinTone]} stopOpacity="1" />
+                    <stop offset="100%" stopColor="#00000015" stopOpacity="0.15" />
+                  </radialGradient>
                 </defs>
 
-                {/* Hand Palm - Simplified Townhouse-style illustration */}
-                <motion.path
-                  d="M100,380 Q80,360 75,330 L75,220 Q75,200 85,195 L215,195 Q225,200 225,220 L225,330 Q220,360 200,380 Z"
-                  fill={SKIN_TONES[skinTone]}
-                  stroke="#4A0404"
-                  strokeWidth="0.5"
-                  opacity="0.95"
-                  key={skinTone}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.95 }}
-                  transition={{ duration: 0.5 }}
-                />
+                {/* Hand Palm - More realistic with shading */}
+                <g filter="url(#handShadow)">
+                  <motion.path
+                    d="M95,385 Q70,365 68,335 C66,315 68,280 70,250 Q72,225 75,215 C77,205 82,200 90,198 L210,198 Q218,200 220,205 C222,210 225,220 227,235 Q230,260 230,290 C230,320 228,350 220,370 Q212,385 195,390 L100,390 Q97,388 95,385 Z"
+                    fill="url(#handShading)"
+                    stroke="#4A0404"
+                    strokeWidth="0.3"
+                    opacity="0.98"
+                    key={skinTone}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.98 }}
+                    transition={{ duration: 0.5 }}
+                  />
 
-                {/* Fingers with realistic proportions */}
+                  {/* Palm highlights for depth */}
+                  <ellipse cx="150" cy="310" rx="35" ry="25" fill="white" opacity="0.08" />
+                  <ellipse cx="120" cy="260" rx="20" ry="15" fill="white" opacity="0.05" />
+                </g>
+
+                {/* Fingers with realistic proportions and knuckle details */}
                 {/* Pinky */}
                 <g transform="translate(90, 150)">
+                  {/* Finger base with knuckles */}
                   <path
-                    d="M-6,50 Q-8,30 -8,10 Q-8,-10 -6,-20 Q-4,-10 -4,10 Q-4,30 -2,50 M2,50 Q4,30 4,10 Q4,-10 6,-20 Q8,-10 8,10 Q8,30 6,50 Z"
+                    d="M-7,50 Q-9,40 -9,30 C-9,25 -8.5,20 -8,15 Q-8,5 -7.5,-5 C-7,-10 -6.5,-15 -6,-20 Q-4,-15 -4,-10 C-4,-5 -4,0 -4,5 Q-4,15 -3.5,25 C-3,30 -3,35 -3,40 Q-2.5,45 -2,50 M2,50 Q2.5,45 3,40 C3,35 3,30 3.5,25 Q4,15 4,5 C4,0 4,-5 4,-10 Q4,-15 6,-20 Q6.5,-15 7,-10 C7.5,-5 8,0 8,5 Q8.5,10 8,15 C8.5,20 9,25 9,30 Q9,40 7,50 Z"
                     fill={SKIN_TONES[skinTone]}
                     stroke="#4A0404"
-                    strokeWidth="0.5"
+                    strokeWidth="0.3"
                   />
+
+                  {/* Knuckle lines for realism */}
+                  <line x1="-6" y1="12" x2="6" y2="12" stroke="#4A0404" strokeWidth="0.2" opacity="0.3" />
+                  <line x1="-5" y1="32" x2="5" y2="32" stroke="#4A0404" strokeWidth="0.2" opacity="0.3" />
+
+                  {/* Subtle shading on sides */}
+                  <path d="M-7,50 Q-9,40 -9,30 L-8,30 Q-7,40 -6,50 Z" fill="black" opacity="0.05" />
+                  <path d="M7,50 Q9,40 9,30 L8,30 Q7,40 6,50 Z" fill="black" opacity="0.05" />
                   <motion.path
                     key={`pinky-${nailShape}-${nailColor}`}
                     d={getNailPath(nailShape, -20, 12, 35)}
@@ -240,11 +274,14 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
                 {/* Ring Finger */}
                 <g transform="translate(120, 130)">
                   <path
-                    d="M-7,70 Q-9,40 -9,10 Q-9,-20 -7,-35 Q-5,-20 -5,10 Q-5,40 -3,70 M3,70 Q5,40 5,10 Q5,-20 7,-35 Q9,-20 9,10 Q9,40 7,70 Z"
+                    d="M-8,70 Q-10,45 -10,20 C-10,10 -9.5,0 -9,-10 Q-8.5,-20 -8,-30 C-7.5,-32 -7,-34 -6.5,-35 Q-5.5,-32 -5,-30 C-4.5,-25 -4.5,-15 -4.5,-5 Q-4,10 -4,25 C-3.5,40 -3,55 -2.5,70 M2.5,70 Q3,55 3.5,40 C4,25 4,10 4.5,-5 Q4.5,-15 5,-25 C5.5,-30 6,-32 6.5,-35 Q7,-34 7.5,-32 C8,-30 8.5,-28 9,-26 Q9.5,-15 10,0 C10,10 10,20 10,30 Q10,50 8,70 Z"
                     fill={SKIN_TONES[skinTone]}
                     stroke="#4A0404"
-                    strokeWidth="0.5"
+                    strokeWidth="0.3"
                   />
+                  <line x1="-7" y1="15" x2="7" y2="15" stroke="#4A0404" strokeWidth="0.2" opacity="0.3" />
+                  <line x1="-6.5" y1="40" x2="6.5" y2="40" stroke="#4A0404" strokeWidth="0.2" opacity="0.3" />
+                  <path d="M-8,70 Q-10,50 -10,30 L-9,30 Q-8,50 -7,70 Z" fill="black" opacity="0.05" />
                   <motion.path
                     key={`ring-${nailShape}-${nailColor}`}
                     d={getNailPath(nailShape, -35, 14, 45)}
@@ -264,11 +301,14 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
                 {/* Middle Finger (longest) */}
                 <g transform="translate(150, 110)">
                   <path
-                    d="M-8,85 Q-10,50 -10,10 Q-10,-30 -8,-50 Q-6,-30 -6,10 Q-6,50 -4,85 M4,85 Q6,50 6,10 Q6,-30 8,-50 Q10,-30 10,10 Q10,50 8,85 Z"
+                    d="M-9,85 Q-11,55 -11,25 C-11,10 -10.5,-5 -10,-20 Q-9.5,-35 -9,-45 C-8.5,-48 -8,-49.5 -7.5,-50 Q-6,-48 -5.5,-45 C-5,-40 -5,-30 -5,-15 Q-4.5,0 -4.5,15 C-4,35 -3.5,60 -3,85 M3,85 Q3.5,60 4,35 C4.5,15 4.5,0 5,-15 Q5,-30 5.5,-40 C6,-45 6.5,-47.5 7.5,-50 Q8,-49.5 8.5,-48 C9,-47 9.5,-45 10,-42 Q10.5,-30 11,-15 C11,0 11,15 11,30 Q11,60 9,85 Z"
                     fill={SKIN_TONES[skinTone]}
                     stroke="#4A0404"
-                    strokeWidth="0.5"
+                    strokeWidth="0.3"
                   />
+                  <line x1="-8" y1="20" x2="8" y2="20" stroke="#4A0404" strokeWidth="0.2" opacity="0.3" />
+                  <line x1="-7.5" y1="50" x2="7.5" y2="50" stroke="#4A0404" strokeWidth="0.2" opacity="0.3" />
+                  <path d="M-9,85 Q-11,60 -11,35 L-10,35 Q-9,60 -8,85 Z" fill="black" opacity="0.05" />
                   <motion.path
                     key={`middle-${nailShape}-${nailColor}`}
                     d={getNailPath(nailShape, -50, 16, 52)}
@@ -288,11 +328,14 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
                 {/* Index Finger */}
                 <g transform="translate(180, 125)">
                   <path
-                    d="M-7,75 Q-9,42 -9,10 Q-9,-22 -7,-38 Q-5,-22 -5,10 Q-5,42 -3,75 M3,75 Q5,42 5,10 Q5,-22 7,-38 Q9,-22 9,10 Q9,42 7,75 Z"
+                    d="M-8,75 Q-10,48 -10,22 C-10,8 -9.5,-6 -9,-18 Q-8.5,-28 -8,-35 C-7.5,-36.5 -7,-37.5 -6.5,-38 Q-5.5,-36 -5,-34 C-4.5,-28 -4.5,-18 -4.5,-6 Q-4,12 -4,28 C-3.5,45 -3,60 -2.5,75 M2.5,75 Q3,60 3.5,45 C4,28 4,12 4.5,-6 Q4.5,-18 5,-28 C5.5,-34 6,-36 6.5,-38 Q7,-37.5 7.5,-36.5 C8,-35 8.5,-32 9,-28 Q9.5,-18 10,-6 C10,8 10,22 10,36 Q10,56 8,75 Z"
                     fill={SKIN_TONES[skinTone]}
                     stroke="#4A0404"
-                    strokeWidth="0.5"
+                    strokeWidth="0.3"
                   />
+                  <line x1="-7" y1="18" x2="7" y2="18" stroke="#4A0404" strokeWidth="0.2" opacity="0.3" />
+                  <line x1="-6.5" y1="43" x2="6.5" y2="43" stroke="#4A0404" strokeWidth="0.2" opacity="0.3" />
+                  <path d="M-8,75 Q-10,55 -10,35 L-9,35 Q-8,55 -7,75 Z" fill="black" opacity="0.05" />
                   <motion.path
                     key={`index-${nailShape}-${nailColor}`}
                     d={getNailPath(nailShape, -38, 14, 48)}
@@ -312,11 +355,14 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
                 {/* Thumb */}
                 <g transform="translate(70, 240)">
                   <path
-                    d="M-10,40 Q-15,25 -18,10 Q-20,-10 -15,-25 Q-10,-10 -8,10 Q-6,25 -4,40 M4,40 Q6,25 8,10 Q10,-10 15,-25 Q20,-10 18,10 Q15,25 10,40 Z"
+                    d="M-11,40 Q-16,28 -19,14 C-20,6 -21,-2 -20,-10 Q-18,-18 -16,-23 C-15.5,-24 -15,-24.5 -14.5,-25 Q-12,-22 -10,-18 C-9,-12 -8.5,-4 -8,4 Q-7,18 -6,30 C-5.5,35 -5,37.5 -4.5,40 M4.5,40 Q5,37.5 5.5,35 C6,30 7,22 8,14 Q9,4 10,-4 C10.5,-10 11,-16 12,-20 Q13,-22 14.5,-25 Q15,-24.5 15.5,-24 C16,-23 17,-21 18,-18 Q19.5,-12 20,-6 C20.5,0 20.5,6 20,12 Q18,24 14,35 C12.5,38 11,39.5 10,40 Z"
                     fill={SKIN_TONES[skinTone]}
                     stroke="#4A0404"
-                    strokeWidth="0.5"
+                    strokeWidth="0.3"
                   />
+                  <line x1="-10" y1="10" x2="10" y2="10" stroke="#4A0404" strokeWidth="0.2" opacity="0.3" />
+                  <line x1="-8" y1="28" x2="8" y2="28" stroke="#4A0404" strokeWidth="0.2" opacity="0.3" />
+                  <path d="M-11,40 Q-16,30 -19,20 L-18,20 Q-15,30 -10,40 Z" fill="black" opacity="0.05" />
                   <motion.path
                     key={`thumb-${nailShape}-${nailColor}`}
                     d={getNailPath(nailShape, -25, 18, 42)}
