@@ -36,6 +36,7 @@ import IVAPromise from "./components/IVAPromise";
 import SignatureDesigns from "./components/SignatureDesigns";
 import TrustBadges from "./components/TrustBadges";
 import PregnancySafe from "./components/PregnancySafe";
+import VirtualNailStudio from "./components/VirtualNailStudio";
 import BeforeAfter from "./components/BeforeAfter";
 import Testimonials from "./components/Testimonials";
 import GiftCards from "./components/GiftCards";
@@ -648,6 +649,9 @@ export default function Home() {
 
       {/* ==================== SIGNATURE DESIGNS ==================== */}
       <SignatureDesigns lang={lang} onBookService={() => openBooking()} />
+
+      {/* ==================== VIRTUAL NAIL STUDIO ==================== */}
+      <VirtualNailStudio lang={lang} />
 
       {/* ==================== SERVICES ==================== */}
       <section id="services" className="py-16 sm:py-24 px-4 sm:px-6">
