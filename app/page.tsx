@@ -44,6 +44,8 @@ import LoyaltyProgram from "./components/LoyaltyProgram";
 import BlogSection from "./components/BlogSection";
 import PressKit from "./components/PressKit";
 import ReferralProgram from "./components/ReferralProgram";
+import GoldenTicket, { notifyOwner } from "./components/GoldenTicket";
+import FusionBubble from "./components/FusionBubble";
 
 // =============================================
 // LOCAL INTERFACES
@@ -85,6 +87,8 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<Service["category"]>("manicure");
   const [formData, setFormData] = useState<BookingState>(initialBookingState);
   const [currentYear, setCurrentYear] = useState<number>(2024);
+  const [showGoldenTicket, setShowGoldenTicket] = useState(false);
+  const [confirmedBooking, setConfirmedBooking] = useState<any>(null);
 
   const t = TRANSLATIONS[lang];
 
@@ -198,8 +202,29 @@ export default function Home() {
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodedMessage}`;
 
+    // Notify owner (console log simulation)
+    notifyOwner({
+      date: formatDate(formData.date),
+      time: formData.time,
+      remainingSlots: 1, // Simulated - would be calculated from database
+      timeBlock: timeBlockInfo,
+    });
+
+    // Store booking data for Golden Ticket
+    setConfirmedBooking({
+      serviceName: serviceName || "",
+      date: formatDate(formData.date),
+      time: timeBlockInfo,
+      name: formData.name,
+      phone: formData.phone,
+    });
+
+    // Open WhatsApp
     window.open(whatsappUrl, "_blank");
+
+    // Close booking modal and show Golden Ticket
     closeBooking();
+    setShowGoldenTicket(true);
   };
 
   // =============================================
@@ -964,6 +989,18 @@ export default function Home() {
         onClose={() => setIsCalculatorOpen(false)}
         lang={lang}
       />
+
+      {/* ==================== FUSION BUBBLE ==================== */}
+      <FusionBubble lang={lang} />
+
+      {/* ==================== GOLDEN TICKET ==================== */}
+      {showGoldenTicket && confirmedBooking && (
+        <GoldenTicket
+          lang={lang}
+          booking={confirmedBooking}
+          onClose={() => setShowGoldenTicket(false)}
+        />
+      )}
     </main>
   );
 }

@@ -250,3 +250,217 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* ========================================== */
+/* EDITORIAL DARK/NUDE AESTHETIC - Awwwards */
+/* ========================================== */
+
+/* Mesh Gradient Background Animation */
+@keyframes meshMove {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+.mesh-gradient-bg {
+  background:
+    radial-gradient(at 0% 0%, rgba(212, 175, 55, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(128, 0, 32, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(85, 26, 139, 0.08) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(255, 228, 196, 0.12) 0px, transparent 50%);
+  animation: meshMove 20s ease-in-out infinite alternate;
+}
+
+/* Luxury Glassmorphism - Enhanced */
+.glass-luxury {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.glass-luxury-dark {
+  background: rgba(26, 15, 10, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow:
+    0 8px 32px rgba(212, 175, 55, 0.15),
+    inset 0 1px 0 rgba(212, 175, 55, 0.1);
+}
+
+/* Editorial Typography - Playfair Display Style */
+.editorial-title {
+  font-family: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #F7E7CE 0%, #D4AF37 50%, #F7E7CE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Liquid Button Effect */
+@keyframes liquidFloat {
+  0%, 100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+}
+
+.btn-liquid {
+  position: relative;
+  overflow: hidden;
+  animation: liquidFloat 8s ease-in-out infinite;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-liquid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Golden Hour Glow */
+@keyframes goldenGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 20px rgba(212, 175, 55, 0.3),
+      0 0 40px rgba(212, 175, 55, 0.2),
+      inset 0 0 20px rgba(212, 175, 55, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(212, 175, 55, 0.5),
+      0 0 60px rgba(212, 175, 55, 0.3),
+      inset 0 0 30px rgba(212, 175, 55, 0.2);
+  }
+}
+
+.golden-glow {
+  animation: goldenGlow 3s ease-in-out infinite;
+}
+
+/* Breathing Animation for CTAs */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+.breathe-slow {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* Nude Palette Variables - Editorial */
+:root {
+  --nude-100: #FDF8F6;
+  --nude-200: #F7E7CE;
+  --nude-300: #E8D4BB;
+  --nude-400: #C9A882;
+  --burgundy-dark: #4A0404;
+  --burgundy-medium: #6A1414;
+  --gold-primary: #D4AF37;
+  --gold-light: #F7E7CE;
+  --dark-bg: #1A0F0A;
+  --dark-accent: #2A1810;
+}
+
+/* Sold Out Badge Animation */
+@keyframes soldOutPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+.sold-out-badge {
+  animation: soldOutPulse 2s ease-in-out infinite;
+  background: linear-gradient(135deg, #4A0404 0%, #6A1414 100%);
+  box-shadow: 0 4px 20px rgba(74, 4, 4, 0.4);
+}
+
+/* Exclusive Access Card */
+.exclusive-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(26, 15, 10, 0.9) 0%, rgba(42, 24, 16, 0.9) 100%);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(212, 175, 55, 0.2),
+    0 0 60px rgba(212, 175, 55, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.exclusive-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  border-color: rgba(212, 175, 55, 0.6);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(212, 175, 55, 0.3),
+    0 0 80px rgba(212, 175, 55, 0.2);
+}
+
+/* Scarcity Indicator */
+@keyframes scarcityBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.scarcity-indicator {
+  animation: scarcityBlink 2s ease-in-out infinite;
+  color: #D4AF37;
+}
+
+/* Premium Texture Overlay */
+.texture-overlay {
+  position: relative;
+}
+
+.texture-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ========================================== */
+/* RESPONSIVE TYPOGRAPHY - Editorial Scale */
+/* ========================================== */
+
+@media (max-width: 640px) {
+  .editorial-title {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+
+  .glass-luxury,
+  .glass-luxury-dark {
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+  }
+}
