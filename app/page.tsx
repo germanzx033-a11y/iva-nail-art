@@ -27,7 +27,7 @@ import {
   CONFIG,
   IMAGES,
   SERVICES,
-  AVAILABLE_HOURS,
+  TIME_BLOCKS,
   CATEGORIES,
   TRANSLATIONS,
 } from "./constants";
@@ -159,6 +159,12 @@ export default function Home() {
       ? `$${formData.service.price} - $${formData.service.priceMax}`
       : `$${formData.service?.price}`;
 
+    // Find the selected time block
+    const selectedBlock = TIME_BLOCKS.find(block => block.time === formData.time);
+    const timeBlockInfo = selectedBlock
+      ? `${selectedBlock.icon} ${lang === "en" ? selectedBlock.label : selectedBlock.labelEs}`
+      : formData.time;
+
     const messageLines = [
       "✨ *New Appointment Request* ✨",
       "",
@@ -169,7 +175,8 @@ export default function Home() {
       `💅 *Service:* ${serviceName}`,
       `💰 *Price:* ${priceText}`,
       `📅 *Date:* ${formatDate(formData.date)}`,
-      `🕐 *Time:* ${formData.time}`,
+      `🕐 *Time Block:* ${timeBlockInfo}`,
+      CONFIG.maternityMode ? `⏱️ *Duration:* ${CONFIG.appointmentDuration}-hour block` : "",
       "",
       `I understand a $${CONFIG.deposit} deposit is required.`,
       "Please confirm availability! 💕",
@@ -271,24 +278,49 @@ export default function Home() {
               />
             </div>
 
-            {/* Time Grid */}
+            {/* Time Blocks - Maternity Mode 🤰 */}
             <div>
               <label className="block text-sm text-[#4A0404]/70 mb-2">
                 <Clock className="w-4 h-4 inline mr-2" />
                 {t.booking.time}
               </label>
-              <div className="grid grid-cols-3 gap-2">
-                {AVAILABLE_HOURS.map((hour) => (
+              {CONFIG.maternityMode && (
+                <div className="mb-3 p-3 bg-pink-50 border border-pink-200 rounded-lg">
+                  <p className="text-xs text-pink-800 flex items-center gap-2">
+                    <span>🤰</span>
+                    <span>
+                      {lang === "en"
+                        ? "Appointments are 4-hour blocks to ensure rest time"
+                        : "Las citas son bloques de 4 horas para asegurar tiempo de descanso"}
+                    </span>
+                  </p>
+                </div>
+              )}
+              <div className="space-y-3">
+                {TIME_BLOCKS.map((block) => (
                   <button
-                    key={hour}
-                    onClick={() => setFormData((prev) => ({ ...prev, time: hour }))}
-                    className={`py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                      formData.time === hour
-                        ? "bg-[#4A0404] text-white"
-                        : "bg-white border border-[#4A0404]/20 text-[#4A0404]/70 hover:border-[#4A0404]/40"
+                    key={block.id}
+                    onClick={() => setFormData((prev) => ({ ...prev, time: block.time }))}
+                    className={`w-full p-4 rounded-xl text-left transition-all duration-200 border-2 ${
+                      formData.time === block.time
+                        ? "border-[#4A0404] bg-[#4A0404]/5 shadow-md"
+                        : "border-[#4A0404]/10 bg-white hover:border-[#4A0404]/30 hover:shadow-sm"
                     }`}
                   >
-                    {hour}
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{block.icon}</span>
+                      <div className="flex-1">
+                        <div className="font-medium text-[#4A0404]">
+                          {lang === "en" ? block.label : block.labelEs}
+                        </div>
+                        <div className="text-xs text-[#4A0404]/50 mt-0.5">
+                          {lang === "en" ? "4-hour appointment block" : "Bloque de 4 horas"}
+                        </div>
+                      </div>
+                      {formData.time === block.time && (
+                        <Check className="w-5 h-5 text-[#4A0404]" />
+                      )}
+                    </div>
                   </button>
                 ))}
               </div>

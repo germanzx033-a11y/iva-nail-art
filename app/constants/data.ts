@@ -28,9 +28,11 @@ export const CONFIG = {
   tiktok: "iva_nailart_ny",
   tiktokUrl: "https://www.tiktok.com/@iva_nailart_ny",
   location: "Brooklyn, NY 11209",
-  hours: "9:00 AM – 8:00 PM",
+  hours: "8:00 AM – 8:00 PM",
   deposit: 35,
   cancellationHours: 24,
+  maternityMode: true, // 🤰 Modo Maternidad activado
+  appointmentDuration: 4, // horas por cita (para descanso y limpieza)
 };
 
 // =============================================
@@ -243,13 +245,51 @@ export const SERVICES: Service[] = [
 ];
 
 // =============================================
-// AVAILABLE HOURS
+// AVAILABLE HOURS - MATERNITY MODE 🤰
 // =============================================
-export const AVAILABLE_HOURS = [
-  "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
-  "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM",
-  "5:00 PM", "6:00 PM", "7:00 PM",
+// Bloques de 4 horas para cuidar la salud de Iva durante el embarazo
+export interface TimeBlock {
+  id: string;
+  time: string;
+  label: string;
+  labelEs: string;
+  icon: string;
+  startTime: string;
+  endTime: string;
+}
+
+export const TIME_BLOCKS: TimeBlock[] = [
+  {
+    id: "morning",
+    time: "8:00 AM",
+    label: "Morning (8:00 AM - 12:00 PM)",
+    labelEs: "Mañana (8:00 AM - 12:00 PM)",
+    icon: "🌅",
+    startTime: "8:00 AM",
+    endTime: "12:00 PM",
+  },
+  {
+    id: "midday",
+    time: "12:00 PM",
+    label: "Midday (12:00 PM - 4:00 PM)",
+    labelEs: "Mediodía (12:00 PM - 4:00 PM)",
+    icon: "☀️",
+    startTime: "12:00 PM",
+    endTime: "4:00 PM",
+  },
+  {
+    id: "afternoon",
+    time: "4:00 PM",
+    label: "Afternoon (4:00 PM - 8:00 PM)",
+    labelEs: "Tarde (4:00 PM - 8:00 PM)",
+    icon: "🌆",
+    startTime: "4:00 PM",
+    endTime: "8:00 PM",
+  },
 ];
+
+// Legacy support - solo los horarios de inicio de cada bloque
+export const AVAILABLE_HOURS = TIME_BLOCKS.map(block => block.time);
 
 // =============================================
 // CATEGORIES
