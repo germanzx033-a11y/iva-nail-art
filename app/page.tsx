@@ -32,6 +32,9 @@ import {
   TRANSLATIONS,
 } from "./constants";
 import PriceCalculator from "./components/PriceCalculator";
+import IVAPromise from "./components/IVAPromise";
+import SignatureDesigns from "./components/SignatureDesigns";
+import TrustBadges from "./components/TrustBadges";
 
 // =============================================
 // LOCAL INTERFACES
@@ -602,6 +605,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ==================== TRUST BADGES ==================== */}
+      <TrustBadges lang={lang} />
+
+      {/* ==================== IVA PROMISE ==================== */}
+      <IVAPromise lang={lang} />
+
+      {/* ==================== SIGNATURE DESIGNS ==================== */}
+      <SignatureDesigns lang={lang} onBookService={() => openBooking()} />
 
       {/* ==================== SERVICES ==================== */}
       <section id="services" className="py-16 sm:py-24 px-4 sm:px-6">
