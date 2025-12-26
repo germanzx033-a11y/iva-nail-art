@@ -905,39 +905,6 @@ export default function Home() {
         onClose={() => setIsCalculatorOpen(false)}
         lang={lang}
       />
-
-      {/* Custom Animations (Tailwind compatible) */}
-      <style jsx global>{`
-        @keyframes slide-up {
-          from {
-            transform: translateY(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-
-        .animate-slide-up {
-          animation: slide-up 0.3s ease-out forwards;
-        }
-
-        .animate-fade-in {
-          animation: fade-in 0.2s ease-out forwards;
-        }
-      `}</style>
     </main>
   );
 }

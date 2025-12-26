@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://iva-nail-art.vercel.app'),
   title: "IVA Nail Art | Luxury Nails in Brooklyn",
   description: "Exclusive nail art studio in Brooklyn, NY. Book your appointment today.",
   keywords: ["nail art", "manicure", "pedicure", "acrylic nails", "gel nails", "Brooklyn", "NY", "nail salon"],

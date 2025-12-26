@@ -15,27 +15,6 @@ export default function Loading() {
           <div className="h-full bg-[#D4AF37] rounded-full animate-loading-bar" />
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes loading-bar {
-          0% {
-            width: 0%;
-            margin-left: 0%;
-          }
-          50% {
-            width: 50%;
-            margin-left: 25%;
-          }
-          100% {
-            width: 0%;
-            margin-left: 100%;
-          }
-        }
-
-        .animate-loading-bar {
-          animation: loading-bar 1.5s ease-in-out infinite;
-        }
-      `}</style>
     </div>
   );
 }
