@@ -35,6 +35,11 @@ import PriceCalculator from "./components/PriceCalculator";
 import IVAPromise from "./components/IVAPromise";
 import SignatureDesigns from "./components/SignatureDesigns";
 import TrustBadges from "./components/TrustBadges";
+import BeforeAfter from "./components/BeforeAfter";
+import Testimonials from "./components/Testimonials";
+import GiftCards from "./components/GiftCards";
+import LoyaltyProgram from "./components/LoyaltyProgram";
+import BlogSection from "./components/BlogSection";
 
 // =============================================
 // LOCAL INTERFACES
@@ -734,6 +739,21 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ==================== BEFORE/AFTER ==================== */}
+      <BeforeAfter lang={lang} />
+
+      {/* ==================== TESTIMONIALS ==================== */}
+      <Testimonials lang={lang} />
+
+      {/* ==================== GIFT CARDS ==================== */}
+      <GiftCards lang={lang} />
+
+      {/* ==================== LOYALTY PROGRAM ==================== */}
+      <LoyaltyProgram lang={lang} />
+
+      {/* ==================== BLOG SECTION ==================== */}
+      <BlogSection lang={lang} />
 
       {/* ==================== FOOTER ==================== */}
       <footer className="bg-[#4A0404] text-white py-12 sm:py-16 px-4 sm:px-6">
