@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, MapPin, Phone, Clock, Palette, Wand2 } from "lucide-react";
+import Image from "next/image";
 import { CONFIG } from "../constants";
 
 interface VirtualNailStudioProps {
@@ -13,11 +14,12 @@ type SkinTone = "fair" | "medium" | "tan" | "deep";
 type NailShape = "almond" | "stiletto" | "square" | "coffin";
 type Finish = "glossy" | "matte" | "chrome";
 
-const SKIN_TONES = {
-  fair: "#FFE0BD",
-  medium: "#DEBA9D",
-  tan: "#C68E6F",
-  deep: "#8D5524",
+// Placeholder URLs for different skin tones (user will replace with real photos)
+const HAND_IMAGES = {
+  fair: "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800&q=80", // Fair skin elegant hand
+  medium: "https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=800&q=80", // Medium skin tone hand
+  tan: "https://images.unsplash.com/photo-1515688594390-b649af70d282?w=800&q=80", // Tan skin hand
+  deep: "https://images.unsplash.com/photo-1598452963314-b09f397a5c48?w=800&q=80", // Deep skin tone hand
 };
 
 const NAIL_COLORS = [
@@ -31,12 +33,37 @@ const NAIL_COLORS = [
   { name: "Lavender", color: "#B19CD9" },
 ];
 
-// SVG paths para diferentes formas de uñas
-const NAIL_SHAPES = {
-  almond: "M20,5 Q30,0 40,5 L40,35 Q30,45 20,35 Z",
-  stiletto: "M20,5 L40,5 L30,50 Z",
-  square: "M20,5 L40,5 L40,40 L20,40 Z",
-  coffin: "M20,5 L40,5 L38,40 L30,50 L22,40 Z",
+// Precise SVG clipPath masks for each nail (coordinates adjusted to match hand photo)
+// These paths will be positioned to overlay exactly on the nail areas of the photo
+const NAIL_MASKS = {
+  almond: {
+    thumb: "M85,195 Q95,185 105,195 L105,225 Q95,235 85,225 Z",
+    index: "M145,95 Q155,85 165,95 L165,135 Q155,145 145,135 Z",
+    middle: "M195,75 Q205,65 215,75 L215,125 Q205,135 195,125 Z",
+    ring: "M245,85 Q255,75 265,85 L265,130 Q255,140 245,130 Z",
+    pinky: "M295,115 Q305,105 315,115 L315,150 Q305,160 295,150 Z",
+  },
+  stiletto: {
+    thumb: "M85,195 L105,195 L95,240 Z",
+    index: "M145,95 L165,95 L155,150 Z",
+    middle: "M195,75 L215,75 L205,140 Z",
+    ring: "M245,85 L265,85 L255,145 Z",
+    pinky: "M295,115 L315,115 L305,165 Z",
+  },
+  square: {
+    thumb: "M85,195 L105,195 L105,230 L85,230 Z",
+    index: "M145,95 L165,95 L165,140 L145,140 Z",
+    middle: "M195,75 L215,75 L215,130 L195,130 Z",
+    ring: "M245,85 L265,85 L265,135 L245,135 Z",
+    pinky: "M295,115 L315,115 L315,155 L295,155 Z",
+  },
+  coffin: {
+    thumb: "M85,195 L105,195 L103,228 L95,235 L87,228 Z",
+    index: "M145,95 L165,95 L163,133 L155,145 L147,133 Z",
+    middle: "M195,75 L215,75 L213,123 L205,135 L197,123 Z",
+    ring: "M245,85 L265,85 L263,128 L255,140 L247,128 Z",
+    pinky: "M295,115 L315,115 L313,148 L305,160 L297,148 Z",
+  },
 };
 
 export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
@@ -99,14 +126,6 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
     return () => clearTimeout(timer);
   }, [skinTone]);
 
-  const getFinishStyle = (baseColor: string): string => {
-    if (finish === "matte") return baseColor;
-    if (finish === "chrome") {
-      return `url(#chromeGradient)`;
-    }
-    return baseColor; // glossy
-  };
-
   const handleBooking = () => {
     const message = lang === "en"
       ? `Hi! I tried the Virtual Nail Studio and I love this combination:\n\n💅 Shape: ${nailShape}\n🎨 Color: ${NAIL_COLORS.find(c => c.color === nailColor)?.name || "Custom"}\n✨ Finish: ${finish}\n\nI'd like to book an appointment!`
@@ -137,7 +156,7 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* LEFT: Interactive Hand Visualizer */}
+          {/* LEFT: Photorealistic Hand Visualizer with Image Masking */}
           <div className="relative">
             {/* AI Recommendation Popup */}
             <AnimatePresence>
@@ -163,195 +182,121 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
               )}
             </AnimatePresence>
 
-            {/* SVG Hand Visualizer */}
+            {/* Photorealistic Hand with SVG Mask Overlay */}
             <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-2xl border border-[#4A0404]/10">
-              <motion.svg
-                viewBox="0 0 400 500"
-                className="w-full h-auto"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <defs>
-                  {/* Chrome Gradient */}
-                  <linearGradient id="chromeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{ stopColor: "#D4AF37", stopOpacity: 1 }} />
-                    <stop offset="50%" style={{ stopColor: "#F7E7CE", stopOpacity: 1 }} />
-                    <stop offset="100%" style={{ stopColor: "#D4AF37", stopOpacity: 1 }} />
-                  </linearGradient>
+              <div className="relative w-full aspect-[4/5] max-w-md mx-auto overflow-hidden rounded-2xl bg-gradient-to-br from-[#FDF8F6] to-white">
+                {/* Base: Real Hand Photo */}
+                <motion.div
+                  key={skinTone}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={HAND_IMAGES[skinTone]}
+                    alt="Elegant hand"
+                    fill
+                    className="object-cover object-center"
+                    priority
+                  />
+                </motion.div>
 
-                  {/* Glossy Shine */}
-                  <linearGradient id="glossyShine" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" style={{ stopColor: "white", stopOpacity: 0.4 }} />
-                    <stop offset="100%" style={{ stopColor: "white", stopOpacity: 0 }} />
-                  </linearGradient>
+                {/* SVG Overlay: Nail Color Masks */}
+                <svg
+                  viewBox="0 0 400 500"
+                  className="absolute inset-0 w-full h-full"
+                  style={{ mixBlendMode: "normal" }}
+                >
+                  <defs>
+                    {/* Glossy Shine Gradient */}
+                    <linearGradient id="glossyShine" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style={{ stopColor: "white", stopOpacity: 0.6 }} />
+                      <stop offset="50%" style={{ stopColor: "white", stopOpacity: 0.2 }} />
+                      <stop offset="100%" style={{ stopColor: "white", stopOpacity: 0 }} />
+                    </linearGradient>
 
-                  {/* Matte filter */}
-                  <filter id="matteFilter">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="0.5" />
-                  </filter>
-                </defs>
+                    {/* Chrome Metallic Gradient */}
+                    <linearGradient id="chromeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style={{ stopColor: "#FFD700", stopOpacity: 1 }} />
+                      <stop offset="25%" style={{ stopColor: "#F7E7CE", stopOpacity: 1 }} />
+                      <stop offset="50%" style={{ stopColor: "#D4AF37", stopOpacity: 1 }} />
+                      <stop offset="75%" style={{ stopColor: "#F7E7CE", stopOpacity: 1 }} />
+                      <stop offset="100%" style={{ stopColor: "#FFD700", stopOpacity: 1 }} />
+                    </linearGradient>
 
-                {/* Hand Palm */}
-                <path
-                  d="M150,400 Q100,350 100,300 L100,200 Q100,180 120,180 L280,180 Q300,180 300,200 L300,300 Q300,350 250,400 Z"
-                  fill={SKIN_TONES[skinTone]}
-                  stroke="#4A0404"
-                  strokeWidth="1"
-                  opacity="0.95"
-                />
+                    {/* ClipPaths for each nail in each shape */}
+                    {Object.entries(NAIL_MASKS).map(([shapeName, nails]) => (
+                      <g key={shapeName}>
+                        {Object.entries(nails).map(([fingerName, pathData]) => (
+                          <clipPath key={`${shapeName}-${fingerName}`} id={`clip-${shapeName}-${fingerName}`}>
+                            <path d={pathData} />
+                          </clipPath>
+                        ))}
+                      </g>
+                    ))}
+                  </defs>
 
-                {/* Fingers - 5 fingers with nails */}
-                {/* Thumb */}
-                <g>
-                  <path
-                    d="M100,220 Q80,200 80,170 Q80,140 100,120 Q120,140 120,170 Q120,200 100,220 Z"
-                    fill={SKIN_TONES[skinTone]}
-                    stroke="#4A0404"
-                    strokeWidth="1"
-                  />
-                  <motion.path
-                    d={NAIL_SHAPES[nailShape]}
-                    transform="translate(70, 100) scale(0.6)"
-                    fill={getFinishStyle(nailColor)}
-                    stroke="#4A0404"
-                    strokeWidth="1.5"
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 0.6, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                  />
-                  {finish === "glossy" && (
-                    <ellipse
-                      cx="90"
-                      cy="115"
-                      rx="8"
-                      ry="4"
-                      fill="url(#glossyShine)"
-                      opacity="0.6"
-                    />
-                  )}
-                </g>
+                  {/* Render colored nails with current shape masks */}
+                  {["thumb", "index", "middle", "ring", "pinky"].map((finger, index) => (
+                    <g key={finger}>
+                      {/* Base nail color */}
+                      <motion.rect
+                        clipPath={`url(#clip-${nailShape}-${finger})`}
+                        x="0"
+                        y="0"
+                        width="400"
+                        height="500"
+                        fill={finish === "chrome" ? "url(#chromeGradient)" : nailColor}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 200,
+                          damping: 15,
+                          delay: index * 0.1,
+                        }}
+                      />
 
-                {/* Index Finger */}
-                <g>
-                  <path
-                    d="M140,180 Q130,100 130,60 Q130,30 150,20 Q170,30 170,60 Q170,100 160,180 Z"
-                    fill={SKIN_TONES[skinTone]}
-                    stroke="#4A0404"
-                    strokeWidth="1"
-                  />
-                  <motion.path
-                    d={NAIL_SHAPES[nailShape]}
-                    transform="translate(120, 0) scale(0.65)"
-                    fill={getFinishStyle(nailColor)}
-                    stroke="#4A0404"
-                    strokeWidth="1.5"
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 0.65, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.1 }}
-                  />
-                  {finish === "glossy" && (
-                    <ellipse
-                      cx="145"
-                      cy="18"
-                      rx="8"
-                      ry="5"
-                      fill="url(#glossyShine)"
-                      opacity="0.6"
-                    />
-                  )}
-                </g>
+                      {/* Glossy finish overlay */}
+                      {finish === "glossy" && (
+                        <motion.rect
+                          clipPath={`url(#clip-${nailShape}-${finger})`}
+                          x="0"
+                          y="0"
+                          width="400"
+                          height="500"
+                          fill="url(#glossyShine)"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: index * 0.1 + 0.3 }}
+                        />
+                      )}
 
-                {/* Middle Finger */}
-                <g>
-                  <path
-                    d="M180,180 Q175,90 175,40 Q175,10 195,0 Q215,10 215,40 Q215,90 210,180 Z"
-                    fill={SKIN_TONES[skinTone]}
-                    stroke="#4A0404"
-                    strokeWidth="1"
-                  />
-                  <motion.path
-                    d={NAIL_SHAPES[nailShape]}
-                    transform="translate(165, -20) scale(0.7)"
-                    fill={getFinishStyle(nailColor)}
-                    stroke="#4A0404"
-                    strokeWidth="1.5"
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 0.7, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
-                  />
-                  {finish === "glossy" && (
-                    <ellipse
-                      cx="195"
-                      cy="0"
-                      rx="9"
-                      ry="5"
-                      fill="url(#glossyShine)"
-                      opacity="0.6"
-                    />
-                  )}
-                </g>
-
-                {/* Ring Finger */}
-                <g>
-                  <path
-                    d="M220,180 Q218,100 218,55 Q218,25 238,15 Q258,25 258,55 Q258,100 255,180 Z"
-                    fill={SKIN_TONES[skinTone]}
-                    stroke="#4A0404"
-                    strokeWidth="1"
-                  />
-                  <motion.path
-                    d={NAIL_SHAPES[nailShape]}
-                    transform="translate(208, -5) scale(0.65)"
-                    fill={getFinishStyle(nailColor)}
-                    stroke="#4A0404"
-                    strokeWidth="1.5"
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 0.65, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.3 }}
-                  />
-                  {finish === "glossy" && (
-                    <ellipse
-                      cx="238"
-                      cy="13"
-                      rx="8"
-                      ry="5"
-                      fill="url(#glossyShine)"
-                      opacity="0.6"
-                    />
-                  )}
-                </g>
-
-                {/* Pinky Finger */}
-                <g>
-                  <path
-                    d="M260,180 Q262,120 262,80 Q262,50 280,40 Q298,50 298,80 Q298,120 295,180 Z"
-                    fill={SKIN_TONES[skinTone]}
-                    stroke="#4A0404"
-                    strokeWidth="1"
-                  />
-                  <motion.path
-                    d={NAIL_SHAPES[nailShape]}
-                    transform="translate(252, 20) scale(0.55)"
-                    fill={getFinishStyle(nailColor)}
-                    stroke="#4A0404"
-                    strokeWidth="1.5"
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 0.55, opacity: 1 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.4 }}
-                  />
-                  {finish === "glossy" && (
-                    <ellipse
-                      cx="272"
-                      cy="38"
-                      rx="7"
-                      ry="4"
-                      fill="url(#glossyShine)"
-                      opacity="0.6"
-                    />
-                  )}
-                </g>
-              </motion.svg>
+                      {/* Chrome additional shine effect */}
+                      {finish === "chrome" && (
+                        <motion.rect
+                          clipPath={`url(#clip-${nailShape}-${finger})`}
+                          x="0"
+                          y="0"
+                          width="400"
+                          height="500"
+                          fill="white"
+                          opacity="0.3"
+                          initial={{ x: -400 }}
+                          animate={{ x: 400 }}
+                          transition={{
+                            repeat: Infinity,
+                            duration: 2,
+                            ease: "linear",
+                            delay: index * 0.2,
+                          }}
+                        />
+                      )}
+                    </g>
+                  ))}
+                </svg>
+              </div>
 
               {/* Current Selection Display */}
               <div className="mt-6 p-4 bg-[#FDF8F6] rounded-xl border border-[#4A0404]/10">
@@ -371,21 +316,25 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
             <div>
               <label className="block font-medium text-[#4A0404] mb-4">{text.skinTone}</label>
               <div className="grid grid-cols-4 gap-3">
-                {(Object.keys(SKIN_TONES) as SkinTone[]).map((tone) => (
+                {(Object.keys(HAND_IMAGES) as SkinTone[]).map((tone) => (
                   <button
                     key={tone}
                     onClick={() => setSkinTone(tone)}
-                    className={`relative p-4 rounded-xl border-2 transition-all ${
+                    className={`relative p-3 rounded-xl border-2 transition-all ${
                       skinTone === tone
                         ? "border-[#D4AF37] shadow-lg scale-105"
                         : "border-[#4A0404]/20 hover:border-[#D4AF37]/50"
                     }`}
                   >
-                    <div
-                      className="w-full h-12 rounded-lg"
-                      style={{ backgroundColor: SKIN_TONES[tone] }}
-                    />
-                    <p className="text-xs mt-2 text-[#4A0404] capitalize">{tone}</p>
+                    <div className="relative w-full h-16 rounded-lg overflow-hidden">
+                      <Image
+                        src={HAND_IMAGES[tone]}
+                        alt={tone}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <p className="text-xs mt-2 text-[#4A0404] capitalize text-center">{tone}</p>
                   </button>
                 ))}
               </div>
@@ -395,7 +344,7 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
             <div>
               <label className="block font-medium text-[#4A0404] mb-4">{text.nailShape}</label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {(Object.keys(NAIL_SHAPES) as NailShape[]).map((shape) => (
+                {(Object.keys(NAIL_MASKS) as NailShape[]).map((shape) => (
                   <button
                     key={shape}
                     onClick={() => setNailShape(shape)}
@@ -405,11 +354,14 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
                         : "border-[#4A0404]/20 hover:border-[#D4AF37]/50"
                     }`}
                   >
-                    <svg viewBox="0 0 60 70" className="w-full h-16 mb-2">
+                    <svg viewBox="0 0 400 200" className="w-full h-16 mb-2">
                       <path
-                        d={NAIL_SHAPES[shape]}
+                        d={NAIL_MASKS[shape].middle}
+                        transform="translate(100, 20) scale(3.5)"
                         fill={shape === nailShape ? "#D4AF37" : "#4A0404"}
-                        opacity="0.3"
+                        opacity="0.4"
+                        stroke="#4A0404"
+                        strokeWidth="1"
                       />
                     </svg>
                     <p className="text-xs text-[#4A0404] capitalize font-medium">{shape}</p>
