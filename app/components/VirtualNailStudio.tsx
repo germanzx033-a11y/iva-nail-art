@@ -180,76 +180,184 @@ export default function VirtualNailStudio({ lang }: VirtualNailStudioProps) {
               <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-[#D4AF37]/10 via-transparent to-[#4A0404]/10 pointer-events-none" />
 
               {/* Hand Image Container */}
-              <div className="relative w-full aspect-[3/4] max-w-md mx-auto">
-                {/* Base Hand Image */}
-                <motion.div
-                  key={`hand-${skinTone}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.6 }}
-                  className="absolute inset-0 rounded-2xl overflow-hidden"
-                  style={{
-                    backgroundImage: `url(${handImage.url})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    filter: 'contrast(1.05) brightness(1.02)',
-                  }}
-                >
-                  {/* Overlay for luxury aesthetic */}
-                  <div className="absolute inset-0" style={{ background: LUXURY_OVERLAYS.goldenHour }} />
-                </motion.div>
-
-                {/* Nail Color Overlays - Positioned over fingernails */}
-                {/* These positions are approximate - adjust based on actual hand images */}
-                {[
-                  { id: 'thumb', top: '65%', left: '15%', size: '18%', delay: 0 },
-                  { id: 'index', top: '15%', left: '65%', size: '16%', delay: 0.1 },
-                  { id: 'middle', top: '5%', left: '48%', size: '17%', delay: 0.2 },
-                  { id: 'ring', top: '12%', left: '32%', size: '16%', delay: 0.3 },
-                  { id: 'pinky', top: '25%', left: '18%', size: '14%', delay: 0.4 },
-                ].map((nail) => (
-                  <motion.div
-                    key={`${nail.id}-${nailColor}-${finish}`}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 200,
-                      damping: 15,
-                      delay: nail.delay
-                    }}
-                    className={`absolute ${getFinishClass()}`}
-                    style={{
-                      top: nail.top,
-                      left: nail.left,
-                      width: nail.size,
-                      aspectRatio: nailShape === 'square' ? '0.7' : nailShape === 'stiletto' ? '0.4' : '0.55',
-                      background: finish === 'chrome'
-                        ? `linear-gradient(135deg, ${nailColor} 0%, #FFD700 50%, ${nailColor} 100%)`
-                        : nailColor,
-                      borderRadius: nailShape === 'square'
-                        ? '8% 8% 0 0'
-                        : nailShape === 'almond'
-                        ? '50% 50% 50% 50% / 60% 60% 40% 40%'
-                        : nailShape === 'stiletto'
-                        ? '50% 50% 50% 50% / 80% 80% 20% 20%'
-                        : '40% 40% 0 0',
-                      opacity: finish === 'matte' ? 0.85 : 0.9,
-                      filter: finish === 'glossy'
-                        ? 'brightness(1.1) saturate(1.2)'
-                        : finish === 'chrome'
-                        ? 'brightness(1.3) saturate(1.5)'
-                        : 'saturate(0.9)',
-                      mixBlendMode: 'multiply',
-                      transform: 'rotate(-5deg)',
-                    }}
+              <div className="relative w-full aspect-[3/4] max-w-md mx-auto bg-gradient-to-br from-[#F5D7C8] via-[#E8D4BB] to-[#DEBA9D] rounded-2xl overflow-hidden">
+                {/* Stylized Hand Illustration with Nail Colors */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <svg
+                    viewBox="0 0 300 400"
+                    className="w-full h-full"
+                    style={{ filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.1))' }}
                   >
-                    {/* Glossy highlight */}
-                    {finish === 'glossy' && (
-                      <div className="absolute top-2 left-1/2 -translate-x-1/2 w-1/3 h-1/4 bg-white/60 rounded-full blur-sm" />
-                    )}
-                  </motion.div>
-                ))}
+                    <defs>
+                      {/* Gradients for skin tone */}
+                      <linearGradient id={`skinGradient-${skinTone}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor={
+                          skinTone === 'light' ? '#FFE0BD' :
+                          skinTone === 'medium' ? '#DEBA9D' :
+                          skinTone === 'tan' ? '#C68E6F' :
+                          skinTone === 'deep' ? '#8D5524' :
+                          '#6B4423'
+                        } />
+                        <stop offset="100%" stopColor={
+                          skinTone === 'light' ? '#F5D7C8' :
+                          skinTone === 'medium' ? '#C9A882' :
+                          skinTone === 'tan' ? '#A67C52' :
+                          skinTone === 'deep' ? '#6B4423' :
+                          '#5A3A1A'
+                        } />
+                      </linearGradient>
+
+                      {/* Chrome gradient */}
+                      <linearGradient id="chromeEffect" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#FFD700" />
+                        <stop offset="50%" stopColor={nailColor} />
+                        <stop offset="100%" stopColor="#FFD700" />
+                      </linearGradient>
+
+                      {/* Glossy shine */}
+                      <linearGradient id="glossyShine" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="white" stopOpacity="0.8" />
+                        <stop offset="100%" stopColor="white" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Hand Palm Base */}
+                    <motion.path
+                      key={skinTone}
+                      d="M95,385 Q70,365 68,335 C66,315 68,280 70,250 Q72,225 75,215 C77,205 82,200 90,198 L210,198 Q218,200 220,205 C222,210 225,220 227,235 Q230,260 230,290 C230,320 228,350 220,370 Q212,385 195,390 L100,390 Q97,388 95,385 Z"
+                      fill={`url(#skinGradient-${skinTone})`}
+                      stroke="rgba(74, 4, 4, 0.15)"
+                      strokeWidth="1"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5 }}
+                    />
+
+                    {/* Fingers with nails */}
+                    {/* Pinky */}
+                    <g transform="translate(90, 150)">
+                      <path
+                        d="M-7,50 Q-9,30 -9,10 Q-9,-10 -6,-20 Q-4,-15 -4,5 Q-4,25 -2,50 M2,50 Q4,25 4,5 Q4,-15 6,-20 Q9,-10 9,10 Q9,30 7,50 Z"
+                        fill={`url(#skinGradient-${skinTone})`}
+                        stroke="rgba(74, 4, 4, 0.15)"
+                        strokeWidth="0.5"
+                      />
+                      <motion.ellipse
+                        key={`pinky-${nailColor}-${finish}`}
+                        cx="0" cy="-18" rx="6" ry="12"
+                        fill={finish === 'chrome' ? 'url(#chromeEffect)' : nailColor}
+                        opacity={finish === 'matte' ? 0.85 : 1}
+                        stroke="rgba(74, 4, 4, 0.2)"
+                        strokeWidth="0.5"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0, type: "spring" }}
+                      />
+                      {finish === 'glossy' && (
+                        <ellipse cx="0" cy="-22" rx="2.5" ry="4" fill="url(#glossyShine)" />
+                      )}
+                    </g>
+
+                    {/* Ring Finger */}
+                    <g transform="translate(120, 130)">
+                      <path
+                        d="M-8,70 Q-10,20 -10,-10 Q-10,-30 -6.5,-35 Q-4.5,-5 -4,25 Q-3.5,55 -2.5,70 M2.5,70 Q3.5,55 4,25 Q4.5,-5 6.5,-35 Q10,-30 10,-10 Q10,20 8,70 Z"
+                        fill={`url(#skinGradient-${skinTone})`}
+                        stroke="rgba(74, 4, 4, 0.15)"
+                        strokeWidth="0.5"
+                      />
+                      <motion.ellipse
+                        key={`ring-${nailColor}-${finish}`}
+                        cx="0" cy="-32" rx="7" ry="14"
+                        fill={finish === 'chrome' ? 'url(#chromeEffect)' : nailColor}
+                        opacity={finish === 'matte' ? 0.85 : 1}
+                        stroke="rgba(74, 4, 4, 0.2)"
+                        strokeWidth="0.5"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.1, type: "spring" }}
+                      />
+                      {finish === 'glossy' && (
+                        <ellipse cx="0" cy="-37" rx="3" ry="5" fill="url(#glossyShine)" />
+                      )}
+                    </g>
+
+                    {/* Middle Finger (longest) */}
+                    <g transform="translate(150, 110)">
+                      <path
+                        d="M-9,85 Q-11,25 -11,-20 Q-11,-45 -7.5,-50 Q-5,-15 -4.5,15 Q-4,45 -3,85 M3,85 Q4,45 4.5,15 Q5,-15 7.5,-50 Q11,-45 11,-20 Q11,25 9,85 Z"
+                        fill={`url(#skinGradient-${skinTone})`}
+                        stroke="rgba(74, 4, 4, 0.15)"
+                        strokeWidth="0.5"
+                      />
+                      <motion.ellipse
+                        key={`middle-${nailColor}-${finish}`}
+                        cx="0" cy="-47" rx="8" ry="16"
+                        fill={finish === 'chrome' ? 'url(#chromeEffect)' : nailColor}
+                        opacity={finish === 'matte' ? 0.85 : 1}
+                        stroke="rgba(74, 4, 4, 0.2)"
+                        strokeWidth="0.5"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.2, type: "spring" }}
+                      />
+                      {finish === 'glossy' && (
+                        <ellipse cx="0" cy="-53" rx="3.5" ry="6" fill="url(#glossyShine)" />
+                      )}
+                    </g>
+
+                    {/* Index Finger */}
+                    <g transform="translate(180, 125)">
+                      <path
+                        d="M-8,75 Q-10,22 -10,-18 Q-10,-35 -6.5,-38 Q-4.5,-6 -4,28 Q-3.5,60 -2.5,75 M2.5,75 Q3.5,60 4,28 Q4.5,-6 6.5,-38 Q10,-35 10,-18 Q10,22 8,75 Z"
+                        fill={`url(#skinGradient-${skinTone})`}
+                        stroke="rgba(74, 4, 4, 0.15)"
+                        strokeWidth="0.5"
+                      />
+                      <motion.ellipse
+                        key={`index-${nailColor}-${finish}`}
+                        cx="0" cy="-35" rx="7" ry="15"
+                        fill={finish === 'chrome' ? 'url(#chromeEffect)' : nailColor}
+                        opacity={finish === 'matte' ? 0.85 : 1}
+                        stroke="rgba(74, 4, 4, 0.2)"
+                        strokeWidth="0.5"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.3, type: "spring" }}
+                      />
+                      {finish === 'glossy' && (
+                        <ellipse cx="0" cy="-42" rx="3" ry="5.5" fill="url(#glossyShine)" />
+                      )}
+                    </g>
+
+                    {/* Thumb */}
+                    <g transform="translate(70, 240)">
+                      <path
+                        d="M-11,40 Q-19,14 -20,-10 Q-18,-23 -14.5,-25 Q-10,-4 -6,30 Q-5.5,37.5 -4.5,40 M4.5,40 Q5.5,37.5 6,30 Q10,-4 14.5,-25 Q18,-23 20,-10 Q19,14 11,40 Z"
+                        fill={`url(#skinGradient-${skinTone})`}
+                        stroke="rgba(74, 4, 4, 0.15)"
+                        strokeWidth="0.5"
+                      />
+                      <motion.ellipse
+                        key={`thumb-${nailColor}-${finish}`}
+                        cx="0" cy="-22" rx="9" ry="13"
+                        fill={finish === 'chrome' ? 'url(#chromeEffect)' : nailColor}
+                        opacity={finish === 'matte' ? 0.85 : 1}
+                        stroke="rgba(74, 4, 4, 0.2)"
+                        strokeWidth="0.5"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.4, type: "spring" }}
+                      />
+                      {finish === 'glossy' && (
+                        <ellipse cx="0" cy="-27" rx="4" ry="5" fill="url(#glossyShine)" />
+                      )}
+                    </g>
+                  </svg>
+                </div>
+
+                {/* Luxury overlay */}
+                <div className="absolute inset-0 pointer-events-none" style={{ background: LUXURY_OVERLAYS.goldenHour }} />
               </div>
 
               {/* Current Selection Display */}
