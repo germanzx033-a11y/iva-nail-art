@@ -31,6 +31,7 @@ import {
   CATEGORIES,
   TRANSLATIONS,
 } from "./constants";
+import PriceCalculator from "./components/PriceCalculator";
 
 // =============================================
 // LOCAL INTERFACES
@@ -68,6 +69,7 @@ export default function Home() {
   const [lang, setLang] = useState<Language>("en");
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<Service["category"]>("manicure");
   const [formData, setFormData] = useState<BookingState>(initialBookingState);
   const [currentYear, setCurrentYear] = useState<number>(2024);
@@ -576,7 +578,16 @@ export default function Home() {
             <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-[#4A0404] mb-3">
               {t.services.title}
             </h2>
-            <p className="text-[#4A0404]/60 text-sm sm:text-base">{t.services.subtitle}</p>
+            <p className="text-[#4A0404]/60 text-sm sm:text-base mb-4">{t.services.subtitle}</p>
+            <button
+              onClick={() => setIsCalculatorOpen(true)}
+              className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-[#D4AF37] text-white text-sm font-medium hover:bg-[#D4AF37]/90 transition-all shadow-md hover:shadow-lg"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              {lang === "en" ? "Price Calculator" : "Calculadora de Precios"}
+            </button>
           </div>
 
           {/* Category Tabs */}
@@ -843,6 +854,13 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* ==================== PRICE CALCULATOR ==================== */}
+      <PriceCalculator
+        isOpen={isCalculatorOpen}
+        onClose={() => setIsCalculatorOpen(false)}
+        lang={lang}
+      />
 
       {/* Custom Animations (Tailwind compatible) */}
       <style jsx global>{`
