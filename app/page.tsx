@@ -41,6 +41,8 @@ import Testimonials from "./components/Testimonials";
 import GiftCards from "./components/GiftCards";
 import LoyaltyProgram from "./components/LoyaltyProgram";
 import BlogSection from "./components/BlogSection";
+import PressKit from "./components/PressKit";
+import ReferralProgram from "./components/ReferralProgram";
 
 // =============================================
 // LOCAL INTERFACES
@@ -781,6 +783,12 @@ export default function Home() {
 
       {/* ==================== BLOG SECTION ==================== */}
       <BlogSection lang={lang} />
+
+      {/* ==================== REFERRAL PROGRAM ==================== */}
+      <ReferralProgram lang={lang} />
+
+      {/* ==================== PRESS KIT ==================== */}
+      <PressKit lang={lang} />
 
       {/* ==================== FOOTER ==================== */}
       <footer className="bg-[#4A0404] text-white py-12 sm:py-16 px-4 sm:px-6">
