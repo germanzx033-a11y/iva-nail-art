@@ -5,7 +5,7 @@
  * EDITORIAL LUXURY - Refined Elegance
  */
 
-import { useEffect, useState, Suspense } from "react";
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   CheckCircle,
@@ -28,31 +28,22 @@ interface BookingDetails {
 function SuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
-  const [booking, setBooking] = useState<BookingDetails | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setLoading(false);
-    setBooking({
-      serviceName: "Luxury Nail Service",
-      date: new Date().toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-      }),
-      slot: "Morning",
-      customerName: "Valued Client",
-      amount: 30,
-    });
-  }, [sessionId]);
+  // Initialize booking data directly to avoid useEffect setState warning
+  const booking: BookingDetails = {
+    serviceName: "Luxury Nail Service",
+    date: new Date().toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    }),
+    slot: "Morning",
+    customerName: "Valued Client",
+    amount: 30,
+  };
 
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-[#F9F8F6] flex items-center justify-center">
-        <div className="w-10 h-10 border border-[#EBE8E2] border-t-[#8C7355] rounded-full animate-spin" />
-      </main>
-    );
-  }
+  // Use sessionId for future API calls if needed
+  void sessionId;
 
   return (
     <main className="min-h-screen bg-[#F9F8F6] flex items-center justify-center p-8">
@@ -123,7 +114,7 @@ function SuccessContent() {
         {/* Actions */}
         <div className="space-y-4">
           <a
-            href={`https://wa.me/13474735036?text=${encodeURIComponent(
+            href={`https://wa.me/19296257273?text=${encodeURIComponent(
               "Hi! I just confirmed my booking at IVA Nail Art. Looking forward to my appointment!"
             )}`}
             target="_blank"

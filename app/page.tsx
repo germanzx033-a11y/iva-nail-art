@@ -33,8 +33,16 @@ const LuxuryGallery = dynamic(() => import("./components/LuxuryGallery"), { ssr:
 const BackToTop = dynamic(() => import("./components/BackToTop"), { ssr: false });
 const GoogleReviews = dynamic(() => import("./components/GoogleReviews"), { ssr: false });
 const ProductsShop = dynamic(() => import("./components/ProductsShop"), { ssr: false });
+const AIChat = dynamic(() => import("./components/AIChat"), { ssr: false });
+const BlogSection = dynamic(() => import("./components/BlogSection"), { ssr: false });
+const VerifiedReviews = dynamic(() => import("./components/VerifiedReviews"), { ssr: false });
+const StripeBooking = dynamic(() => import("./components/StripeBooking"), { ssr: false });
+const LuxuryRituals = dynamic(() => import("./components/LuxuryRituals"), { ssr: false });
+const IVAStandard = dynamic(() => import("./components/IVAStandard"), { ssr: false });
+const AboutIva = dynamic(() => import("./components/AboutIva"), { ssr: false });
 import ScrollReveal, { StaggerContainer, StaggerItem } from "./components/ScrollReveal";
 import AnimatedCounter from "./components/AnimatedCounter";
+import { HERO_COPY, SCARCITY_CTAS } from "./constants/luxuryRituals";
 
 // =============================================
 // DATA
@@ -97,8 +105,9 @@ const CONFIG = {
   whatsappNumber: "19296257273",
   instagram: "iva_nailart_ny",
   tiktok: "iva_nailart_ny",
-  location: "Bay Ridge, Brooklyn",
-  deposit: 30,
+  location: "Bay Ridge, Brooklyn 11209",
+  deposit: 35,
+  dailySlots: 2, // Scarcity model
 };
 
 // =============================================
@@ -145,6 +154,8 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [currentYear, setCurrentYear] = useState(2024);
   const [showAR, setShowAR] = useState(false);
+  const [showStripeBooking, setShowStripeBooking] = useState(false);
+  const [language, setLanguage] = useState<"en" | "es">("en");
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());
@@ -231,7 +242,7 @@ I understand a $${CONFIG.deposit} deposit is required.`;
           </a>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6">
             <a href="#services" className="text-xs uppercase tracking-[0.15em] text-[#4A4A4A] hover:text-[#8C7355] transition-colors">
               Services
             </a>
@@ -241,10 +252,33 @@ I understand a $${CONFIG.deposit} deposit is required.`;
             <a href="#shop" className="text-xs uppercase tracking-[0.15em] text-[#4A4A4A] hover:text-[#8C7355] transition-colors">
               Shop
             </a>
-            <a href="#about" className="text-xs uppercase tracking-[0.15em] text-[#4A4A4A] hover:text-[#8C7355] transition-colors">
-              About
+            <a href="#blog" className="text-xs uppercase tracking-[0.15em] text-[#4A4A4A] hover:text-[#8C7355] transition-colors">
+              Blog
             </a>
-            <button onClick={() => openBooking()} className="px-6 py-3 bg-gradient-to-r from-[#722F37] to-[#8B3A44] text-white text-xs uppercase tracking-[0.15em] hover:from-[#8B3A44] hover:to-[#A04550] transition-all shadow-md hover:shadow-lg">
+            <a href="/my-account" className="text-xs uppercase tracking-[0.15em] text-[#4A4A4A] hover:text-[#8C7355] transition-colors">
+              Account
+            </a>
+            {/* Language Switcher */}
+            <div className="flex items-center gap-1 border-l border-[#EBE8E2] pl-6">
+              <button
+                onClick={() => setLanguage("en")}
+                className={`px-2 py-1 text-xs font-medium rounded transition-all ${
+                  language === "en" ? "bg-[#722F37] text-white" : "text-[#7A7A7A] hover:text-[#1A1A1A]"
+                }`}
+              >
+                EN
+              </button>
+              <span className="text-[#D4D0C8]">|</span>
+              <button
+                onClick={() => setLanguage("es")}
+                className={`px-2 py-1 text-xs font-medium rounded transition-all ${
+                  language === "es" ? "bg-[#722F37] text-white" : "text-[#7A7A7A] hover:text-[#1A1A1A]"
+                }`}
+              >
+                ES
+              </button>
+            </div>
+            <button onClick={() => setShowStripeBooking(true)} className="px-6 py-3 bg-gradient-to-r from-[#722F37] to-[#8B3A44] text-white text-xs uppercase tracking-[0.15em] hover:from-[#8B3A44] hover:to-[#A04550] transition-all shadow-md hover:shadow-lg">
               Book Now
             </button>
           </div>
@@ -267,13 +301,32 @@ I understand a $${CONFIG.deposit} deposit is required.`;
             <a href="#shop" className="block text-sm uppercase tracking-[0.1em] text-[#4A4A4A]" onClick={() => setMobileMenuOpen(false)}>
               Shop
             </a>
-            <a href="#about" className="block text-sm uppercase tracking-[0.1em] text-[#4A4A4A]" onClick={() => setMobileMenuOpen(false)}>
-              About
+            <a href="#blog" className="block text-sm uppercase tracking-[0.1em] text-[#4A4A4A]" onClick={() => setMobileMenuOpen(false)}>
+              Blog
             </a>
+            <a href="/my-account" className="block text-sm uppercase tracking-[0.1em] text-[#4A4A4A]" onClick={() => setMobileMenuOpen(false)}>
+              My Account
+            </a>
+            {/* Language Switcher Mobile */}
+            <div className="flex items-center gap-2 py-2">
+              <span className="text-xs uppercase tracking-[0.1em] text-[#7A7A7A]">Language:</span>
+              <button
+                onClick={() => setLanguage("en")}
+                className={`px-3 py-1 text-sm rounded ${language === "en" ? "bg-[#722F37] text-white" : "bg-[#EBE8E2] text-[#4A4A4A]"}`}
+              >
+                EN
+              </button>
+              <button
+                onClick={() => setLanguage("es")}
+                className={`px-3 py-1 text-sm rounded ${language === "es" ? "bg-[#722F37] text-white" : "bg-[#EBE8E2] text-[#4A4A4A]"}`}
+              >
+                ES
+              </button>
+            </div>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
-                openBooking();
+                setShowStripeBooking(true);
               }}
               className="w-full py-3 bg-gradient-to-r from-[#722F37] to-[#8B3A44] text-white text-sm uppercase tracking-[0.1em] shadow-md"
             >
@@ -283,7 +336,7 @@ I understand a $${CONFIG.deposit} deposit is required.`;
         )}
       </header>
 
-      {/* ==================== HERO ==================== */}
+      {/* ==================== HERO - SEO OPTIMIZED ==================== */}
       <section className="relative pt-20 pb-8 md:pt-28 md:pb-16 px-6 md:px-8 overflow-hidden bg-gradient-to-br from-[#FAF9F7] via-[#FDF8F6] to-[#F5EDE8]">
         {/* Floating Sparkles */}
         <FloatingParticles count={25} />
@@ -296,41 +349,59 @@ I understand a $${CONFIG.deposit} deposit is required.`;
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Content */}
             <div className="order-2 md:order-1 animate-fade-in">
-              {/* Tagline */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#B76E79]/10 to-[#722F37]/10 rounded-full mb-6">
+              {/* Tagline Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#B76E79]/10 to-[#722F37]/10 rounded-full mb-4">
                 <span className="w-2 h-2 bg-[#B76E79] rounded-full animate-pulse" />
                 <span className="text-xs uppercase tracking-[0.2em] text-[#722F37] font-medium">
-                  Pregnancy-Safe Sanctuary
+                  {language === "en" ? HERO_COPY.en.badge : HERO_COPY.es.badge}
                 </span>
               </div>
 
-              {/* Hero Title */}
+              {/* Tagline */}
+              <p className="text-sm md:text-base text-[#B76E79] font-medium mb-3 italic">
+                {language === "en" ? HERO_COPY.en.tagline : HERO_COPY.es.tagline}
+              </p>
+
+              {/* Hero Title - SEO: non-toxic nail Brooklyn, pregnancy-safe luxury manicure */}
               <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#0D0D0D] leading-[1.05] mb-6 md:mb-8">
-                Nail artistry
+                {language === "en" ? HERO_COPY.en.headline : HERO_COPY.es.headline}
                 <br />
                 <span className="bg-gradient-to-r from-[#B76E79] via-[#8C6239] to-[#722F37] bg-clip-text text-transparent">
-                  redefined
+                  {language === "en" ? HERO_COPY.en.subheadline : HERO_COPY.es.subheadline}
                 </span>
               </h1>
 
-              {/* Subtitle */}
-              <p className="text-base md:text-lg text-[#3D3D3D] leading-relaxed max-w-lg mb-8 md:mb-10">
-                Brooklyn&apos;s premier destination for pregnancy-safe, non-toxic nail care. Limited to two clients daily for an intimate, luxurious experience.
+              {/* Subtitle - SEO Description */}
+              <p className="text-base md:text-lg text-[#3D3D3D] leading-relaxed max-w-lg mb-6">
+                {language === "en" ? HERO_COPY.en.description : HERO_COPY.es.description}
+              </p>
+
+              {/* Scarcity Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#722F37]/10 rounded-lg mb-6 border border-[#722F37]/20">
+                <Shield className="w-4 h-4 text-[#722F37]" />
+                <span className="text-sm font-medium text-[#722F37]">
+                  {language === "en" ? HERO_COPY.en.scarcityBadge : HERO_COPY.es.scarcityBadge}
+                </span>
+              </div>
+
+              {/* Trust Line */}
+              <p className="text-xs text-[#6B6B6B] mb-8 uppercase tracking-wider">
+                {language === "en" ? HERO_COPY.en.trustLine : HERO_COPY.es.trustLine}
               </p>
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
-                  onClick={() => openBooking()}
+                  onClick={() => setShowStripeBooking(true)}
                   className="px-8 py-4 bg-gradient-to-r from-[#722F37] to-[#8B3A44] text-white text-xs uppercase tracking-[0.15em] hover:from-[#8B3A44] hover:to-[#A04550] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
                 >
-                  Book Appointment
+                  {language === "en" ? HERO_COPY.en.ctaPrimary : HERO_COPY.es.ctaPrimary}
                 </button>
                 <a
-                  href="#services"
+                  href="#rituals"
                   className="px-8 py-4 border-2 border-[#0D0D0D] text-[#0D0D0D] text-xs uppercase tracking-[0.15em] hover:bg-[#0D0D0D] hover:text-white transition-all text-center"
                 >
-                  View Services
+                  {language === "en" ? HERO_COPY.en.ctaSecondary : HERO_COPY.es.ctaSecondary}
                 </a>
               </div>
             </div>
@@ -342,7 +413,7 @@ I understand a $${CONFIG.deposit} deposit is required.`;
                 <div className="aspect-[4/5] overflow-hidden rounded-2xl shadow-2xl">
                   <img
                     src="/trabajo1.jpg"
-                    alt="IVA Nail Art - Luxury nail design"
+                    alt="Non-toxic nail salon Brooklyn - Pregnancy-safe luxury manicure by IVA Nail Art"
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                   />
                 </div>
@@ -351,15 +422,26 @@ I understand a $${CONFIG.deposit} deposit is required.`;
                 <div className="absolute -bottom-6 -left-6 w-32 h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-xl border-4 border-white">
                   <img
                     src="/trabajo2.jpg"
-                    alt="Nail art detail"
+                    alt="HEPA filtered nail studio - 10-Free polish application"
                     className="w-full h-full object-cover"
                   />
                 </div>
 
-                {/* Floating Badge */}
+                {/* Scarcity Badge */}
                 <div className="absolute -top-4 -right-4 md:top-6 md:-right-6 bg-gradient-to-br from-[#B76E79] to-[#722F37] text-white px-4 py-3 rounded-xl shadow-lg">
-                  <p className="text-2xl font-serif font-bold">5★</p>
-                  <p className="text-[10px] uppercase tracking-wider opacity-80">Rated</p>
+                  <p className="text-2xl font-serif font-bold">2</p>
+                  <p className="text-[10px] uppercase tracking-wider opacity-80">
+                    {language === "en" ? "Clients/Day" : "Clientas/Día"}
+                  </p>
+                </div>
+
+                {/* 5-Star Badge */}
+                <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-lg">
+                  <div className="flex items-center gap-1">
+                    <span className="text-lg font-serif text-[#722F37]">5</span>
+                    <span className="text-[#FFD700]">★</span>
+                    <span className="text-xs text-[#6B6B6B] ml-1">Google</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -381,116 +463,20 @@ I understand a $${CONFIG.deposit} deposit is required.`;
         </div>
       </section>
 
-      {/* ==================== SERVICES ==================== */}
-      <section id="services" className="py-16 md:py-24 px-6 md:px-8 bg-[#FAF9F7]">
-        <div className="max-w-6xl mx-auto">
-          {/* Section Header */}
-          <ScrollReveal>
-            <div className="max-w-xl mb-12 md:mb-16">
-              <p className="text-xs uppercase tracking-[0.2em] text-[#B76E79] mb-3 font-medium">Our Services</p>
-              <h2 className="font-serif text-3xl md:text-5xl text-[#0D0D0D] mb-4">Luxury Treatments</h2>
-              <p className="text-[#3D3D3D]">
-                Every service uses 10-free, pregnancy-safe products in a HEPA-filtered environment.
-              </p>
-            </div>
-          </ScrollReveal>
+      {/* ==================== LUXURY RITUALS (New Premium Services) ==================== */}
+      <LuxuryRituals
+        language={language}
+        onBookRitual={() => setShowStripeBooking(true)}
+      />
 
-          {/* Services List */}
-          <StaggerContainer className="space-y-4">
-            {SERVICES.map((service) => (
-              <StaggerItem key={service.id}>
-                <div
-                  onClick={() => openBooking(service)}
-                  className="group flex items-center justify-between p-5 md:p-6 cursor-pointer bg-white rounded-xl border border-[#EDE9E3] hover:border-[#B76E79]/30 hover:shadow-lg transition-all"
-                >
-                  <div className="flex-1 min-w-0 pr-4">
-                    <div className="flex items-center gap-3 mb-1">
-                      <h3 className="font-serif text-lg md:text-xl text-[#0D0D0D]">{service.name}</h3>
-                      {service.featured && (
-                        <span className="text-[10px] uppercase tracking-wider text-white bg-gradient-to-r from-[#B76E79] to-[#722F37] px-3 py-1 rounded-full">
-                          Featured
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-[#6B6B6B] hidden sm:block">{service.description}</p>
-                  </div>
-                  <div className="flex items-center gap-6 md:gap-8 flex-shrink-0">
-                    <div className="text-right">
-                      <p className="font-serif text-xl md:text-2xl text-[#722F37]">
-                        ${service.price}
-                        {service.priceMax && <span className="text-[#B76E79]">+</span>}
-                      </p>
-                      <p className="text-xs text-[#6B6B6B]">{service.duration}</p>
-                    </div>
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#B76E79]/20 to-[#722F37]/20 flex items-center justify-center group-hover:from-[#B76E79] group-hover:to-[#722F37] transition-all">
-                      <ChevronRight className="w-5 h-5 text-[#722F37] group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-                    </div>
-                  </div>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
+      {/* ==================== THE IVA STANDARD (Trust Module) ==================== */}
+      <IVAStandard
+        language={language}
+        onBook={() => setShowStripeBooking(true)}
+      />
 
-      {/* ==================== ABOUT ==================== */}
-      <section id="about" className="py-16 md:py-24 px-6 md:px-8 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
-            {/* Image */}
-            <ScrollReveal animation="fadeLeft" className="order-1 relative">
-              <div className="aspect-[4/5] overflow-hidden rounded-2xl shadow-2xl">
-                <img
-                  src="/portada.jpg"
-                  alt="IVA Nail Art Studio"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              {/* Decorative element */}
-              <div className="absolute -bottom-4 -right-4 w-full h-full rounded-2xl border-2 border-[#B76E79]/30 -z-10" />
-            </ScrollReveal>
-
-            {/* Content */}
-            <ScrollReveal animation="fadeRight" delay={0.2} className="order-2">
-              <p className="text-xs uppercase tracking-[0.2em] text-[#B76E79] mb-3 font-medium">About Us</p>
-              <h2 className="font-serif text-3xl md:text-4xl text-[#0D0D0D] mb-6 leading-tight">
-                A sanctuary for{" "}
-                <span className="bg-gradient-to-r from-[#B76E79] to-[#722F37] bg-clip-text text-transparent">
-                  expecting mothers
-                </span>
-              </h2>
-              <p className="text-[#3D3D3D] leading-relaxed mb-4">
-                IVA Nail Art was created with one mission: to provide a safe, luxurious nail care experience for pregnant women and anyone seeking non-toxic beauty treatments.
-              </p>
-              <p className="text-[#3D3D3D] leading-relaxed mb-8">
-                Our studio features hospital-grade sterilization, HEPA air filtration capturing 99.97% of particles, and exclusively 10-free polishes free from harmful chemicals.
-              </p>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-4 md:gap-6">
-                <div className="text-center p-4 bg-gradient-to-br from-[#B76E79]/10 to-[#722F37]/10 rounded-xl">
-                  <p className="font-serif text-3xl md:text-4xl text-[#722F37]">
-                    <AnimatedCounter end={2} duration={1.5} />
-                  </p>
-                  <p className="text-xs uppercase tracking-wider text-[#6B6B6B] mt-1">Clients daily</p>
-                </div>
-                <div className="text-center p-4 bg-gradient-to-br from-[#8C6239]/10 to-[#5C4033]/10 rounded-xl">
-                  <p className="font-serif text-3xl md:text-4xl text-[#8C6239]">
-                    <AnimatedCounter end={100} duration={2} suffix="%" />
-                  </p>
-                  <p className="text-xs uppercase tracking-wider text-[#6B6B6B] mt-1">Non-toxic</p>
-                </div>
-                <div className="text-center p-4 bg-gradient-to-br from-[#B76E79]/10 to-[#722F37]/10 rounded-xl">
-                  <p className="font-serif text-3xl md:text-4xl text-[#722F37]">
-                    <AnimatedCounter end={5} duration={1} suffix="★" />
-                  </p>
-                  <p className="text-xs uppercase tracking-wider text-[#6B6B6B] mt-1">Rated</p>
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
-        </div>
-      </section>
+      {/* ==================== ABOUT IVA (Humanized Story) ==================== */}
+      <AboutIva language={language} />
 
       {/* ==================== TESTIMONIALS ==================== */}
       <Testimonials />
@@ -503,6 +489,9 @@ I understand a $${CONFIG.deposit} deposit is required.`;
 
       {/* ==================== PRODUCTS SHOP ==================== */}
       <ProductsShop />
+
+      {/* ==================== BLOG SECTION ==================== */}
+      <BlogSection lang={language} />
 
       {/* ==================== AR NAIL STUDIO SECTION ==================== */}
       <section id="virtual-studio" className="py-16 md:py-24 px-6 md:px-8 bg-gradient-to-br from-[#722F37] via-[#5A252C] to-[#3D1A1E] text-white relative overflow-hidden">
@@ -708,6 +697,16 @@ I understand a $${CONFIG.deposit} deposit is required.`;
 
       {/* ==================== AI BUBBLE ==================== */}
       <AIBubble />
+
+      {/* ==================== AI CHAT ==================== */}
+      <AIChat />
+
+      {/* ==================== STRIPE BOOKING MODAL ==================== */}
+      <StripeBooking
+        isOpen={showStripeBooking}
+        onClose={() => setShowStripeBooking(false)}
+        language={language}
+      />
 
       {/* ==================== FLOATING WHATSAPP ==================== */}
       <a

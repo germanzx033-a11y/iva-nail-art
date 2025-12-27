@@ -1,7 +1,20 @@
 "use client";
 
+/**
+ * IVA Nail Art - Premium Blog Section
+ * Compact, visually stunning nail care insights
+ */
+
 import { useState } from "react";
-import { BookOpen, ChevronRight, Clock, Tag } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ChevronRight,
+  Clock,
+  Sparkles,
+  ArrowRight,
+  X,
+  MessageCircle
+} from "lucide-react";
 import { CONFIG } from "../constants";
 
 interface BlogSectionProps {
@@ -17,7 +30,8 @@ interface BlogPost {
   category: string;
   categoryEs: string;
   readTime: number;
-  image: string;
+  gradient: string;
+  icon: string;
   tips: string[];
   tipsEs: string[];
 }
@@ -25,14 +39,15 @@ interface BlogPost {
 const BLOG_POSTS: BlogPost[] = [
   {
     id: "gel-care",
-    title: "How to Make Your Gel Manicure Last 3+ Weeks",
-    titleEs: "Cómo Hacer que tu Manicura en Gel Dure 3+ Semanas",
-    excerpt: "Professional secrets to extend the life of your gel nails",
-    excerptEs: "Secretos profesionales para prolongar la vida de tus uñas en gel",
-    category: "Care Tips",
-    categoryEs: "Consejos de Cuidado",
+    title: "Gel Manicure: 3+ Weeks",
+    titleEs: "Gel Manicura: 3+ Semanas",
+    excerpt: "Pro secrets for long-lasting nails",
+    excerptEs: "Secretos pro para uñas duraderas",
+    category: "Care",
+    categoryEs: "Cuidado",
     readTime: 4,
-    image: "💅",
+    gradient: "from-rose-400 via-pink-500 to-rose-600",
+    icon: "💅",
     tips: [
       "Apply cuticle oil daily (morning & night)",
       "Wear gloves when cleaning or washing dishes",
@@ -41,23 +56,24 @@ const BLOG_POSTS: BlogPost[] = [
       "Keep hands moisturized to prevent lifting",
     ],
     tipsEs: [
-      "Aplica aceite de cutícula diariamente (mañana y noche)",
+      "Aplica aceite de cutícula diariamente",
       "Usa guantes al limpiar o lavar platos",
       "Evita usar las uñas como herramientas",
       "Reserva retoques cada 2-3 semanas",
-      "Mantén las manos hidratadas para evitar despegues",
+      "Mantén las manos hidratadas",
     ],
   },
   {
     id: "seasonal-trends",
-    title: "2025 Nail Art Trends: What's Hot This Season",
-    titleEs: "Tendencias de Nail Art 2025: Lo Más Popular Esta Temporada",
-    excerpt: "Discover the latest luxury nail designs from Paris to Brooklyn",
-    excerptEs: "Descubre los últimos diseños de lujo desde París hasta Brooklyn",
+    title: "2025 Nail Trends",
+    titleEs: "Tendencias 2025",
+    excerpt: "Hottest looks from Paris to NYC",
+    excerptEs: "Lo más hot de París a NYC",
     category: "Trends",
     categoryEs: "Tendencias",
     readTime: 5,
-    image: "✨",
+    gradient: "from-violet-400 via-purple-500 to-indigo-600",
+    icon: "✨",
     tips: [
       "Minimalist chrome accents on nude bases",
       "3D floral embellishments for special occasions",
@@ -75,14 +91,15 @@ const BLOG_POSTS: BlogPost[] = [
   },
   {
     id: "nail-health",
-    title: "5 Signs Your Nails Need a Break (And What to Do)",
-    titleEs: "5 Señales de que tus Uñas Necesitan un Descanso (Y Qué Hacer)",
-    excerpt: "Learn when to pause and how to strengthen your natural nails",
-    excerptEs: "Aprende cuándo pausar y cómo fortalecer tus uñas naturales",
+    title: "Nail Health Signs",
+    titleEs: "Señales de Salud",
+    excerpt: "When your nails need a break",
+    excerptEs: "Cuando tus uñas necesitan descanso",
     category: "Health",
     categoryEs: "Salud",
     readTime: 6,
-    image: "🩺",
+    gradient: "from-emerald-400 via-teal-500 to-cyan-600",
+    icon: "💎",
     tips: [
       "Peeling or splitting: Switch to builder gel for strength",
       "White spots: Boost biotin intake & hydrate cuticles",
@@ -91,11 +108,11 @@ const BLOG_POSTS: BlogPost[] = [
       "Pain/redness: Consult a professional immediately",
     ],
     tipsEs: [
-      "Descamación o grietas: Cambia a builder gel para fuerza",
+      "Descamación: Cambia a builder gel para fuerza",
       "Manchas blancas: Aumenta biotina e hidrata cutículas",
-      "Amarillamiento: Toma 1 semana de descanso entre colores",
-      "Uñas delgadas: Usa tratamiento de keratina antes de gel",
-      "Dolor/enrojecimiento: Consulta a un profesional de inmediato",
+      "Amarillamiento: Toma 1 semana de descanso",
+      "Uñas delgadas: Usa tratamiento de keratina",
+      "Dolor/enrojecimiento: Consulta un profesional",
     ],
   },
 ];
@@ -105,22 +122,22 @@ export default function BlogSection({ lang }: BlogSectionProps) {
 
   const t = {
     en: {
-      title: "Nail Care Insights",
+      title: "Nail Insights",
       subtitle: "Expert tips from IVA's studio",
-      readMore: "Read Tips",
-      closePost: "Back to Articles",
-      minRead: "min read",
-      askIva: "Ask IVA Personally",
-      bookConsultation: "Book a Consultation",
+      readMore: "Read",
+      closePost: "Back",
+      minRead: "min",
+      askIva: "Have questions?",
+      askButton: "Ask IVA",
     },
     es: {
-      title: "Guía de Cuidado de Uñas",
+      title: "Tips de Uñas",
       subtitle: "Consejos expertos del estudio de IVA",
-      readMore: "Leer Consejos",
-      closePost: "Volver a Artículos",
-      minRead: "min de lectura",
-      askIva: "Pregúntale a IVA Personalmente",
-      bookConsultation: "Reservar Consulta",
+      readMore: "Leer",
+      closePost: "Volver",
+      minRead: "min",
+      askIva: "¿Tienes preguntas?",
+      askButton: "Pregunta a IVA",
     },
   };
 
@@ -128,129 +145,179 @@ export default function BlogSection({ lang }: BlogSectionProps) {
 
   const handleAskIVA = (post: BlogPost) => {
     const message = lang === "en"
-      ? `Hi! I read your article "${post.title}" and I have a question about nail care...`
-      : `¡Hola! Leí tu artículo "${post.titleEs}" y tengo una pregunta sobre cuidado de uñas...`;
+      ? `Hi! I read your article "${post.title}" and I have a question...`
+      : `¡Hola! Leí tu artículo "${post.titleEs}" y tengo una pregunta...`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodedMessage}`;
     window.open(whatsappUrl, "_blank");
   };
 
+  // Detail Modal
   if (selectedPost) {
     return (
-      <section className="py-16 sm:py-24 px-4 sm:px-6 bg-white">
-        <div className="max-w-3xl mx-auto">
-          <button
-            onClick={() => setSelectedPost(null)}
-            className="flex items-center gap-2 text-[#4A0404]/60 hover:text-[#4A0404] mb-6 transition-colors"
+      <section className="py-12 sm:py-16 px-4 sm:px-6 bg-gradient-to-b from-[#FDFCFB] to-white">
+        <div className="max-w-2xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative"
           >
-            <ChevronRight className="w-4 h-4 rotate-180" />
-            {text.closePost}
-          </button>
-
-          <div className="text-6xl mb-4">{selectedPost.image}</div>
-          <div className="flex items-center gap-4 text-sm text-[#4A0404]/60 mb-4">
-            <span className="flex items-center gap-1">
-              <Tag className="w-4 h-4" />
-              {lang === "en" ? selectedPost.category : selectedPost.categoryEs}
-            </span>
-            <span className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
-              {selectedPost.readTime} {text.minRead}
-            </span>
-          </div>
-
-          <h2 className="font-serif text-3xl sm:text-4xl text-[#4A0404] mb-6">
-            {lang === "en" ? selectedPost.title : selectedPost.titleEs}
-          </h2>
-
-          <p className="text-[#4A0404]/70 mb-8 text-lg">
-            {lang === "en" ? selectedPost.excerpt : selectedPost.excerptEs}
-          </p>
-
-          <div className="bg-[#FDF8F6] rounded-2xl p-6 sm:p-8 mb-8">
-            <h3 className="font-medium text-[#4A0404] mb-4 flex items-center gap-2">
-              <span className="text-xl">{selectedPost.image}</span>
-              {lang === "en" ? "Key Takeaways" : "Puntos Clave"}
-            </h3>
-            <ul className="space-y-3">
-              {(lang === "en" ? selectedPost.tips : selectedPost.tipsEs).map((tip, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[#D4AF37] text-white text-sm flex items-center justify-center font-medium mt-0.5">
-                    {index + 1}
-                  </span>
-                  <span className="text-[#4A0404]/80">{tip}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="bg-gradient-to-br from-[#4A0404] to-[#D4AF37] rounded-2xl p-6 sm:p-8 text-white text-center">
-            <p className="mb-4 text-lg">
-              {text.askIva}
-            </p>
+            {/* Close Button */}
             <button
-              onClick={() => handleAskIVA(selectedPost)}
-              className="bg-white text-[#4A0404] px-6 py-3 rounded-xl font-medium hover:bg-white/90 transition-colors"
+              onClick={() => setSelectedPost(null)}
+              className="absolute -top-2 -right-2 z-10 w-10 h-10 bg-white shadow-lg rounded-full flex items-center justify-center hover:bg-gray-50 transition-colors"
             >
-              {text.bookConsultation}
+              <X className="w-5 h-5 text-gray-600" />
             </button>
-          </div>
+
+            {/* Header Card */}
+            <div className={`relative overflow-hidden rounded-3xl bg-gradient-to-br ${selectedPost.gradient} p-6 sm:p-8 text-white mb-6`}>
+              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
+              <div className="relative">
+                <span className="text-5xl sm:text-6xl mb-4 block">{selectedPost.icon}</span>
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium">
+                    {lang === "en" ? selectedPost.category : selectedPost.categoryEs}
+                  </span>
+                  <span className="flex items-center gap-1 text-white/80 text-xs">
+                    <Clock className="w-3 h-3" />
+                    {selectedPost.readTime} {text.minRead}
+                  </span>
+                </div>
+                <h2 className="font-serif text-2xl sm:text-3xl font-medium">
+                  {lang === "en" ? selectedPost.title : selectedPost.titleEs}
+                </h2>
+              </div>
+            </div>
+
+            {/* Tips List */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+              <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-amber-500" />
+                {lang === "en" ? "Key Tips" : "Consejos Clave"}
+              </h3>
+              <ul className="space-y-4">
+                {(lang === "en" ? selectedPost.tips : selectedPost.tipsEs).map((tip, index) => (
+                  <motion.li
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="flex items-start gap-3"
+                  >
+                    <span className={`flex-shrink-0 w-7 h-7 rounded-lg bg-gradient-to-br ${selectedPost.gradient} text-white text-sm flex items-center justify-center font-semibold shadow-sm`}>
+                      {index + 1}
+                    </span>
+                    <span className="text-gray-700 leading-relaxed pt-0.5">{tip}</span>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+
+            {/* CTA Card */}
+            <div className="bg-gradient-to-br from-[#722F37] to-[#4A1C24] rounded-2xl p-6 text-center">
+              <p className="text-white/90 mb-4">{text.askIva}</p>
+              <button
+                onClick={() => handleAskIVA(selectedPost)}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-[#722F37] rounded-xl font-semibold hover:bg-white/90 transition-colors shadow-lg"
+              >
+                <MessageCircle className="w-5 h-5" />
+                {text.askButton}
+              </button>
+            </div>
+
+            {/* Back Link */}
+            <button
+              onClick={() => setSelectedPost(null)}
+              className="mt-6 flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors mx-auto"
+            >
+              <ChevronRight className="w-4 h-4 rotate-180" />
+              {text.closePost}
+            </button>
+          </motion.div>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="py-16 sm:py-24 px-4 sm:px-6 bg-white">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#4A0404]/5 mb-4">
-            <BookOpen className="w-8 h-8 text-[#4A0404]" />
-          </div>
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-[#4A0404] mb-3">
-            {text.title}
-          </h2>
-          <p className="text-[#4A0404]/60 text-sm sm:text-base">{text.subtitle}</p>
+    <section className="py-12 sm:py-16 px-4 sm:px-6 bg-gradient-to-b from-[#FDFCFB] to-white overflow-hidden">
+      <div className="max-w-5xl mx-auto">
+        {/* Compact Header */}
+        <div className="text-center mb-8 sm:mb-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="font-serif text-3xl sm:text-4xl mb-2">
+              <span className="bg-gradient-to-r from-[#722F37] via-[#B76E79] to-[#D4A574] bg-clip-text text-transparent font-semibold">
+                {text.title}
+              </span>
+            </h2>
+            <p className="text-gray-500 text-sm">{text.subtitle}</p>
+          </motion.div>
         </div>
 
-        {/* Blog Grid */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {BLOG_POSTS.map((post) => (
-            <article
+        {/* Compact Card Grid */}
+        <div className="grid sm:grid-cols-3 gap-4 sm:gap-5">
+          {BLOG_POSTS.map((post, index) => (
+            <motion.article
               key={post.id}
-              className="group bg-[#FDF8F6] rounded-2xl overflow-hidden hover:shadow-xl transition-all cursor-pointer"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 }}
               onClick={() => setSelectedPost(post)}
+              className="group cursor-pointer"
             >
-              <div className="p-6">
-                <div className="text-5xl mb-4">{post.image}</div>
+              <div className="relative overflow-hidden rounded-2xl bg-white shadow-sm border border-gray-100 hover:shadow-xl hover:border-transparent transition-all duration-300 hover:-translate-y-1">
+                {/* Gradient Header */}
+                <div className={`relative h-24 sm:h-28 bg-gradient-to-br ${post.gradient} overflow-hidden`}>
+                  <div className="absolute inset-0 bg-black/10" />
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full blur-2xl" />
 
-                <div className="flex items-center gap-3 text-xs text-[#4A0404]/60 mb-3">
-                  <span className="flex items-center gap-1">
-                    <Tag className="w-3 h-3" />
-                    {lang === "en" ? post.category : post.categoryEs}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {post.readTime} {text.minRead}
-                  </span>
+                  {/* Icon */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-4xl sm:text-5xl drop-shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+                      {post.icon}
+                    </span>
+                  </div>
+
+                  {/* Category Badge */}
+                  <div className="absolute top-3 left-3">
+                    <span className="px-2.5 py-1 bg-white/25 backdrop-blur-sm rounded-full text-white text-[10px] font-bold uppercase tracking-wider">
+                      {lang === "en" ? post.category : post.categoryEs}
+                    </span>
+                  </div>
+
+                  {/* Read Time */}
+                  <div className="absolute top-3 right-3">
+                    <span className="flex items-center gap-1 text-white/90 text-xs font-medium">
+                      <Clock className="w-3 h-3" />
+                      {post.readTime}
+                    </span>
+                  </div>
                 </div>
 
-                <h3 className="font-serif text-xl text-[#4A0404] mb-2 group-hover:text-[#D4AF37] transition-colors">
-                  {lang === "en" ? post.title : post.titleEs}
-                </h3>
+                {/* Content */}
+                <div className="p-4">
+                  <h3 className="font-serif text-lg font-semibold text-gray-900 mb-1 group-hover:text-[#722F37] transition-colors leading-tight">
+                    {lang === "en" ? post.title : post.titleEs}
+                  </h3>
+                  <p className="text-gray-500 text-xs mb-3 line-clamp-1">
+                    {lang === "en" ? post.excerpt : post.excerptEs}
+                  </p>
 
-                <p className="text-sm text-[#4A0404]/60 mb-4 line-clamp-2">
-                  {lang === "en" ? post.excerpt : post.excerptEs}
-                </p>
-
-                <div className="flex items-center gap-2 text-[#4A0404] font-medium text-sm group-hover:text-[#D4AF37] transition-colors">
-                  {text.readMore}
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  {/* Read Link */}
+                  <div className="flex items-center gap-1.5 text-[#722F37] font-semibold text-sm group-hover:gap-2.5 transition-all">
+                    {text.readMore}
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
                 </div>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>

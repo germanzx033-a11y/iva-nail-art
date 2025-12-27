@@ -5,7 +5,7 @@
  * EDITORIAL LUXURY - Refined Elegance
  */
 
-import { X, ArrowRight, MessageCircle, RefreshCw } from "lucide-react";
+import { X, MessageCircle, RefreshCw } from "lucide-react";
 import Link from "next/link";
 
 export default function BookingCancelPage() {
@@ -41,7 +41,7 @@ export default function BookingCancelPage() {
           </Link>
 
           <a
-            href={`https://wa.me/13474735036?text=${encodeURIComponent(
+            href={`https://wa.me/19296257273?text=${encodeURIComponent(
               "Hi! I had trouble completing my booking. Can you help me schedule an appointment?"
             )}`}
             target="_blank"
