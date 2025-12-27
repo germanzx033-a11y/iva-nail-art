@@ -40,6 +40,8 @@ const StripeBooking = dynamic(() => import("./components/StripeBooking"), { ssr:
 const LuxuryRituals = dynamic(() => import("./components/LuxuryRituals"), { ssr: false });
 const IVAStandard = dynamic(() => import("./components/IVAStandard"), { ssr: false });
 const AboutIva = dynamic(() => import("./components/AboutIva"), { ssr: false });
+const SocialProofToast = dynamic(() => import("./components/SocialProofToast"), { ssr: false });
+const EasterEgg = dynamic(() => import("./components/EasterEgg"), { ssr: false });
 import ScrollReveal, { StaggerContainer, StaggerItem } from "./components/ScrollReveal";
 import AnimatedCounter from "./components/AnimatedCounter";
 import { HERO_COPY, SCARCITY_CTAS } from "./constants/luxuryRituals";
@@ -951,6 +953,10 @@ I understand a $${CONFIG.deposit} deposit is required.`;
 
       {/* ==================== BACK TO TOP ==================== */}
       <BackToTop />
+
+      {/* ==================== SURPRISE FEATURES ==================== */}
+      <SocialProofToast />
+      <EasterEgg />
     </main>
   );
 }
