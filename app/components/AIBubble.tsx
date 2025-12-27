@@ -14,7 +14,7 @@ const FEATURED_DESIGNS = [
   { id: 6, image: '/gallery/599ff034-b45d-48af-8a8e-9996f5d98a8b.jpg', name: 'Ombre Magic' },
 ];
 
-const WHATSAPP_NUMBER = '13474735036';
+const WHATSAPP_NUMBER = '19296257273';
 
 export default function AIBubble() {
   const [isOpen, setIsOpen] = useState(false);

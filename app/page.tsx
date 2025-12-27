@@ -31,6 +31,8 @@ const FloatingParticles = dynamic(() => import("./components/FloatingParticles")
 const Testimonials = dynamic(() => import("./components/Testimonials"), { ssr: false });
 const LuxuryGallery = dynamic(() => import("./components/LuxuryGallery"), { ssr: false });
 const BackToTop = dynamic(() => import("./components/BackToTop"), { ssr: false });
+const GoogleReviews = dynamic(() => import("./components/GoogleReviews"), { ssr: false });
+const ProductsShop = dynamic(() => import("./components/ProductsShop"), { ssr: false });
 import ScrollReveal, { StaggerContainer, StaggerItem } from "./components/ScrollReveal";
 import AnimatedCounter from "./components/AnimatedCounter";
 
@@ -92,7 +94,7 @@ const TRUST_ITEMS = [
 ];
 
 const CONFIG = {
-  whatsappNumber: "13474735036",
+  whatsappNumber: "19296257273",
   instagram: "iva_nailart_ny",
   tiktok: "iva_nailart_ny",
   location: "Bay Ridge, Brooklyn",
@@ -229,12 +231,15 @@ I understand a $${CONFIG.deposit} deposit is required.`;
           </a>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-8">
             <a href="#services" className="text-xs uppercase tracking-[0.15em] text-[#4A4A4A] hover:text-[#8C7355] transition-colors">
               Services
             </a>
             <a href="#gallery" className="text-xs uppercase tracking-[0.15em] text-[#4A4A4A] hover:text-[#8C7355] transition-colors">
               Gallery
+            </a>
+            <a href="#shop" className="text-xs uppercase tracking-[0.15em] text-[#4A4A4A] hover:text-[#8C7355] transition-colors">
+              Shop
             </a>
             <a href="#about" className="text-xs uppercase tracking-[0.15em] text-[#4A4A4A] hover:text-[#8C7355] transition-colors">
               About
@@ -258,6 +263,9 @@ I understand a $${CONFIG.deposit} deposit is required.`;
             </a>
             <a href="#gallery" className="block text-sm uppercase tracking-[0.1em] text-[#4A4A4A]" onClick={() => setMobileMenuOpen(false)}>
               Gallery
+            </a>
+            <a href="#shop" className="block text-sm uppercase tracking-[0.1em] text-[#4A4A4A]" onClick={() => setMobileMenuOpen(false)}>
+              Shop
             </a>
             <a href="#about" className="block text-sm uppercase tracking-[0.1em] text-[#4A4A4A]" onClick={() => setMobileMenuOpen(false)}>
               About
@@ -487,8 +495,14 @@ I understand a $${CONFIG.deposit} deposit is required.`;
       {/* ==================== TESTIMONIALS ==================== */}
       <Testimonials />
 
+      {/* ==================== GOOGLE REVIEWS ==================== */}
+      <GoogleReviews />
+
       {/* ==================== GALLERY ==================== */}
       <LuxuryGallery instagramHandle={CONFIG.instagram} />
+
+      {/* ==================== PRODUCTS SHOP ==================== */}
+      <ProductsShop />
 
       {/* ==================== AR NAIL STUDIO SECTION ==================== */}
       <section id="virtual-studio" className="py-16 md:py-24 px-6 md:px-8 bg-gradient-to-br from-[#722F37] via-[#5A252C] to-[#3D1A1E] text-white relative overflow-hidden">
