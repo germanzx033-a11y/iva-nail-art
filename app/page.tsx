@@ -145,6 +145,38 @@ const initialBooking: BookingState = {
 };
 
 // =============================================
+// LIVE VIEWERS COMPONENT (Social Proof)
+// =============================================
+
+function LiveViewers({ language }: { language: string }) {
+  const [viewers, setViewers] = useState(5);
+
+  useEffect(() => {
+    // Randomize viewers only on client side to avoid hydration mismatch
+    setViewers(Math.floor(Math.random() * 5) + 3);
+
+    // Occasionally update the number for realism
+    const interval = setInterval(() => {
+      setViewers(Math.floor(Math.random() * 5) + 3);
+    }, 8000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-full shadow-lg border border-[#EBE8E2] flex items-center gap-2">
+      <span className="relative flex h-2 w-2">
+        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+      </span>
+      <span className="text-xs text-[#3D3D3D]">
+        <span className="font-semibold">{viewers}</span> {language === "en" ? "people viewing" : "personas viendo"}
+      </span>
+    </div>
+  );
+}
+
+// =============================================
 // MAIN COMPONENT
 // =============================================
 
@@ -443,6 +475,9 @@ I understand a $${CONFIG.deposit} deposit is required.`;
                     <span className="text-xs text-[#6B6B6B] ml-1">Google</span>
                   </div>
                 </div>
+
+                {/* Live Visitors Indicator */}
+                <LiveViewers language={language} />
               </div>
             </div>
           </div>
