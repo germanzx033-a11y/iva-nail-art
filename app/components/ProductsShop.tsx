@@ -41,7 +41,7 @@ const PRODUCTS: Product[] = [
     name: "Rose Gold Cuticle Oil",
     description: "Luxurious organic jojoba oil infused with rose hip and vitamin E. Strengthens and nourishes cuticles.",
     price: 28,
-    image: "/products/cuticle-oil.jpg",
+    image: "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg",
     category: "cuticle-oil",
     badge: "Best Seller",
     rating: 4.9,
@@ -55,7 +55,7 @@ const PRODUCTS: Product[] = [
     description: "Rich, fast-absorbing cream with shea butter and collagen. Keeps hands soft for 24 hours.",
     price: 35,
     originalPrice: 42,
-    image: "/products/hand-cream.jpg",
+    image: "/gallery/afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg",
     category: "hand-cream",
     badge: "20% Off",
     rating: 4.8,
@@ -68,7 +68,7 @@ const PRODUCTS: Product[] = [
     name: "At-Home Nail Care Kit",
     description: "Complete kit with file, buffer, cuticle pusher, and our signature cuticle oil. Perfect between appointments.",
     price: 65,
-    image: "/products/nail-kit.jpg",
+    image: "/gallery/f0d71275-94d3-4325-9592-55cbe28a5bdd.jpg",
     category: "nail-kit",
     badge: "New",
     rating: 5.0,
@@ -81,7 +81,7 @@ const PRODUCTS: Product[] = [
     name: "Lavender Dream Cuticle Oil",
     description: "Calming lavender oil blend that promotes nail growth and relaxation. Perfect for bedtime routine.",
     price: 28,
-    image: "/products/cuticle-oil-lavender.jpg",
+    image: "/gallery/1c77f4d1-58a0-4b2f-b1ca-f7054eeb9627.jpg",
     category: "cuticle-oil",
     rating: 4.7,
     reviews: 45,
@@ -93,7 +93,7 @@ const PRODUCTS: Product[] = [
     name: "Diamond Nail Strengthener",
     description: "Professional-grade treatment that repairs and strengthens damaged nails. Visible results in 2 weeks.",
     price: 32,
-    image: "/products/strengthener.jpg",
+    image: "/gallery/810c6eb7-e2e7-49eb-87e4-c6867d09f390.jpg",
     category: "accessories",
     rating: 4.9,
     reviews: 156,
@@ -106,7 +106,7 @@ const PRODUCTS: Product[] = [
     description: "Our most popular products in a beautiful gift box. Includes cuticle oil, hand cream, and nail file.",
     price: 85,
     originalPrice: 98,
-    image: "/products/gift-set.jpg",
+    image: "/gallery/599ff034-b45d-48af-8a8e-9996f5d98a8b.jpg",
     category: "nail-kit",
     badge: "Gift Ready",
     rating: 5.0,
@@ -196,7 +196,7 @@ export default function ProductsShop() {
     const message = `Hi! I'd like to order these products:\n\n${items}\n\nTotal: $${cartTotal}\n\nPlease let me know the payment and delivery options!`;
 
     window.open(
-      `https://wa.me/13474735036?text=${encodeURIComponent(message)}`,
+      `https://wa.me/19296257273?text=${encodeURIComponent(message)}`,
       "_blank"
     );
   };
@@ -252,15 +252,15 @@ export default function ProductsShop() {
               >
                 {/* Product Image */}
                 <div
-                  className="relative aspect-square bg-[#F5F3EF] cursor-pointer"
+                  className="relative aspect-square bg-[#F5F3EF] cursor-pointer overflow-hidden"
                   onClick={() => setSelectedProduct(product)}
                 >
-                  {/* Placeholder - replace with actual images */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-32 h-32 bg-gradient-to-br from-[#B76E79]/20 to-[#722F37]/20 rounded-full flex items-center justify-center">
-                      <Sparkles className="w-12 h-12 text-[#722F37]/50" />
-                    </div>
-                  </div>
+                  {/* Product Image */}
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
 
                   {/* Badge */}
                   {product.badge && (
@@ -428,9 +428,9 @@ export default function ProductsShop() {
                         key={item.id}
                         className="flex gap-4 p-4 bg-[#F9F8F6] rounded-xl"
                       >
-                        {/* Product Image Placeholder */}
-                        <div className="w-20 h-20 bg-[#EBE8E2] rounded-lg flex items-center justify-center flex-shrink-0">
-                          <Sparkles className="w-8 h-8 text-[#B76E79]" />
+                        {/* Product Image */}
+                        <div className="w-20 h-20 bg-[#EBE8E2] rounded-lg overflow-hidden flex-shrink-0">
+                          <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                         </div>
 
                         <div className="flex-1">
@@ -516,12 +516,12 @@ export default function ProductsShop() {
                 className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-hidden"
               >
                 {/* Product Image */}
-                <div className="relative aspect-video bg-[#F5F3EF]">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-32 h-32 bg-gradient-to-br from-[#B76E79]/20 to-[#722F37]/20 rounded-full flex items-center justify-center">
-                      <Sparkles className="w-12 h-12 text-[#722F37]/50" />
-                    </div>
-                  </div>
+                <div className="relative aspect-video bg-[#F5F3EF] overflow-hidden">
+                  <img
+                    src={selectedProduct.image}
+                    alt={selectedProduct.name}
+                    className="w-full h-full object-cover"
+                  />
                   <button
                     onClick={() => setSelectedProduct(null)}
                     className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg"
