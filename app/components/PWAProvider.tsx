@@ -165,7 +165,6 @@ export default function PWAProvider({ children }: { children: ReactNode }) {
         registration.showNotification(title, {
           icon: "/icon-192.png",
           badge: "/icon-192.png",
-          vibrate: [200, 100, 200],
           ...options,
         });
       });
