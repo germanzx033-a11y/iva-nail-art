@@ -2,277 +2,208 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Sparkles,
-  X,
-  MessageCircle,
-  ChevronRight,
-  Heart,
-  Lightbulb,
-  Palette,
-  Star,
-  Send,
-} from 'lucide-react';
+import Image from 'next/image';
 
-// Nail inspiration ideas with images from gallery
-const INSPIRATION_CATEGORIES = [
-  {
-    id: 'trending',
-    title: 'Trending Now',
-    emoji: '🔥',
-    ideas: [
-      { name: 'Chrome Finish', description: 'Mirror-like metallic shine', image: '/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg' },
-      { name: 'Soft French', description: 'Modern take on classic French', image: '/gallery/afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg' },
-      { name: '3D Florals', description: 'Delicate raised flower art', image: '/gallery/f0d71275-94d3-4325-9592-55cbe28a5bdd.jpg' },
-    ],
-  },
-  {
-    id: 'classic',
-    title: 'Timeless Classics',
-    emoji: '💎',
-    ideas: [
-      { name: 'Nude Elegance', description: 'Sophisticated natural tones', image: '/gallery/1c77f4d1-58a0-4b2f-b1ca-f7054eeb9627.jpg' },
-      { name: 'Bold Red', description: 'Statement-making crimson', image: '/gallery/2b1d20c5-dd9d-45d5-85eb-da7821a34743.jpg' },
-      { name: 'French Tips', description: 'The eternal favorite', image: '/gallery/14e8d740-b174-48d9-8c87-bddcb007ec72.jpg' },
-    ],
-  },
-  {
-    id: 'artistic',
-    title: 'Artistic Designs',
-    emoji: '🎨',
-    ideas: [
-      { name: 'Abstract Art', description: 'Unique hand-painted designs', image: '/gallery/810c6eb7-e2e7-49eb-87e4-c6867d09f390.jpg' },
-      { name: 'Geometric', description: 'Clean lines and shapes', image: '/gallery/0252121b-f561-4b19-bf43-11cdd5a1f36a.jpg' },
-      { name: 'Ombre Magic', description: 'Beautiful color gradients', image: '/gallery/599ff034-b45d-48af-8a8e-9996f5d98a8b.jpg' },
-    ],
-  },
+// Curated nail designs from gallery
+const FEATURED_DESIGNS = [
+  { id: 1, image: '/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg', name: 'Chrome Elegance' },
+  { id: 2, image: '/gallery/afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg', name: 'Soft French' },
+  { id: 3, image: '/gallery/f0d71275-94d3-4325-9592-55cbe28a5bdd.jpg', name: '3D Florals' },
+  { id: 4, image: '/gallery/1c77f4d1-58a0-4b2f-b1ca-f7054eeb9627.jpg', name: 'Nude Elegance' },
+  { id: 5, image: '/gallery/810c6eb7-e2e7-49eb-87e4-c6867d09f390.jpg', name: 'Abstract Art' },
+  { id: 6, image: '/gallery/599ff034-b45d-48af-8a8e-9996f5d98a8b.jpg', name: 'Ombre Magic' },
 ];
 
-const QUICK_IDEAS = [
-  'Something elegant for a wedding',
-  'Bold and colorful for summer',
-  'Minimalist and professional',
-  'Sparkly for a party',
-  'Natural pregnancy-safe look',
-  'Festive holiday design',
-];
+const WHATSAPP_NUMBER = '13474735036';
 
 export default function AIBubble() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState(INSPIRATION_CATEGORIES[0].id);
-  const [selectedIdea, setSelectedIdea] = useState<string | null>(null);
-  const [customRequest, setCustomRequest] = useState('');
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [selectedDesign, setSelectedDesign] = useState<number | null>(null);
+  const [customIdea, setCustomIdea] = useState('');
 
-  const handleSendRequest = () => {
-    if (!customRequest.trim() && !selectedIdea) return;
+  const handleBook = () => {
+    const selected = FEATURED_DESIGNS.find(d => d.id === selectedDesign);
+    const message = selected
+      ? `Hi IVA! I love this design: "${selected.name}" ✨ Can I book an appointment?`
+      : `Hi IVA! I have a nail idea: ${customIdea} ✨ Can I book an appointment?`;
 
-    const message = selectedIdea
-      ? `Hi! I'm interested in this nail design: ${selectedIdea}. Can I book an appointment?`
-      : `Hi! I'd like to get nails done with this idea: ${customRequest}`;
-
-    window.open(
-      `https://wa.me/13474735036?text=${encodeURIComponent(message)}`,
-      '_blank'
-    );
-
-    setShowSuccess(true);
-    setTimeout(() => {
-      setShowSuccess(false);
-      setIsOpen(false);
-      setSelectedIdea(null);
-      setCustomRequest('');
-    }, 2000);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank');
+    setIsOpen(false);
+    setSelectedDesign(null);
+    setCustomIdea('');
   };
 
-  const activeInspiration = INSPIRATION_CATEGORIES.find(c => c.id === activeCategory);
+  const canBook = selectedDesign !== null || customIdea.trim().length > 0;
 
   return (
     <>
-      {/* Floating Bubble Button */}
+      {/* Elegant Floating Button */}
       <motion.button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full bg-gradient-to-br from-[#722F37] to-[#B76E79] shadow-2xl flex items-center justify-center group overflow-hidden"
-        whileHover={{ scale: 1.1 }}
+        className="fixed bottom-24 right-6 z-50 group"
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1.5, type: 'spring' }}
+        whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        initial={{ opacity: 0, y: 100 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1 }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#FFD700]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-        <Sparkles className="w-7 h-7 text-white relative z-10" />
-        <motion.span
-          className="absolute -top-1 -right-1 w-6 h-6 bg-[#FFD700] rounded-full flex items-center justify-center shadow-lg"
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-        >
-          <Lightbulb className="w-3 h-3 text-[#722F37]" />
-        </motion.span>
+        <div className="relative">
+          {/* Glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#B76E79] to-[#722F37] rounded-full blur-lg opacity-50 group-hover:opacity-70 transition-opacity" />
+
+          {/* Button */}
+          <div className="relative w-14 h-14 bg-gradient-to-br from-[#0D0D0D] to-[#1A1A1A] rounded-full flex items-center justify-center border border-[#B76E79]/30 shadow-2xl">
+            <svg className="w-6 h-6 text-[#B76E79]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+
+          {/* Pulse indicator */}
+          <span className="absolute -top-0.5 -right-0.5 w-3 h-3">
+            <span className="absolute inset-0 bg-[#FFD700] rounded-full animate-ping opacity-75" />
+            <span className="relative block w-3 h-3 bg-[#FFD700] rounded-full" />
+          </span>
+        </div>
       </motion.button>
 
       {/* Modal */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-[100] flex items-end md:items-center justify-center"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             {/* Backdrop */}
             <motion.div
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/80 backdrop-blur-md"
               onClick={() => setIsOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             />
 
             {/* Modal Content */}
             <motion.div
-              className="relative bg-white w-full max-w-lg max-h-[90vh] rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden"
-              initial={{ y: '100%', opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: '100%', opacity: 0 }}
-              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              className="relative w-full max-w-md bg-[#0D0D0D] rounded-2xl overflow-hidden border border-[#B76E79]/20 shadow-2xl"
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 50, scale: 0.9 }}
+              transition={{ type: 'spring', damping: 25 }}
             >
               {/* Header */}
-              <div className="relative bg-gradient-to-br from-[#722F37] via-[#8B3A44] to-[#B76E79] p-6 text-white">
-                {/* Decorative elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#FFD700]/10 rounded-full blur-2xl" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-xl" />
+              <div className="relative p-6 border-b border-white/5">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
 
-                <div className="relative flex items-start justify-between">
-                  <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <Sparkles className="w-5 h-5 text-[#FFD700]" />
-                      <span className="text-xs uppercase tracking-wider text-white/80">Nail Inspiration</span>
-                    </div>
-                    <h2 className="text-2xl font-serif">Find Your Perfect Design</h2>
-                    <p className="text-white/70 text-sm mt-1">Get inspired and book your appointment</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#B76E79] to-[#722F37] flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                   </div>
-                  <button
-                    onClick={() => setIsOpen(false)}
-                    className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition backdrop-blur-sm"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
+                  <div>
+                    <h2 className="text-lg font-serif text-white">Get Inspired</h2>
+                    <p className="text-sm text-white/40">Select a design or describe your idea</p>
+                  </div>
                 </div>
+              </div>
 
-                {/* Category Tabs */}
-                <div className="flex gap-2 mt-6 overflow-x-auto pb-2">
-                  {INSPIRATION_CATEGORIES.map((cat) => (
-                    <button
-                      key={cat.id}
-                      onClick={() => setActiveCategory(cat.id)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition ${
-                        activeCategory === cat.id
-                          ? 'bg-white text-[#722F37]'
-                          : 'bg-white/20 hover:bg-white/30'
+              {/* Design Grid */}
+              <div className="p-4">
+                <div className="grid grid-cols-3 gap-2">
+                  {FEATURED_DESIGNS.map((design, idx) => (
+                    <motion.button
+                      key={design.id}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: idx * 0.05 }}
+                      onClick={() => {
+                        setSelectedDesign(selectedDesign === design.id ? null : design.id);
+                        setCustomIdea('');
+                      }}
+                      className={`relative aspect-square rounded-lg overflow-hidden group transition-all duration-300 ${
+                        selectedDesign === design.id
+                          ? 'ring-2 ring-[#B76E79] ring-offset-2 ring-offset-[#0D0D0D] scale-[0.98]'
+                          : 'hover:scale-[1.02]'
                       }`}
                     >
-                      {cat.emoji} {cat.title}
-                    </button>
+                      <Image
+                        src={design.image}
+                        alt={design.name}
+                        fill
+                        className="object-cover"
+                        sizes="150px"
+                      />
+                      <div className={`absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent transition-opacity ${
+                        selectedDesign === design.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                      }`} />
+                      <span className={`absolute bottom-1.5 left-1.5 right-1.5 text-[10px] text-white font-medium transition-opacity ${
+                        selectedDesign === design.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                      }`}>
+                        {design.name}
+                      </span>
+                      {selectedDesign === design.id && (
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="absolute top-1.5 right-1.5 w-5 h-5 bg-[#B76E79] rounded-full flex items-center justify-center"
+                        >
+                          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </motion.div>
+                      )}
+                    </motion.button>
                   ))}
                 </div>
               </div>
 
-              {/* Content */}
-              <div className="overflow-y-auto max-h-[50vh] p-6">
-                {showSuccess ? (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-center py-12"
-                  >
-                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Heart className="w-10 h-10 text-green-500 fill-current" />
-                    </div>
-                    <h3 className="text-xl font-serif text-[#722F37] mb-2">Opening WhatsApp...</h3>
-                    <p className="text-gray-500">We can&apos;t wait to create your dream nails!</p>
-                  </motion.div>
-                ) : (
-                  <>
-                    {/* Inspiration Grid */}
-                    <div className="grid grid-cols-3 gap-3 mb-6">
-                      {activeInspiration?.ideas.map((idea, idx) => (
-                        <motion.button
-                          key={idx}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: idx * 0.1 }}
-                          onClick={() => setSelectedIdea(selectedIdea === idea.name ? null : idea.name)}
-                          className={`relative rounded-xl overflow-hidden aspect-square group ${
-                            selectedIdea === idea.name ? 'ring-2 ring-[#722F37] ring-offset-2' : ''
-                          }`}
-                        >
-                          <img
-                            src={idea.image}
-                            alt={idea.name}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                          <div className="absolute bottom-0 left-0 right-0 p-2 text-white text-left">
-                            <p className="text-xs font-medium">{idea.name}</p>
-                          </div>
-                          {selectedIdea === idea.name && (
-                            <div className="absolute top-2 right-2 w-6 h-6 bg-[#722F37] rounded-full flex items-center justify-center">
-                              <Star className="w-3 h-3 text-white fill-current" />
-                            </div>
-                          )}
-                        </motion.button>
-                      ))}
-                    </div>
+              {/* Divider */}
+              <div className="px-6 flex items-center gap-4">
+                <div className="flex-1 h-px bg-white/10" />
+                <span className="text-xs text-white/30 uppercase tracking-wider">or</span>
+                <div className="flex-1 h-px bg-white/10" />
+              </div>
 
-                    {/* Quick Ideas */}
-                    <div className="mb-6">
-                      <p className="text-xs uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-2">
-                        <Palette className="w-4 h-4" />
-                        Quick Ideas
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {QUICK_IDEAS.map((idea, i) => (
-                          <button
-                            key={i}
-                            onClick={() => setCustomRequest(idea)}
-                            className={`px-3 py-1.5 text-xs rounded-full transition ${
-                              customRequest === idea
-                                ? 'bg-[#722F37] text-white'
-                                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                            }`}
-                          >
-                            {idea}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+              {/* Custom Input */}
+              <div className="p-4">
+                <input
+                  type="text"
+                  value={customIdea}
+                  onChange={(e) => {
+                    setCustomIdea(e.target.value);
+                    setSelectedDesign(null);
+                  }}
+                  placeholder="Describe your dream nails..."
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 text-sm focus:outline-none focus:border-[#B76E79]/50 focus:bg-white/[0.07] transition"
+                />
+              </div>
 
-                    {/* Custom Request Input */}
-                    <div className="mb-4">
-                      <label className="text-xs uppercase tracking-wider text-gray-500 mb-2 block">
-                        Or describe your own idea
-                      </label>
-                      <textarea
-                        value={customRequest}
-                        onChange={(e) => setCustomRequest(e.target.value)}
-                        placeholder="E.g., Soft pink with gold accents for a birthday..."
-                        className="w-full p-4 border border-gray-200 rounded-xl resize-none h-20 focus:ring-2 focus:ring-[#722F37]/20 focus:border-[#722F37] transition text-sm"
-                      />
-                    </div>
-
-                    {/* Send Button */}
-                    <button
-                      onClick={handleSendRequest}
-                      disabled={!customRequest.trim() && !selectedIdea}
-                      className="w-full py-4 bg-gradient-to-r from-[#722F37] to-[#B76E79] text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-                    >
-                      <MessageCircle className="w-5 h-5" />
-                      Send via WhatsApp
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-
-                    <p className="text-center text-xs text-gray-400 mt-4">
-                      We&apos;ll discuss your design and schedule your appointment
-                    </p>
-                  </>
-                )}
+              {/* Book Button */}
+              <div className="p-4 pt-0">
+                <motion.button
+                  onClick={handleBook}
+                  disabled={!canBook}
+                  className="w-full py-3.5 bg-gradient-to-r from-[#B76E79] to-[#722F37] text-white rounded-lg font-medium text-sm flex items-center justify-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+                  whileHover={canBook ? { scale: 1.01 } : {}}
+                  whileTap={canBook ? { scale: 0.99 } : {}}
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                  </svg>
+                  Book via WhatsApp
+                </motion.button>
+                <p className="text-center text-[11px] text-white/25 mt-3">
+                  We&apos;ll respond within 24 hours
+                </p>
               </div>
             </motion.div>
           </motion.div>
