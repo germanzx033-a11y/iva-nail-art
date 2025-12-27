@@ -2,12 +2,7 @@
 
 /**
  * IVA-PULSE: Admin Concierge Dashboard
- * Mobile-First Luxury Interface
- *
- * Features:
- * - Toggle MGM with haptic feedback
- * - Daily Brief with bookings & revenue
- * - WhatsApp Golden Bridge
+ * EDITORIAL LUXURY - Refined Elegance
  */
 
 import { useState, useEffect, useCallback } from "react";
@@ -20,13 +15,12 @@ import {
   MessageCircle,
   RefreshCw,
   Shield,
-  Crown,
-  Sparkles,
-  ChevronRight,
   Clock,
   Phone,
   Mail,
   AlertTriangle,
+  LogOut,
+  ArrowUpRight,
 } from "lucide-react";
 
 // =============================================
@@ -121,7 +115,7 @@ export default function AdminPage() {
         const waitlistData = await waitlistRes.json();
         setWaitlist(waitlistData.entries || []);
       }
-    } catch (err) {
+    } catch {
       setError("Connection error");
     } finally {
       setIsLoading(false);
@@ -161,7 +155,7 @@ export default function AdminPage() {
         );
         triggerHaptic("light");
       }
-    } catch (err) {
+    } catch {
       setError("Failed to toggle");
     } finally {
       setIsToggling(false);
@@ -181,14 +175,13 @@ export default function AdminPage() {
       day: "numeric",
     });
 
-    const message = `Hola ${entry.name} ✨ Soy el Concierge de IVA. Iva ha abierto un espacio exclusivo para hoy (${today}) y el cupo es tuyo. ¿Confirmas? 💅`;
+    const message = `Hi ${entry.name}! This is IVA Nail Art. We have an exclusive opening today (${today}) and the spot is yours. Would you like to confirm?`;
 
     const phone = entry.phone.replace(/\D/g, "");
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
     window.open(url, "_blank");
 
-    // Mark as notified
     fetch("/api/waitlist", {
       method: "PATCH",
       headers: {
@@ -208,31 +201,26 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <main className="min-h-screen bg-[#121212] flex items-center justify-center p-6">
+      <main className="min-h-screen bg-[#F9F8F6] flex items-center justify-center p-8">
         <div className="w-full max-w-sm">
           {/* Logo */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[#D4AF37] to-[#B8960C] mb-4">
-              <Crown className="w-8 h-8 text-[#121212]" />
-            </div>
-            <h1 className="font-serif text-2xl text-white tracking-wide">
-              IVA-PULSE
-            </h1>
-            <p className="text-white/40 text-sm mt-1">Admin Concierge</p>
+          <div className="text-center mb-12">
+            <h1 className="font-serif text-4xl text-[#1A1A1A] mb-2">IVA</h1>
+            <p className="text-[11px] uppercase tracking-[0.2em] text-[#7A7A7A]">Admin Portal</p>
           </div>
 
           {/* Login Form */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/10">
-            <div className="mb-4">
-              <label className="block text-white/60 text-sm mb-2">
-                <Shield className="w-4 h-4 inline mr-2" />
+          <div className="bg-white p-8 border border-[#EBE8E2]">
+            <div className="mb-6">
+              <label className="text-[11px] uppercase tracking-[0.15em] text-[#7A7A7A] block mb-3">
+                <Shield className="w-3.5 h-3.5 inline mr-2 opacity-60" />
                 Admin Key
               </label>
               <input
                 type="password"
                 value={adminKey}
                 onChange={(e) => setAdminKey(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:border-[#D4AF37] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
+                className="input"
                 placeholder="Enter admin key"
               />
             </div>
@@ -243,14 +231,14 @@ export default function AdminPage() {
                 setIsAuthenticated(true);
               }}
               disabled={!adminKey}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#B8960C] text-[#121212] font-medium transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-editorial-filled w-full disabled:opacity-30 disabled:cursor-not-allowed"
             >
               Access Dashboard
             </button>
           </div>
 
-          <p className="text-center text-white/20 text-xs mt-6">
-            Secured with Passkey-grade protection
+          <p className="text-center text-[#A3A3A3] text-[11px] mt-8 tracking-wide">
+            Secured access
           </p>
         </div>
       </main>
@@ -264,20 +252,15 @@ export default function AdminPage() {
   const isResting = brief?.appStatus === "REST";
 
   return (
-    <main className="min-h-screen bg-[#121212] text-white">
+    <main className="min-h-screen bg-[#F9F8F6]">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#121212]/90 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-lg mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#B8960C] flex items-center justify-center">
-              <Crown className="w-5 h-5 text-[#121212]" />
-            </div>
-            <div>
-              <h1 className="font-serif text-lg">IVA-PULSE</h1>
-              <p className="text-white/40 text-xs">
-                {brief?.formattedDate || "Loading..."}
-              </p>
-            </div>
+      <header className="sticky top-0 z-50 bg-[#F9F8F6]/95 backdrop-blur-sm border-b border-[#EBE8E2]">
+        <div className="max-w-lg mx-auto px-6 py-5 flex items-center justify-between">
+          <div>
+            <h1 className="font-serif text-xl text-[#1A1A1A]">Dashboard</h1>
+            <p className="text-[11px] text-[#7A7A7A] tracking-wide">
+              {brief?.formattedDate || "Loading..."}
+            </p>
           </div>
 
           <button
@@ -286,61 +269,44 @@ export default function AdminPage() {
               fetchBrief();
             }}
             disabled={isLoading}
-            className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+            className="p-2 hover:opacity-70 transition-all duration-500"
           >
             <RefreshCw
-              className={`w-5 h-5 text-white/60 ${isLoading ? "animate-spin" : ""}`}
+              className={`w-4 h-4 text-[#7A7A7A] ${isLoading ? "animate-spin" : ""}`}
             />
           </button>
         </div>
       </header>
 
-      <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
+      <div className="max-w-lg mx-auto px-6 py-8 space-y-6">
         {/* Error Message */}
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center gap-3">
-            <AlertTriangle className="w-5 h-5 text-red-400" />
-            <p className="text-red-400 text-sm">{error}</p>
+          <div className="bg-white border border-red-200 p-4 flex items-center gap-3">
+            <AlertTriangle className="w-4 h-4 text-red-500" />
+            <p className="text-red-600 text-[13px]">{error}</p>
           </div>
         )}
 
-        {/* Ghost Mode Toggle */}
-        <div
-          className={`relative overflow-hidden rounded-2xl p-6 transition-all duration-500 ${
-            isResting
-              ? "bg-gradient-to-br from-purple-900/50 to-indigo-900/50 border border-purple-500/20"
-              : "bg-gradient-to-br from-[#D4AF37]/20 to-amber-900/20 border border-[#D4AF37]/20"
-          }`}
-        >
-          {/* Animated Background */}
-          <div className="absolute inset-0 opacity-20">
-            <div
-              className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl ${
-                isResting ? "bg-purple-500" : "bg-[#D4AF37]"
-              }`}
-            />
-          </div>
-
-          <div className="relative flex items-center justify-between">
+        {/* Status Toggle Card */}
+        <div className="bg-white p-6 border border-[#EBE8E2]">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div
-                className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${
-                  isResting
-                    ? "bg-purple-500/20 text-purple-400"
-                    : "bg-[#D4AF37]/20 text-[#D4AF37]"
+                className={`w-12 h-12 flex items-center justify-center transition-colors duration-500 ${
+                  isResting ? "bg-[#F1EFE9] text-[#7A7A7A]" : "bg-[#F1EFE9] text-[#8C7355]"
                 }`}
               >
                 {isResting ? (
-                  <Moon className="w-7 h-7" />
+                  <Moon className="w-5 h-5" />
                 ) : (
-                  <Sun className="w-7 h-7" />
+                  <Sun className="w-5 h-5" />
                 )}
               </div>
               <div>
-                <h2 className="font-medium text-lg">
-                  {isResting ? "Ghost Mode" : "Active"}
+                <h2 className="font-serif text-lg text-[#1A1A1A]">
+                  {isResting ? "Rest Mode" : "Active"}
                 </h2>
-                <p className="text-white/40 text-sm">
+                <p className="text-[12px] text-[#7A7A7A]">
                   {isResting ? "Calendar hidden" : "Accepting bookings"}
                 </p>
               </div>
@@ -349,45 +315,46 @@ export default function AdminPage() {
             <button
               onClick={toggleGhostMode}
               disabled={isToggling}
-              className={`relative w-16 h-9 rounded-full transition-all duration-300 ${
-                isResting ? "bg-purple-500" : "bg-[#D4AF37]"
+              className={`relative w-12 h-6 transition-colors duration-500 ${
+                isResting ? "bg-[#7A7A7A]" : "bg-[#8C7355]"
               }`}
             >
               <div
-                className={`absolute top-1 w-7 h-7 rounded-full bg-white shadow-lg transition-all duration-300 ${
-                  isResting ? "left-1" : "left-8"
+                className={`absolute top-0.5 w-5 h-5 bg-white transition-all duration-500 ${
+                  isResting ? "left-0.5" : "left-6"
                 }`}
               />
             </button>
           </div>
         </div>
 
-        {/* Daily Brief Stats */}
+        {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4">
           {/* Bookings */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-5 border border-white/5">
-            <div className="flex items-center gap-2 mb-3">
-              <Calendar className="w-4 h-4 text-[#D4AF37]" />
-              <span className="text-white/40 text-xs uppercase tracking-wider">
-                Bookings
+          <div className="bg-white p-6 border border-[#EBE8E2]">
+            <div className="flex items-center gap-2 mb-4">
+              <Calendar className="w-3.5 h-3.5 text-[#8C7355] opacity-70" />
+              <span className="text-[10px] uppercase tracking-[0.15em] text-[#7A7A7A]">
+                Today
               </span>
             </div>
             <div className="flex items-baseline gap-1">
-              <span className="font-serif text-3xl text-white">
+              <span className="font-serif text-4xl text-[#1A1A1A]">
                 {brief?.bookings.count || 0}
               </span>
-              <span className="text-white/40 text-sm">
+              <span className="text-[#A3A3A3] text-sm">
                 /{brief?.bookings.maxCapacity || 2}
               </span>
             </div>
-            <div className="mt-2 flex gap-1">
+            <p className="text-[11px] text-[#7A7A7A] mt-1">bookings</p>
+            <div className="mt-4 flex gap-1">
               {[0, 1].map((i) => (
                 <div
                   key={i}
-                  className={`flex-1 h-1.5 rounded-full transition-colors ${
+                  className={`flex-1 h-1 transition-colors duration-500 ${
                     i < (brief?.bookings.count || 0)
-                      ? "bg-[#D4AF37]"
-                      : "bg-white/10"
+                      ? "bg-[#8C7355]"
+                      : "bg-[#EBE8E2]"
                   }`}
                 />
               ))}
@@ -395,58 +362,58 @@ export default function AdminPage() {
           </div>
 
           {/* Revenue */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-5 border border-white/5">
-            <div className="flex items-center gap-2 mb-3">
-              <DollarSign className="w-4 h-4 text-emerald-400" />
-              <span className="text-white/40 text-xs uppercase tracking-wider">
+          <div className="bg-white p-6 border border-[#EBE8E2]">
+            <div className="flex items-center gap-2 mb-4">
+              <DollarSign className="w-3.5 h-3.5 text-[#8C7355] opacity-70" />
+              <span className="text-[10px] uppercase tracking-[0.15em] text-[#7A7A7A]">
                 Revenue
               </span>
             </div>
-            <div className="font-serif text-3xl text-white">
+            <div className="font-serif text-4xl text-[#1A1A1A]">
               ${brief?.bookings.revenue || 0}
             </div>
-            <p className="text-white/30 text-xs mt-2">Deposits collected</p>
+            <p className="text-[11px] text-[#7A7A7A] mt-1">deposits</p>
           </div>
         </div>
 
-        {/* Slot Availability */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-5 border border-white/5">
-          <div className="flex items-center gap-2 mb-4">
-            <Clock className="w-4 h-4 text-[#D4AF37]" />
-            <span className="text-white/60 text-sm font-medium">
-              Slot Availability
+        {/* Time Slots */}
+        <div className="bg-white p-6 border border-[#EBE8E2]">
+          <div className="flex items-center gap-2 mb-5">
+            <Clock className="w-3.5 h-3.5 text-[#8C7355] opacity-70" />
+            <span className="text-[11px] uppercase tracking-[0.15em] text-[#7A7A7A]">
+              Availability
             </span>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             <div
-              className={`p-4 rounded-xl border ${
+              className={`p-4 border transition-colors duration-500 ${
                 brief?.slots.morning
-                  ? "bg-emerald-500/10 border-emerald-500/20"
-                  : "bg-red-500/10 border-red-500/20"
+                  ? "border-[#8C7355]/30 bg-[#F9F8F6]"
+                  : "border-[#EBE8E2]"
               }`}
             >
-              <span className="text-xl mb-1 block">🌅</span>
-              <p className="text-white/80 text-sm font-medium">Morning</p>
+              <p className="font-serif text-[#1A1A1A] mb-1">Morning</p>
+              <p className="text-[11px] text-[#7A7A7A]">9:00 AM - 1:00 PM</p>
               <p
-                className={`text-xs ${
-                  brief?.slots.morning ? "text-emerald-400" : "text-red-400"
+                className={`text-[11px] mt-2 ${
+                  brief?.slots.morning ? "text-[#8C7355]" : "text-[#A3A3A3]"
                 }`}
               >
                 {brief?.slots.morning ? "Available" : "Booked"}
               </p>
             </div>
             <div
-              className={`p-4 rounded-xl border ${
+              className={`p-4 border transition-colors duration-500 ${
                 brief?.slots.afternoon
-                  ? "bg-emerald-500/10 border-emerald-500/20"
-                  : "bg-red-500/10 border-red-500/20"
+                  ? "border-[#8C7355]/30 bg-[#F9F8F6]"
+                  : "border-[#EBE8E2]"
               }`}
             >
-              <span className="text-xl mb-1 block">🌇</span>
-              <p className="text-white/80 text-sm font-medium">Afternoon</p>
+              <p className="font-serif text-[#1A1A1A] mb-1">Afternoon</p>
+              <p className="text-[11px] text-[#7A7A7A]">2:00 PM - 6:00 PM</p>
               <p
-                className={`text-xs ${
-                  brief?.slots.afternoon ? "text-emerald-400" : "text-red-400"
+                className={`text-[11px] mt-2 ${
+                  brief?.slots.afternoon ? "text-[#8C7355]" : "text-[#A3A3A3]"
                 }`}
               >
                 {brief?.slots.afternoon ? "Available" : "Booked"}
@@ -456,72 +423,70 @@ export default function AdminPage() {
         </div>
 
         {/* VIP Waitlist */}
-        <div className="bg-white/5 backdrop-blur-xl rounded-2xl p-5 border border-white/5">
-          <div className="flex items-center justify-between mb-4">
+        <div className="bg-white p-6 border border-[#EBE8E2]">
+          <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-[#D4AF37]" />
-              <span className="text-white/60 text-sm font-medium">
-                VIP Waitlist
+              <Users className="w-3.5 h-3.5 text-[#8C7355] opacity-70" />
+              <span className="text-[11px] uppercase tracking-[0.15em] text-[#7A7A7A]">
+                Waitlist
               </span>
             </div>
-            <span className="text-white/40 text-xs">
+            <span className="text-[11px] text-[#A3A3A3]">
               {waitlist.length} {waitlist.length === 1 ? "person" : "people"}
             </span>
           </div>
 
           {waitlist.length === 0 ? (
-            <div className="text-center py-8">
-              <Sparkles className="w-8 h-8 text-white/20 mx-auto mb-2" />
-              <p className="text-white/30 text-sm">No one on waitlist</p>
+            <div className="text-center py-10">
+              <Users className="w-6 h-6 text-[#EBE8E2] mx-auto mb-3" />
+              <p className="text-[13px] text-[#A3A3A3]">No one on waitlist</p>
             </div>
           ) : (
             <div className="space-y-3">
               {waitlist.map((entry, i) => (
                 <div
                   key={i}
-                  className={`p-4 rounded-xl border transition-all ${
+                  className={`p-4 border transition-colors duration-500 ${
                     entry.priority === "HIGH"
-                      ? "bg-[#D4AF37]/10 border-[#D4AF37]/20"
-                      : "bg-white/5 border-white/5"
+                      ? "border-[#8C7355]/40 bg-[#F9F8F6]"
+                      : "border-[#EBE8E2]"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium text-white truncate">
+                        <span className="font-serif text-[#1A1A1A] truncate">
                           {entry.name}
                         </span>
                         {entry.priority === "HIGH" && (
-                          <span className="px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#D4AF37] text-[10px] font-medium">
+                          <span className="text-[9px] uppercase tracking-[0.1em] text-[#8C7355] border border-[#8C7355] px-1.5 py-0.5">
                             VIP
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-3 text-white/40 text-xs">
+                      <div className="flex items-center gap-3 text-[11px] text-[#7A7A7A]">
                         <span className="flex items-center gap-1">
-                          <Phone className="w-3 h-3" />
+                          <Phone className="w-3 h-3 opacity-60" />
                           {entry.phone}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <Mail className="w-3 h-3" />
+                        <span className="flex items-center gap-1 hidden sm:flex">
+                          <Mail className="w-3 h-3 opacity-60" />
                           {entry.email}
                         </span>
                       </div>
                     </div>
 
-                    {/* WhatsApp Golden Bridge */}
                     <button
                       onClick={() => openWhatsAppConcierge(entry)}
-                      className="flex-shrink-0 w-10 h-10 rounded-xl bg-green-500 hover:bg-green-600 transition-colors flex items-center justify-center group"
+                      className="flex-shrink-0 w-10 h-10 bg-[#25D366] text-white flex items-center justify-center hover:opacity-70 transition-all duration-500"
                     >
-                      <MessageCircle className="w-5 h-5 text-white" />
+                      <MessageCircle className="w-4 h-4" />
                     </button>
                   </div>
 
                   {entry.lastNotifiedAt && (
-                    <p className="text-white/20 text-[10px] mt-2">
-                      Notified:{" "}
-                      {new Date(entry.lastNotifiedAt).toLocaleString()}
+                    <p className="text-[10px] text-[#A3A3A3] mt-2">
+                      Notified: {new Date(entry.lastNotifiedAt).toLocaleString()}
                     </p>
                   )}
                 </div>
@@ -534,21 +499,27 @@ export default function AdminPage() {
         <div className="grid grid-cols-2 gap-4">
           <a
             href="/"
-            className="flex items-center justify-center gap-2 p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors"
+            className="flex items-center justify-center gap-2 p-4 bg-white border border-[#EBE8E2] hover:opacity-70 transition-all duration-500"
           >
-            <span className="text-white/60 text-sm">View Site</span>
-            <ChevronRight className="w-4 h-4 text-white/40" />
+            <span className="text-[11px] uppercase tracking-[0.15em] text-[#7A7A7A]">View Site</span>
+            <ArrowUpRight className="w-3 h-3 text-[#A3A3A3]" />
           </a>
           <button
             onClick={() => {
               setIsAuthenticated(false);
               setAdminKey("");
             }}
-            className="flex items-center justify-center gap-2 p-4 rounded-xl bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 transition-colors"
+            className="flex items-center justify-center gap-2 p-4 bg-white border border-[#EBE8E2] hover:opacity-70 transition-all duration-500"
           >
-            <span className="text-red-400 text-sm">Logout</span>
+            <span className="text-[11px] uppercase tracking-[0.15em] text-[#7A7A7A]">Logout</span>
+            <LogOut className="w-3 h-3 text-[#A3A3A3]" />
           </button>
         </div>
+
+        {/* Footer */}
+        <p className="text-center text-[11px] text-[#A3A3A3] py-4 tracking-wide">
+          IVA Nail Art Admin
+        </p>
       </div>
     </main>
   );

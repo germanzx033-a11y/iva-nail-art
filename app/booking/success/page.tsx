@@ -2,10 +2,10 @@
 
 /**
  * IVA Nail Art - Booking Success Page
- * Silent Luxury Confirmation Experience
+ * EDITORIAL LUXURY - Refined Elegance
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   CheckCircle,
@@ -13,9 +13,7 @@ import {
   Clock,
   MapPin,
   MessageCircle,
-  Sparkles,
   ArrowRight,
-  Download,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -27,15 +25,13 @@ interface BookingDetails {
   amount: number;
 }
 
-export default function BookingSuccessPage() {
+function SuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const [booking, setBooking] = useState<BookingDetails | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // In a real implementation, fetch booking details from the API
-    // For now, show a generic success message
     setLoading(false);
     setBooking({
       serviceName: "Luxury Nail Service",
@@ -44,7 +40,7 @@ export default function BookingSuccessPage() {
         month: "long",
         day: "numeric",
       }),
-      slot: "Morning Glow",
+      slot: "Morning",
       customerName: "Valued Client",
       amount: 30,
     });
@@ -52,123 +48,120 @@ export default function BookingSuccessPage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#121212] flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-[#D4AF37]/20 border-t-[#D4AF37] rounded-full animate-spin" />
+      <main className="min-h-screen bg-[#F9F8F6] flex items-center justify-center">
+        <div className="w-10 h-10 border border-[#EBE8E2] border-t-[#8C7355] rounded-full animate-spin" />
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#121212] flex items-center justify-center p-6">
+    <main className="min-h-screen bg-[#F9F8F6] flex items-center justify-center p-8">
       <div className="w-full max-w-md">
-        {/* Success Animation */}
-        <div className="text-center mb-8">
-          <div className="relative inline-flex">
-            <div className="absolute inset-0 bg-[#D4AF37]/20 rounded-full blur-xl animate-pulse" />
-            <div className="relative w-24 h-24 bg-gradient-to-br from-[#D4AF37] to-[#B8960C] rounded-full flex items-center justify-center animate-golden-glow">
-              <CheckCircle className="w-12 h-12 text-[#121212]" />
-            </div>
+        {/* Success Icon */}
+        <div className="text-center mb-10">
+          <div className="inline-flex w-20 h-20 bg-[#F1EFE9] items-center justify-center">
+            <CheckCircle className="w-10 h-10 text-[#8C7355]" />
           </div>
         </div>
 
         {/* Confirmation Card */}
-        <div className="glass-card p-8 text-center mb-6">
-          <h1 className="font-serif text-3xl text-white mb-2">
+        <div className="bg-white p-10 border border-[#EBE8E2] text-center mb-8">
+          <h1 className="font-serif text-3xl text-[#1A1A1A] mb-3">
             Booking Confirmed
           </h1>
-          <p className="text-white/60 mb-8">
-            Your exclusive appointment is secured
+          <p className="text-[#7A7A7A] text-[14px]">
+            Your appointment is secured
           </p>
 
           {/* Booking Details */}
-          <div className="space-y-4 text-left bg-white/5 rounded-xl p-5">
+          <div className="mt-10 space-y-5 text-left bg-[#F9F8F6] p-6">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/20 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-[#D4AF37]" />
+              <div className="w-10 h-10 bg-[#F1EFE9] flex items-center justify-center">
+                <Calendar className="w-4 h-4 text-[#8C7355]" />
               </div>
               <div>
-                <p className="text-white/40 text-xs uppercase tracking-wider">
-                  Service
-                </p>
-                <p className="text-white font-medium">
-                  {booking?.serviceName}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/20 flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-[#D4AF37]" />
-              </div>
-              <div>
-                <p className="text-white/40 text-xs uppercase tracking-wider">
+                <p className="text-[10px] uppercase tracking-[0.15em] text-[#7A7A7A]">
                   Date
                 </p>
-                <p className="text-white font-medium">{booking?.date}</p>
+                <p className="text-[#1A1A1A] font-serif">{booking?.date}</p>
               </div>
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/20 flex items-center justify-center">
-                <Clock className="w-5 h-5 text-[#D4AF37]" />
+              <div className="w-10 h-10 bg-[#F1EFE9] flex items-center justify-center">
+                <Clock className="w-4 h-4 text-[#8C7355]" />
               </div>
               <div>
-                <p className="text-white/40 text-xs uppercase tracking-wider">
-                  Time Block
+                <p className="text-[10px] uppercase tracking-[0.15em] text-[#7A7A7A]">
+                  Time
                 </p>
-                <p className="text-white font-medium">{booking?.slot}</p>
+                <p className="text-[#1A1A1A] font-serif">{booking?.slot}</p>
               </div>
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-[#D4AF37]/20 flex items-center justify-center">
-                <MapPin className="w-5 h-5 text-[#D4AF37]" />
+              <div className="w-10 h-10 bg-[#F1EFE9] flex items-center justify-center">
+                <MapPin className="w-4 h-4 text-[#8C7355]" />
               </div>
               <div>
-                <p className="text-white/40 text-xs uppercase tracking-wider">
+                <p className="text-[10px] uppercase tracking-[0.15em] text-[#7A7A7A]">
                   Location
                 </p>
-                <p className="text-white font-medium">Bay Ridge, Brooklyn</p>
+                <p className="text-[#1A1A1A] font-serif">Bay Ridge, Brooklyn</p>
               </div>
             </div>
           </div>
 
           {/* Deposit Paid */}
-          <div className="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-            <p className="text-emerald-400 text-sm">
+          <div className="mt-6 p-4 bg-[#F1EFE9] border border-[#8C7355]/20">
+            <p className="text-[#8C7355] text-[13px]">
               Deposit of ${booking?.amount} paid successfully
             </p>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="space-y-3">
+        <div className="space-y-4">
           <a
             href={`https://wa.me/13474735036?text=${encodeURIComponent(
               "Hi! I just confirmed my booking at IVA Nail Art. Looking forward to my appointment!"
             )}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-green-500 text-white font-medium hover:bg-green-600 transition-all"
+            className="flex items-center justify-center gap-3 w-full py-4 bg-[#25D366] text-white text-[11px] font-medium uppercase tracking-[0.2em] hover:opacity-70 transition-all duration-500"
           >
-            <MessageCircle className="w-5 h-5" />
+            <MessageCircle className="w-4 h-4" />
             Chat on WhatsApp
           </a>
 
           <Link
             href="/"
-            className="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-all"
+            className="flex items-center justify-center gap-3 w-full py-4 bg-white border border-[#EBE8E2] text-[#7A7A7A] text-[11px] font-medium uppercase tracking-[0.2em] hover:opacity-70 transition-all duration-500"
           >
             Return Home
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
 
         {/* Footer Note */}
-        <p className="text-center text-white/30 text-xs mt-8">
+        <p className="text-center text-[#A3A3A3] text-[11px] mt-10 tracking-wide">
           A confirmation email has been sent. Please arrive 5 minutes early.
         </p>
       </div>
     </main>
+  );
+}
+
+export default function BookingSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-[#F9F8F6] flex items-center justify-center">
+          <div className="w-10 h-10 border border-[#EBE8E2] border-t-[#8C7355] rounded-full animate-spin" />
+        </main>
+      }
+    >
+      <SuccessContent />
+    </Suspense>
   );
 }
