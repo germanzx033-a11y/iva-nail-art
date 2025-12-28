@@ -48,6 +48,8 @@ const CursorSparkle = dynamic(() => import("./components/CursorSparkle"), { ssr:
 const VIPPopup = dynamic(() => import("./components/VIPPopup"), { ssr: false });
 const ScrollProgress = dynamic(() => import("./components/ScrollProgress"), { ssr: false });
 const TimeGreeting = dynamic(() => import("./components/TimeGreeting"), { ssr: false });
+const LiveActivityIndicator = dynamic(() => import("./components/LiveActivityIndicator"), { ssr: false });
+const VIPTeaser = dynamic(() => import("./components/VIPTeaser"), { ssr: false });
 import ScrollReveal, { StaggerContainer, StaggerItem } from "./components/ScrollReveal";
 import AnimatedCounter from "./components/AnimatedCounter";
 import { HERO_COPY, SCARCITY_CTAS } from "./constants/luxuryRituals";
@@ -969,6 +971,8 @@ I understand a $${CONFIG.deposit} deposit is required.`;
       <VIPPopup />
       <ScrollProgress />
       <TimeGreeting />
+      <LiveActivityIndicator lang={language} />
+      <VIPTeaser lang={language} />
     </main>
   );
 }
