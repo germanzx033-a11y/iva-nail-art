@@ -42,6 +42,12 @@ const IVAStandard = dynamic(() => import("./components/IVAStandard"), { ssr: fal
 const AboutIva = dynamic(() => import("./components/AboutIva"), { ssr: false });
 const SocialProofToast = dynamic(() => import("./components/SocialProofToast"), { ssr: false });
 const EasterEgg = dynamic(() => import("./components/EasterEgg"), { ssr: false });
+const FloatingTestimonials = dynamic(() => import("./components/FloatingTestimonials"), { ssr: false });
+const SpecialOfferBanner = dynamic(() => import("./components/SpecialOfferBanner"), { ssr: false });
+const CursorSparkle = dynamic(() => import("./components/CursorSparkle"), { ssr: false });
+const VIPPopup = dynamic(() => import("./components/VIPPopup"), { ssr: false });
+const ScrollProgress = dynamic(() => import("./components/ScrollProgress"), { ssr: false });
+const TimeGreeting = dynamic(() => import("./components/TimeGreeting"), { ssr: false });
 import ScrollReveal, { StaggerContainer, StaggerItem } from "./components/ScrollReveal";
 import AnimatedCounter from "./components/AnimatedCounter";
 import { HERO_COPY, SCARCITY_CTAS } from "./constants/luxuryRituals";
@@ -957,6 +963,12 @@ I understand a $${CONFIG.deposit} deposit is required.`;
       {/* ==================== SURPRISE FEATURES ==================== */}
       <SocialProofToast />
       <EasterEgg />
+      <FloatingTestimonials lang={language} />
+      <SpecialOfferBanner lang={language} onBook={() => setShowStripeBooking(true)} />
+      <CursorSparkle />
+      <VIPPopup />
+      <ScrollProgress />
+      <TimeGreeting />
     </main>
   );
 }
