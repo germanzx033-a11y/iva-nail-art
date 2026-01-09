@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useId } from "react";
 import {
   Phone,
   MapPin,
@@ -28,7 +28,7 @@ import { GALLERY_IMAGES } from "@/app/data/galleryData";
 // LOGO SVG COMPONENT - Rose Gold con Diamante
 // ============================================================================
 function IVALogo({ className = "h-12" }: { className?: string }) {
-  const [uniqueId] = useState(() => Math.random().toString(36).substr(2, 9));
+  const uniqueId = useId().replace(/:/g, '');
 
   return (
     <svg

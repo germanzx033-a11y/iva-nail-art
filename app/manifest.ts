@@ -4,16 +4,16 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'IVA Nail Art - Luxury Nails Brooklyn',
     short_name: 'IVA Nails',
-    description: 'Exclusive pregnancy-safe nail art studio in Bay Ridge, Brooklyn. Hospital-grade sterilization, 10-Free polishes. Book your luxury appointment today!',
+    description: 'Premier luxury nail art studio in Bay Ridge, Brooklyn. Hospital-grade sterilization, premium 10-Free polishes, award-winning artistry. Book your exclusive appointment today!',
     start_url: '/',
     display: 'standalone',
-    background_color: '#FFFFFF',
+    background_color: '#FDF8F6',
     theme_color: '#4A0404',
     orientation: 'portrait',
     scope: '/',
     lang: 'en',
     dir: 'ltr',
-    categories: ['beauty', 'lifestyle', 'health'],
+    categories: ['beauty', 'lifestyle'],
     icons: [
       {
         src: '/icon-192.png',
