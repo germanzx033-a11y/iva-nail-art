@@ -27,48 +27,53 @@ import { GALLERY_IMAGES } from "@/app/data/galleryData";
 // ============================================================================
 // LOGO SVG COMPONENT - Rose Gold con Diamante
 // ============================================================================
-function IVALogo({ className = "h-12", showText = false }: { className?: string; showText?: boolean }) {
+function IVALogo({ className = "h-12" }: { className?: string }) {
+  const [uniqueId] = useState(() => Math.random().toString(36).substr(2, 9));
+
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      <svg viewBox="0 0 120 50" className="h-full w-auto" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="roseGold" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#E8B4B8" />
-            <stop offset="25%" stopColor="#D4A5A5" />
-            <stop offset="50%" stopColor="#C9A0A0" />
-            <stop offset="75%" stopColor="#B76E79" />
-            <stop offset="100%" stopColor="#A45A52" />
-          </linearGradient>
-          <linearGradient id="diamond" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="30%" stopColor="#F0F0F0" />
-            <stop offset="60%" stopColor="#E8E8E8" />
-            <stop offset="100%" stopColor="#D0D0D0" />
-          </linearGradient>
-          <linearGradient id="shine" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.4" />
-            <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.1" />
-            <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        {/* Letter i */}
-        <path d="M8 18 L8 42 Q8 44 10 44 L14 44 Q16 44 16 42 L16 18 Q16 16 14 16 L10 16 Q8 16 8 18 Z" fill="url(#roseGold)" />
-        <path d="M8 18 L8 42 Q8 44 10 44 L12 44 L12 16 L10 16 Q8 16 8 18 Z" fill="url(#shine)" />
-        {/* Diamond */}
-        <circle cx="12" cy="7" r="6" fill="url(#diamond)" stroke="#C9A0A0" strokeWidth="0.5" />
-        <path d="M12 1 L14 7 L12 13 L10 7 Z" fill="url(#diamond)" opacity="0.8" />
-        <path d="M6 7 L12 5 L18 7 L12 9 Z" fill="url(#diamond)" opacity="0.6" />
-        <circle cx="10" cy="5" r="1" fill="white" opacity="0.9" />
-        {/* Letter V */}
-        <path d="M28 16 Q26 16 25 18 L40 44 Q41 46 43 46 L47 46 Q49 46 50 44 L65 18 Q66 16 64 16 L60 16 Q58 16 57 18 L45 38 L33 18 Q32 16 30 16 Z" fill="url(#roseGold)" />
-        <path d="M28 16 Q26 16 25 18 L40 44 Q41 46 43 46 L45 46 L32 20 Q31 18 29 17 Z" fill="url(#shine)" />
-        {/* Letter A */}
-        <path d="M75 44 Q73 44 72 42 L87 10 Q88 8 90 8 L94 8 Q96 8 97 10 L112 42 Q113 44 111 44 L107 44 Q105 44 104 42 L100 34 L84 34 L80 42 Q79 44 77 44 Z M92 14 L86 28 L98 28 Z" fill="url(#roseGold)" />
-        <path d="M87 10 Q88 8 90 8 L92 8 L78 42 Q77 44 75 44 Q73 44 72 42 L87 10 Z" fill="url(#shine)" />
-        <path d="M92 16 L87 27 L97 27 Z" fill="#FDF8F6" />
-      </svg>
-      {showText && <span className="font-serif text-[#4A0404]">Nail Art</span>}
-    </div>
+    <svg
+      viewBox="0 0 120 50"
+      className={className}
+      style={{ minWidth: '80px' }}
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="IVA Nail Art"
+    >
+      <defs>
+        <linearGradient id={`rg-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#E8B4B8" />
+          <stop offset="25%" stopColor="#D4A5A5" />
+          <stop offset="50%" stopColor="#C9A0A0" />
+          <stop offset="75%" stopColor="#B76E79" />
+          <stop offset="100%" stopColor="#A45A52" />
+        </linearGradient>
+        <linearGradient id={`dm-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="30%" stopColor="#F0F0F0" />
+          <stop offset="60%" stopColor="#E8E8E8" />
+          <stop offset="100%" stopColor="#D0D0D0" />
+        </linearGradient>
+        <linearGradient id={`sh-${uniqueId}`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.4" />
+          <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.1" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      {/* Letter i */}
+      <path d="M8 18 L8 42 Q8 44 10 44 L14 44 Q16 44 16 42 L16 18 Q16 16 14 16 L10 16 Q8 16 8 18 Z" fill={`url(#rg-${uniqueId})`} />
+      <path d="M8 18 L8 42 Q8 44 10 44 L12 44 L12 16 L10 16 Q8 16 8 18 Z" fill={`url(#sh-${uniqueId})`} />
+      {/* Diamond */}
+      <circle cx="12" cy="7" r="6" fill={`url(#dm-${uniqueId})`} stroke="#C9A0A0" strokeWidth="0.5" />
+      <path d="M12 1 L14 7 L12 13 L10 7 Z" fill={`url(#dm-${uniqueId})`} opacity="0.8" />
+      <path d="M6 7 L12 5 L18 7 L12 9 Z" fill={`url(#dm-${uniqueId})`} opacity="0.6" />
+      <circle cx="10" cy="5" r="1" fill="white" opacity="0.9" />
+      {/* Letter V */}
+      <path d="M28 16 Q26 16 25 18 L40 44 Q41 46 43 46 L47 46 Q49 46 50 44 L65 18 Q66 16 64 16 L60 16 Q58 16 57 18 L45 38 L33 18 Q32 16 30 16 Z" fill={`url(#rg-${uniqueId})`} />
+      <path d="M28 16 Q26 16 25 18 L40 44 Q41 46 43 46 L45 46 L32 20 Q31 18 29 17 Z" fill={`url(#sh-${uniqueId})`} />
+      {/* Letter A */}
+      <path d="M75 44 Q73 44 72 42 L87 10 Q88 8 90 8 L94 8 Q96 8 97 10 L112 42 Q113 44 111 44 L107 44 Q105 44 104 42 L100 34 L84 34 L80 42 Q79 44 77 44 Z M92 14 L86 28 L98 28 Z" fill={`url(#rg-${uniqueId})`} />
+      <path d="M87 10 Q88 8 90 8 L92 8 L78 42 Q77 44 75 44 Q73 44 72 42 L87 10 Z" fill={`url(#sh-${uniqueId})`} />
+      <path d="M92 16 L87 27 L97 27 Z" fill="#FDF8F6" />
+    </svg>
   );
 }
 
