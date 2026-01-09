@@ -77,6 +77,240 @@ function IVALogo({ className = "h-12" }: { className?: string }) {
   );
 }
 
+// ============================================================================
+// SOCIAL PROOF NOTIFICATIONS - "María reservó hace 5 min"
+// ============================================================================
+const FAKE_BOOKINGS = [
+  { name: "María G.", service: "Gel Manicure", time: "hace 3 min" },
+  { name: "Sofia R.", service: "Nail Art 3D", time: "hace 7 min" },
+  { name: "Isabella M.", service: "Luxury Pedicure", time: "hace 12 min" },
+  { name: "Valentina L.", service: "Chrome Nails", time: "hace 18 min" },
+  { name: "Camila P.", service: "Full Set Acrylic", time: "hace 25 min" },
+  { name: "Lucia T.", service: "French Manicure", time: "hace 32 min" },
+];
+
+function SocialProofToast({ lang }: { lang: string }) {
+  const [show, setShow] = useState(false);
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const showNotification = () => {
+      setCurrent(Math.floor(Math.random() * FAKE_BOOKINGS.length));
+      setShow(true);
+      setTimeout(() => setShow(false), 4000);
+    };
+
+    // Primera notificación después de 8 segundos
+    const firstTimeout = setTimeout(showNotification, 8000);
+
+    // Repetir cada 25-40 segundos
+    const interval = setInterval(() => {
+      showNotification();
+    }, 25000 + Math.random() * 15000);
+
+    return () => {
+      clearTimeout(firstTimeout);
+      clearInterval(interval);
+    };
+  }, []);
+
+  const booking = FAKE_BOOKINGS[current];
+
+  return (
+    <div
+      className={`fixed bottom-24 left-4 z-50 transition-all duration-500 ${
+        show ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
+      }`}
+    >
+      <div className="bg-white rounded-2xl shadow-2xl border border-[#D4AF37]/20 p-4 max-w-xs">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#B8964D] flex items-center justify-center text-white font-bold text-sm">
+            {booking.name.charAt(0)}
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-medium text-[#4A0404]">
+              {booking.name} {lang === "en" ? "just booked" : "acaba de reservar"}
+            </p>
+            <p className="text-xs text-[#4A0404]/60">{booking.service}</p>
+            <p className="text-xs text-[#D4AF37] mt-1">{booking.time}</p>
+          </div>
+          <span className="text-green-500 text-lg">✓</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// CONFETTI EFFECT - Celebración al reservar
+// ============================================================================
+function ConfettiEffect({ active }: { active: boolean }) {
+  const [particles, setParticles] = useState<Array<{ id: number; x: number; color: string; delay: number }>>([]);
+
+  useEffect(() => {
+    if (active) {
+      const newParticles = Array.from({ length: 50 }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        color: ['#D4AF37', '#E8B4B8', '#B76E79', '#4A0404', '#FFD700'][Math.floor(Math.random() * 5)],
+        delay: Math.random() * 0.5,
+      }));
+      setParticles(newParticles);
+      setTimeout(() => setParticles([]), 3000);
+    }
+  }, [active]);
+
+  if (!active || particles.length === 0) return null;
+
+  return (
+    <div className="fixed inset-0 pointer-events-none z-[100]">
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className="absolute w-3 h-3 animate-confetti"
+          style={{
+            left: `${p.x}%`,
+            top: '-20px',
+            backgroundColor: p.color,
+            animationDelay: `${p.delay}s`,
+            borderRadius: Math.random() > 0.5 ? '50%' : '0',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+// ============================================================================
+// EASTER EGG - Click secreto en logo
+// ============================================================================
+function useEasterEgg() {
+  const [clicks, setClicks] = useState(0);
+  const [showSecret, setShowSecret] = useState(false);
+
+  const handleLogoClick = () => {
+    setClicks(prev => prev + 1);
+    if (clicks + 1 >= 5) {
+      setShowSecret(true);
+      setClicks(0);
+      setTimeout(() => setShowSecret(false), 5000);
+    }
+  };
+
+  return { handleLogoClick, showSecret };
+}
+
+function SecretMessage({ show, lang }: { show: boolean; lang: string }) {
+  if (!show) return null;
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm">
+      <div className="bg-gradient-to-br from-[#D4AF37] to-[#B8964D] p-8 rounded-3xl text-center max-w-sm mx-4 animate-bounce-in">
+        <p className="text-4xl mb-4">💎✨💅</p>
+        <h3 className="text-2xl font-serif text-white mb-2">
+          {lang === "en" ? "You found it!" : "¡Lo encontraste!"}
+        </h3>
+        <p className="text-white/90">
+          {lang === "en"
+            ? "Use code SECRETIVA for 10% off your first visit!"
+            : "¡Usa el código SECRETIVA para 10% de descuento en tu primera visita!"}
+        </p>
+        <p className="text-white/60 text-sm mt-4">
+          {lang === "en" ? "Tell Iva you found the secret!" : "¡Dile a Iva que encontraste el secreto!"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// TESTIMONIALS CAROUSEL
+// ============================================================================
+const TESTIMONIALS = [
+  {
+    name: "Jennifer M.",
+    text: "Best nail artist in Brooklyn! My nails have never looked better. The attention to detail is incredible.",
+    textEs: "¡La mejor artista de uñas en Brooklyn! Mis uñas nunca se han visto mejor. La atención al detalle es increíble.",
+    rating: 5,
+    service: "Gel Manicure + Nail Art",
+  },
+  {
+    name: "Stephanie K.",
+    text: "Finally found someone who understands exactly what I want. Iva is a true artist!",
+    textEs: "Finalmente encontré a alguien que entiende exactamente lo que quiero. ¡Iva es una verdadera artista!",
+    rating: 5,
+    service: "3D Nail Art",
+  },
+  {
+    name: "Amanda R.",
+    text: "The luxury experience I was looking for. Clean, professional, and beautiful results every time.",
+    textEs: "La experiencia de lujo que buscaba. Limpio, profesional y resultados hermosos cada vez.",
+    rating: 5,
+    service: "Luxury Pedicure",
+  },
+];
+
+function TestimonialsSection({ lang }: { lang: string }) {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActive(prev => (prev + 1) % TESTIMONIALS.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section className="py-20 px-4 bg-gradient-to-br from-[#FDF8F6] to-white overflow-hidden">
+      <div className="max-w-4xl mx-auto text-center">
+        <p className="text-sm uppercase tracking-[0.3em] text-[#D4AF37] mb-4">
+          {lang === "en" ? "Client Love" : "Amor de Clientes"}
+        </p>
+        <h2 className="font-serif text-3xl md:text-4xl text-[#4A0404] mb-12">
+          {lang === "en" ? "What They Say" : "Lo Que Dicen"}
+        </h2>
+
+        <div className="relative h-64">
+          {TESTIMONIALS.map((t, i) => (
+            <div
+              key={i}
+              className={`absolute inset-0 transition-all duration-700 ${
+                i === active ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
+              }`}
+            >
+              <div className="bg-white rounded-3xl shadow-xl p-8 border border-[#D4AF37]/10">
+                <div className="flex justify-center gap-1 mb-4">
+                  {[...Array(t.rating)].map((_, j) => (
+                    <span key={j} className="text-[#D4AF37] text-xl">★</span>
+                  ))}
+                </div>
+                <p className="text-lg text-[#4A0404]/80 italic mb-6 leading-relaxed">
+                  &ldquo;{lang === "en" ? t.text : t.textEs}&rdquo;
+                </p>
+                <p className="font-medium text-[#4A0404]">{t.name}</p>
+                <p className="text-sm text-[#D4AF37]">{t.service}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Dots */}
+        <div className="flex justify-center gap-2 mt-6">
+          {TESTIMONIALS.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              className={`w-2 h-2 rounded-full transition-all ${
+                i === active ? "bg-[#D4AF37] w-6" : "bg-[#D4AF37]/30"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // Componente de contador animado PREMIUM
 function AnimatedCounter({ end, duration = 2000, suffix = "", prefix = "" }: {
   end: number;
@@ -379,6 +613,7 @@ export default function Home() {
   const [lang, setLang] = useState<"en" | "es">("en");
   const [selectedCategory, setSelectedCategory] = useState("manicure");
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const [bookingData, setBookingData] = useState<BookingState>({
     step: 1,
     service: null,
@@ -392,6 +627,9 @@ export default function Home() {
   });
 
   const t = translations[lang];
+
+  // Easter Egg Hook
+  const { handleLogoClick, showSecret } = useEasterEgg();
 
   // Estado para animaciones de scroll reveal
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
@@ -725,6 +963,10 @@ ${bookingData.email ? `📧 *Email:* ${bookingData.email}` : ""}
 Entiendo que se requiere depósito de $${CONFIG.deposit}.
 ¡Por favor confirma disponibilidad! 💕`;
 
+      // Trigger confetti celebration!
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 3000);
+
       window.open(
         `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`,
         "_blank"
@@ -763,6 +1005,11 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
 
   return (
     <main className="min-h-screen bg-[#FDF8F6] relative overflow-x-hidden">
+      {/* ============ SURPRISE FEATURES ============ */}
+      <SocialProofToast lang={lang} />
+      <ConfettiEffect active={showConfetti} />
+      <SecretMessage show={showSecret} lang={lang} />
+
       {/* Spotlight mágico que sigue el mouse */}
       <div
         className="fixed pointer-events-none z-40 transition-opacity duration-300"
@@ -963,9 +1210,9 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       {/* ================================================================== */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-[#FDF8F6]/90 backdrop-blur-md border-b border-[#4A0404]/10">
         <nav className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <a href="#" className="group">
+          <button onClick={handleLogoClick} className="group cursor-pointer">
             <IVALogo className="h-10 md:h-12 transition-transform group-hover:scale-105" />
-          </a>
+          </button>
 
           <div className="flex items-center gap-6">
             <div className="hidden md:flex items-center gap-6 text-sm text-[#4A0404]/70">
@@ -1493,6 +1740,11 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
           </a>
         </div>
       </section>
+
+      {/* ================================================================== */}
+      {/* TESTIMONIALS SECTION */}
+      {/* ================================================================== */}
+      <TestimonialsSection lang={lang} />
 
       {/* ================================================================== */}
       {/* FOOTER PREMIUM */}
