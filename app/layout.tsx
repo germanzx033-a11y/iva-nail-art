@@ -6,7 +6,7 @@ import PWAProvider from "./components/PWAProvider";
 /**
  * IVA Nail Art - LUXURY EDITORIAL
  * Elegant, Sophisticated Design
- * Bay Ridge, Brooklyn - Pregnancy-Safe Boutique
+ * Bay Ridge, Brooklyn - Premium Nail Art Studio
  */
 
 // Inter - Clean Sans-Serif for body
@@ -32,26 +32,26 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   metadataBase: new URL("https://iva-nail-art.vercel.app"),
   title: {
-    default: "IVA Nail Art | Non-Toxic Nail Salon Brooklyn | Pregnancy-Safe Luxury Manicure",
-    template: "%s | IVA Nail Art - The Purest Protocol",
+    default: "IVA Nail Art | Luxury Nail Salon Brooklyn | Premium Nail Art Studio",
+    template: "%s | IVA Nail Art - Luxury Nails Brooklyn",
   },
   description:
-    "The Purest Protocol in Brooklyn. Clinical-grade luxury nail sanctuary with hospital-grade sterilization, HEPA air filtration, and 10-Free vegan polishes. Safe for miracles, essential for you. Only 2 private appointments daily in Bay Ridge 11209.",
+    "Premier luxury nail art studio in Bay Ridge, Brooklyn. Award-winning artistry, hospital-grade sterilization, HEPA air filtration, and premium 10-Free polishes. Private studio experience. Book your exclusive appointment today.",
   keywords: [
-    "non-toxic nail Brooklyn",
-    "pregnancy-safe luxury manicure",
-    "non-toxic nail salon NYC",
-    "pregnancy safe nails Brooklyn",
+    "luxury nail salon Brooklyn",
+    "premium nail art NYC",
+    "nail artist Brooklyn",
     "10-free nail salon",
     "HEPA filtered nail studio",
     "hospital-grade nail salon",
-    "vegan nail salon Brooklyn",
     "luxury private nail studio",
     "Bay Ridge nail artist",
     "11209 nail salon",
-    "clean beauty nails",
-    "breathable nail polish",
-    "maternity safe manicure",
+    "nail art designs",
+    "gel manicure Brooklyn",
+    "acrylic nails Brooklyn",
+    "chrome nails NYC",
+    "3D nail art",
   ],
   authors: [{ name: "IVA Nail Art" }],
   creator: "IVA Nail Art",
@@ -60,21 +60,21 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://iva-nail-art.vercel.app",
     siteName: "IVA Nail Art",
-    title: "IVA Nail Art | The Purest Protocol - Non-Toxic Luxury Nails Brooklyn",
-    description: "Safe for miracles, essential for you. Clinical-grade luxury nail sanctuary with hospital-grade sterilization and HEPA filtration. Only 2 private appointments daily.",
+    title: "IVA Nail Art | Luxury Nail Art Studio Brooklyn",
+    description: "Premier luxury nail art studio in Bay Ridge, Brooklyn. Award-winning artistry, hospital-grade sterilization, and premium 10-Free polishes. Book your exclusive appointment.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "IVA Nail Art - Non-Toxic Pregnancy-Safe Luxury Manicure Brooklyn",
+        alt: "IVA Nail Art - Luxury Nail Art Studio Brooklyn",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "IVA Nail Art | Non-Toxic Nail Salon Brooklyn",
-    description: "The Purest Protocol. Safe for miracles, essential for you. Only 2 private appointments daily.",
+    title: "IVA Nail Art | Luxury Nail Salon Brooklyn",
+    description: "Premier luxury nail art studio in Bay Ridge. Award-winning artistry. Book your exclusive appointment.",
     images: ["/og-image.jpg"],
   },
   robots: {

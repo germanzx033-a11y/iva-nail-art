@@ -2031,3 +2031,28 @@ button {
   animation: bounce-in 0.6s ease-out forwards;
 }
 
+
+/* =============================================
+   SUBTLE SHIMMER EFFECT
+   ============================================= */
+@keyframes subtle-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.shimmer-btn {
+  background-size: 200% auto;
+  animation: subtle-shimmer 3s linear infinite;
+}
+
+/* =============================================
+   SMOOTH SCROLL
+   ============================================= */
+html {
+  scroll-behavior: smooth;
+}
+

@@ -23,6 +23,11 @@ import { formatDate, getMinBookingDate, isValidEmail, isValidPhone } from "@/lib
 import AboutIva from "@/app/components/AboutIva";
 import GallerySection from "@/app/components/GallerySection";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
+import FloatingWhatsApp from "@/app/components/FloatingWhatsApp";
+import SocialProofNotification from "@/app/components/SocialProofNotification";
+import InstallAppPrompt from "@/app/components/InstallAppPrompt";
+import ServiceWorkerRegistration from "@/app/components/ServiceWorkerRegistration";
+import BackToTop from "@/app/components/BackToTop";
 
 // ============================================================================
 // LOGO SVG COMPONENT - Rose Gold con Diamante
@@ -78,7 +83,58 @@ function IVALogo({ className = "h-12" }: { className?: string }) {
 }
 
 // ============================================================================
-// SOCIAL PROOF NOTIFICATIONS - "María reservó hace 5 min"
+// TIME-BASED GREETING - Saludo elegante según hora
+// ============================================================================
+function useTimeGreeting(lang: string) {
+  const [greeting, setGreeting] = useState("");
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) {
+      setGreeting(lang === "en" ? "Good morning" : "Buenos días");
+    } else if (hour >= 12 && hour < 18) {
+      setGreeting(lang === "en" ? "Good afternoon" : "Buenas tardes");
+    } else {
+      setGreeting(lang === "en" ? "Good evening" : "Buenas noches");
+    }
+  }, [lang]);
+
+  return greeting;
+}
+
+// ============================================================================
+// ACTIVE SECTION TRACKER - Para navegación inteligente
+// ============================================================================
+function useActiveSection() {
+  const [activeSection, setActiveSection] = useState("");
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ["services", "gallery"];
+      const scrollPosition = window.scrollY + 200;
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(section);
+            return;
+          }
+        }
+      }
+      setActiveSection("");
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return activeSection;
+}
+
+// ============================================================================
+// SOCIAL PROOF NOTIFICATIONS - Más sutil, menos frecuente
 // ============================================================================
 const FAKE_BOOKINGS = [
   { name: "María G.", service: "Gel Manicure", time: "hace 3 min" },
@@ -100,13 +156,13 @@ function SocialProofToast({ lang }: { lang: string }) {
       setTimeout(() => setShow(false), 4000);
     };
 
-    // Primera notificación después de 8 segundos
-    const firstTimeout = setTimeout(showNotification, 8000);
+    // Primera notificación después de 15 segundos (más sutil)
+    const firstTimeout = setTimeout(showNotification, 15000);
 
-    // Repetir cada 25-40 segundos
+    // Repetir cada 45-60 segundos (menos intrusivo)
     const interval = setInterval(() => {
       showNotification();
-    }, 25000 + Math.random() * 15000);
+    }, 45000 + Math.random() * 15000);
 
     return () => {
       clearTimeout(firstTimeout);
@@ -628,8 +684,10 @@ export default function Home() {
 
   const t = translations[lang];
 
-  // Easter Egg Hook
+  // Hooks elegantes
   const { handleLogoClick, showSecret } = useEasterEgg();
+  const greeting = useTimeGreeting(lang);
+  const activeSection = useActiveSection();
 
   // Estado para animaciones de scroll reveal
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
@@ -1215,12 +1273,32 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
           </button>
 
           <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-6 text-sm text-[#4A0404]/70">
-              <a href="#services" className="hover:text-[#4A0404] transition-colors">
+            <div className="hidden md:flex items-center gap-6 text-sm">
+              <a
+                href="#services"
+                className={`transition-all duration-300 ${
+                  activeSection === "services"
+                    ? "text-[#D4AF37] font-medium"
+                    : "text-[#4A0404]/70 hover:text-[#4A0404]"
+                }`}
+              >
                 {t.nav.services}
+                {activeSection === "services" && (
+                  <span className="block h-0.5 bg-[#D4AF37] mt-1 rounded-full" />
+                )}
               </a>
-              <a href="#gallery" className="hover:text-[#4A0404] transition-colors">
+              <a
+                href="#gallery"
+                className={`transition-all duration-300 ${
+                  activeSection === "gallery"
+                    ? "text-[#D4AF37] font-medium"
+                    : "text-[#4A0404]/70 hover:text-[#4A0404]"
+                }`}
+              >
                 {t.nav.gallery}
+                {activeSection === "gallery" && (
+                  <span className="block h-0.5 bg-[#D4AF37] mt-1 rounded-full" />
+                )}
               </a>
             </div>
 
@@ -1279,6 +1357,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
         {/* Content */}
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
           <p className="text-[#D4AF37] tracking-[0.3em] text-sm mb-4 font-medium">
+            {greeting && <span className="opacity-80">{greeting}, </span>}
             {t.hero.welcome}
           </p>
           <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight animate-slide-in-up">
@@ -2159,26 +2238,13 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       )}
 
       {/* ================================================================== */}
-      {/* FLOATING WHATSAPP BUTTON */}
+      {/* PWA & ENGAGEMENT COMPONENTS */}
       {/* ================================================================== */}
-      <a
-        href={`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(
-          lang === "en"
-            ? "Hi! I'd like information about your nail services 💅"
-            : "¡Hola! Me gustaría información sobre tus servicios de uñas 💅"
-        )}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:bg-[#128C7E] hover:scale-110 transition-all z-40 group"
-        aria-label="Contact via WhatsApp"
-      >
-        <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-        </svg>
-        <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-[#4A0404] text-white text-sm px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
-          {t.floatingBtn}
-        </span>
-      </a>
+      <ServiceWorkerRegistration />
+      <FloatingWhatsApp lang={lang} phoneNumber={CONFIG.whatsappNumber} />
+      <SocialProofNotification lang={lang} />
+      <InstallAppPrompt lang={lang} />
+      <BackToTop />
     </main>
   );
 }
