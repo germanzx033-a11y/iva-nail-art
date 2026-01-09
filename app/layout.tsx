@@ -91,12 +91,12 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": ["NailSalon", "LocalBusiness", "HealthAndBeautyBusiness"],
   name: "IVA Nail Art",
-  description: "The Purest Protocol in Brooklyn. Clinical-grade luxury nail sanctuary with hospital-grade sterilization, HEPA air filtration, and 10-Free vegan polishes. Pregnancy-safe, non-toxic nail care. Only 2 private appointments daily.",
+  description: "Premier luxury nail art studio in Bay Ridge, Brooklyn. Award-winning artistry, hospital-grade sterilization, HEPA air filtration, and premium 10-Free polishes. Private studio experience.",
   url: "https://iva-nail-art.vercel.app",
   telephone: "+1-929-625-7273",
   priceRange: "$$$",
-  slogan: "Safe for Miracles. Essential for You.",
-  knowsAbout: ["Pregnancy-safe nail care", "Non-toxic manicure", "10-Free polishes", "HEPA air filtration", "Hospital-grade sterilization"],
+  slogan: "Luxury Nail Art. Personalized Experience.",
+  knowsAbout: ["Luxury nail art", "Premium manicure", "10-Free polishes", "HEPA air filtration", "Hospital-grade sterilization", "Gel extensions", "Chrome nails", "3D nail art"],
   address: {
     "@type": "PostalAddress",
     addressLocality: "Brooklyn",
@@ -126,27 +126,31 @@ const jsonLd = {
   },
   hasOfferCatalog: {
     "@type": "OfferCatalog",
-    name: "Luxury Health Rituals",
+    name: "Luxury Nail Art Services",
     itemListElement: [
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "The Purest Ritual",
-          description: "Signature non-toxic manicure with 10-Free breathable polish",
+          name: "Signature Luxury Manicure",
+          description: "Premium manicure with 10-Free breathable polish and artistic designs",
         },
-        price: "105",
-        priceCurrency: "USD",
       },
       {
         "@type": "Offer",
         itemOffered: {
           "@type": "Service",
-          name: "The Maternity Sanctuary Protocol",
-          description: "Pregnancy-safe luxury treatment with lymphatic drainage",
+          name: "Ultimate Relaxation Ritual",
+          description: "Full pampering experience with premium products and massage",
         },
-        price: "155",
-        priceCurrency: "USD",
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "3D Nail Art Design",
+          description: "Custom artistic nail designs with premium embellishments",
+        },
       },
     ],
   },
@@ -165,7 +169,20 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <meta name="theme-color" content="#FFFFFF" />
+        <meta name="theme-color" content="#4A0404" />
+
+        {/* Apple PWA Meta Tags */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="IVA Nails" />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
+
+        {/* Apple Splash Screens */}
+        <link rel="apple-touch-startup-image" href="/portada.jpg" />
+
+        {/* Viewport for PWA */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
