@@ -146,7 +146,7 @@ export default function SpecialOfferBanner({ lang = "en", onBook }: SpecialOffer
               <h3 className="font-serif text-2xl text-white font-semibold mb-1">
                 {text.title}
               </h3>
-              <p className="text-white/90 text-sm mb-2">{text.subtitle}</p>
+              <p className="text-white text-sm mb-2">{text.subtitle}</p>
 
               {/* Code */}
               <div className="inline-block px-3 py-1.5 bg-white/10 backdrop-blur-sm rounded-lg mb-4">
@@ -157,17 +157,17 @@ export default function SpecialOfferBanner({ lang = "en", onBook }: SpecialOffer
 
               {/* Countdown */}
               <div className="flex items-center gap-2 mb-4">
-                <Clock className="w-4 h-4 text-white/70" />
-                <span className="text-white/70 text-xs">{text.expires}:</span>
+                <Clock className="w-4 h-4 text-white" />
+                <span className="text-white text-xs">{text.expires}:</span>
                 <div className="flex items-center gap-1">
                   <span className="px-2 py-1 bg-white/20 rounded text-white text-sm font-bold font-mono">
                     {formatNumber(timeLeft.hours)}
                   </span>
-                  <span className="text-white/70">:</span>
+                  <span className="text-white">:</span>
                   <span className="px-2 py-1 bg-white/20 rounded text-white text-sm font-bold font-mono">
                     {formatNumber(timeLeft.minutes)}
                   </span>
-                  <span className="text-white/70">:</span>
+                  <span className="text-white">:</span>
                   <span className="px-2 py-1 bg-white/20 rounded text-white text-sm font-bold font-mono">
                     {formatNumber(timeLeft.seconds)}
                   </span>

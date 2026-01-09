@@ -80,7 +80,7 @@ export default function VIPPopup() {
               {/* Close button */}
               <button
                 onClick={handleDismiss}
-                className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors z-10"
+                className="absolute top-4 right-4 text-white hover:text-white transition-colors z-10"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -101,7 +101,7 @@ export default function VIPPopup() {
                 <h3 className="text-2xl font-light text-white mb-2">
                   VIP <span className="text-[#D4AF37]">Exclusive</span> Offer
                 </h3>
-                <p className="text-white/60 text-sm mb-6">
+                <p className="text-white text-sm mb-6">
                   First-time visitor special discount
                 </p>
 
@@ -110,9 +110,9 @@ export default function VIPPopup() {
                   <div className="flex items-center justify-center gap-2 mb-3">
                     <Sparkles className="w-5 h-5 text-[#D4AF37]" />
                     <span className="text-5xl font-light text-white">15%</span>
-                    <span className="text-xl text-white/60">OFF</span>
+                    <span className="text-xl text-white">OFF</span>
                   </div>
-                  <p className="text-white/80 text-sm">Your first appointment</p>
+                  <p className="text-white text-sm">Your first appointment</p>
 
                   {/* Code */}
                   <div className="mt-4 bg-[#D4AF37]/10 border border-[#D4AF37]/30 rounded-lg py-3 px-6 inline-block">
@@ -121,7 +121,7 @@ export default function VIPPopup() {
                 </div>
 
                 {/* Timer */}
-                <div className="flex items-center justify-center gap-2 text-white/60 mb-6">
+                <div className="flex items-center justify-center gap-2 text-white mb-6">
                   <Clock className="w-4 h-4" />
                   <span className="text-sm">
                     Offer expires in{" "}
@@ -138,7 +138,7 @@ export default function VIPPopup() {
                   <Sparkles className="w-4 h-4" />
                 </button>
 
-                <p className="text-white/40 text-xs mt-4">
+                <p className="text-white text-xs mt-4">
                   Valid for new clients only. Cannot be combined with other offers.
                 </p>
               </div>

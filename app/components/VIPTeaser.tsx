@@ -130,7 +130,7 @@ export default function VIPTeaser({ lang = "en" }: VIPTeaserProps) {
                   onClick={handleClose}
                   className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
                 >
-                  <X className="w-4 h-4 text-white/80" />
+                  <X className="w-4 h-4 text-white" />
                 </button>
 
                 {/* Crown Icon */}
@@ -154,14 +154,14 @@ export default function VIPTeaser({ lang = "en" }: VIPTeaserProps) {
                 <h2 className="text-3xl font-serif font-bold text-white text-center mb-2">
                   {text.title}
                 </h2>
-                <p className="text-white/60 text-center mb-6">{text.subtitle}</p>
+                <p className="text-white text-center mb-6">{text.subtitle}</p>
 
                 {/* Price */}
                 <div className="text-center mb-6">
                   <span className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">
                     {text.price}
                   </span>
-                  <span className="text-white/50 text-lg">{text.period}</span>
+                  <span className="text-white text-lg">{text.period}</span>
                 </div>
 
                 {/* Benefits */}
@@ -177,7 +177,7 @@ export default function VIPTeaser({ lang = "en" }: VIPTeaserProps) {
                       <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#B76E79]/30 to-[#722F37]/30 flex items-center justify-center">
                         <benefit.icon className="w-4 h-4 text-[#E8B4B8]" />
                       </div>
-                      <span className="text-white/80 text-sm flex-1">
+                      <span className="text-white text-sm flex-1">
                         {lang === "en" ? benefit.en : benefit.es}
                       </span>
                       <Check className="w-4 h-4 text-emerald-400" />
@@ -197,7 +197,7 @@ export default function VIPTeaser({ lang = "en" }: VIPTeaserProps) {
 
                 <button
                   onClick={handleClose}
-                  className="w-full py-3 text-white/60 hover:text-white text-sm font-medium flex items-center justify-center gap-1 transition-colors"
+                  className="w-full py-3 text-white hover:text-white text-sm font-medium flex items-center justify-center gap-1 transition-colors"
                 >
                   {text.secondary}
                   <ArrowRight className="w-4 h-4" />

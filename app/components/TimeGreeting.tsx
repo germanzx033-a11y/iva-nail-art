@@ -127,7 +127,7 @@ export default function TimeGreeting() {
                 <p className="text-white font-medium text-lg">
                   {currentGreeting[language]}
                 </p>
-                <p className="text-white/80 text-sm">
+                <p className="text-white text-sm">
                   {currentGreeting.message[language]}
                 </p>
               </div>

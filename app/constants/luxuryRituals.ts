@@ -1,14 +1,14 @@
 // =============================================
 // IVA NAIL ART - LUXURY RITUALS & NEUROCOPY
 // Modelo 360 - Jürgen Klaric Strategy
-// Brooklyn's Pregnancy-Safe Sanctuary
+// Brooklyn's Premium Private Nail Studio
 // =============================================
 
 // =============================================
 // BUSINESS CONFIG - SCARCITY MODEL
 // =============================================
 export const LUXURY_CONFIG = {
-  dailySlots: 2, // Only 2 clients per day for maximum purity
+  dailySlots: 2, // Only 2 clients per day for maximum attention
   zipCode: "11209",
   neighborhood: "Bay Ridge, Brooklyn",
   averageTicket: 145,
@@ -19,14 +19,14 @@ export const LUXURY_CONFIG = {
 // SEO KEYWORDS
 // =============================================
 export const SEO_KEYWORDS = [
-  "non-toxic nail Brooklyn",
-  "pregnancy-safe luxury manicure",
+  "luxury nail salon Brooklyn",
+  "private nail studio NYC",
   "10-free nail salon NYC",
   "HEPA filtered nail studio",
-  "hospital-grade nail salon Brooklyn",
-  "pregnancy nail care Bay Ridge",
+  "premium nail art Brooklyn",
+  "exclusive nail care Bay Ridge",
   "luxury private nail studio NYC",
-  "vegan nail salon Brooklyn",
+  "best nail artist Brooklyn",
 ];
 
 // =============================================
@@ -34,26 +34,26 @@ export const SEO_KEYWORDS = [
 // =============================================
 export const HERO_COPY = {
   en: {
-    badge: "The Pregnancy Standard",
-    tagline: "Safe for Miracles. Essential for You.",
-    headline: "The Purest Protocol",
+    badge: "The Luxury Standard",
+    tagline: "Your Private Sanctuary. Your Moment.",
+    headline: "The Purest Experience",
     subheadline: "in Brooklyn",
-    description: "Where clinical-grade safety meets artistry. Our pregnancy-safe sanctuary offers 10-Free formulas, hospital-grade sterilization, and HEPA-filtered air. If it's safe for a miracle in formation, it's the definitive luxury for every woman.",
-    ctaPrimary: "Reserve Your Private Sanctuary",
+    description: "Where clinical-grade cleanliness meets true artistry. Our exclusive private studio offers 10-Free formulas, hospital-grade sterilization, and HEPA-filtered air. Because you deserve an experience as refined as you are.",
+    ctaPrimary: "Reserve Your Private Session",
     ctaSecondary: "Discover Our Rituals",
     scarcityBadge: "Only 2 Private Appointments Daily",
-    trustLine: "100% Non-Toxic | HEPA Filtration | Medical-Grade Sterilization",
+    trustLine: "100% Clean | HEPA Filtration | Medical-Grade Sterilization",
   },
   es: {
-    badge: "El Estándar de Embarazo",
-    tagline: "Seguro para Milagros. Esencial para Ti.",
-    headline: "El Protocolo Más Puro",
+    badge: "El Estándar de Lujo",
+    tagline: "Tu Santuario Privado. Tu Momento.",
+    headline: "La Experiencia Más Pura",
     subheadline: "en Brooklyn",
-    description: "Donde la seguridad clínica se encuentra con el arte. Nuestro santuario seguro para embarazadas ofrece fórmulas 10-Free, esterilización hospitalaria y aire filtrado HEPA. Si es seguro para un milagro en formación, es el lujo definitivo para toda mujer.",
-    ctaPrimary: "Reserva Tu Santuario Privado",
+    description: "Donde la limpieza clínica se encuentra con el verdadero arte. Nuestro estudio privado exclusivo ofrece fórmulas 10-Free, esterilización hospitalaria y aire filtrado HEPA. Porque mereces una experiencia tan refinada como tú.",
+    ctaPrimary: "Reserva Tu Sesión Privada",
     ctaSecondary: "Descubre Nuestros Rituales",
     scarcityBadge: "Solo 2 Citas Privadas Diarias",
-    trustLine: "100% No Tóxico | Filtración HEPA | Esterilización Médica",
+    trustLine: "100% Limpio | Filtración HEPA | Esterilización Médica",
   },
 };
 
@@ -63,36 +63,36 @@ export const HERO_COPY = {
 export const ABOUT_COPY = {
   en: {
     title: "Meet Iva",
-    subtitle: "A Mother's Mission to Protect",
-    story: `As a mother to baby Ezra, I understand that some things are non-negotiable: the air we breathe, the products that touch our skin, and the environments where we let our guard down.
+    subtitle: "An Artist's Passion for Perfection",
+    story: `As a mother to my precious Ezra, I understand that quality and care are non-negotiable. The environments we choose, the products that touch our skin, and the experiences that become part of our lives—they all matter.
 
-After my own health journey with post-bariatric care and conscious aesthetics, I discovered that most nail salons expose women to over 20 toxic chemicals without their knowledge. Pregnant or not, no woman deserves that.
+After studying at a professional nail art school and obtaining my license, I realized something was missing: a space where every woman could feel truly special, not rushed. Where artistry meets clinical cleanliness. Where you're not just another appointment.
 
-IVA Nail Art was born from a simple belief: if the most vulnerable life—a baby in formation—can be safe here, then every woman can experience true luxury without compromise.
+IVA Nail Art was born from this vision: a private sanctuary where you receive my complete attention, surrounded by certified, high-quality products and the cleanest environment possible.
 
-I don't just paint nails. I protect lives.`,
-    signature: "— Iva, Founder & Nail Health Artist",
+I don't just create beautiful nails. I create unforgettable experiences.`,
+    signature: "— Iva, Founder & Nail Art Master",
     badges: [
-      "Conscious Mother",
-      "Post-Bariatric Health Advocate",
-      "10+ Years Nail Artistry",
+      "Dedicated Mother",
+      "Certified Nail Artist",
+      "3 Years of Experience",
     ],
   },
   es: {
     title: "Conoce a Iva",
-    subtitle: "La Misión de una Madre para Proteger",
-    story: `Como madre de mi bebé Ezra, entiendo que algunas cosas no son negociables: el aire que respiramos, los productos que tocan nuestra piel y los ambientes donde bajamos la guardia.
+    subtitle: "La Pasión de una Artista por la Perfección",
+    story: `Como madre de mi precioso Ezra, entiendo que la calidad y el cuidado no son negociables. Los ambientes que elegimos, los productos que tocan nuestra piel y las experiencias que se vuelven parte de nuestra vida—todo importa.
 
-Después de mi propio viaje de salud con cuidado post-bariátrico y estética consciente, descubrí que la mayoría de los salones de uñas exponen a las mujeres a más de 20 químicos tóxicos sin su conocimiento. Embarazadas o no, ninguna mujer merece eso.
+Después de estudiar en una escuela profesional de nail art y obtener mi licencia, me di cuenta de que algo faltaba: un espacio donde cada mujer pudiera sentirse verdaderamente especial, sin prisas. Donde el arte se encuentra con la limpieza clínica. Donde no eres solo otra cita más.
 
-IVA Nail Art nació de una creencia simple: si la vida más vulnerable—un bebé en formación—puede estar segura aquí, entonces toda mujer puede experimentar el verdadero lujo sin compromisos.
+IVA Nail Art nació de esta visión: un santuario privado donde recibes mi atención completa, rodeada de productos certificados y de mejor calidad, y el ambiente más limpio posible.
 
-No solo pinto uñas. Protejo vidas.`,
-    signature: "— Iva, Fundadora y Artista de Salud de Uñas",
+No solo creo uñas hermosas. Creo experiencias inolvidables.`,
+    signature: "— Iva, Fundadora y Maestra del Nail Art",
     badges: [
-      "Madre Consciente",
-      "Defensora de Salud Post-Bariátrica",
-      "10+ Años de Nail Art",
+      "Madre Dedicada",
+      "Artista Certificada",
+      "3 Años de Experiencia",
     ],
   },
 };
@@ -103,8 +103,8 @@ No solo pinto uñas. Protejo vidas.`,
 export const IVA_STANDARD = {
   en: {
     title: "The IVA Standard",
-    subtitle: "Clinical-Grade Luxury. Biological Benefits.",
-    intro: "Every element of your experience is engineered for your cellular wellbeing. This isn't just a manicure—it's a wellness protocol.",
+    subtitle: "Clinical-Grade Luxury. Uncompromised Quality.",
+    intro: "Every element of your experience is designed for your wellbeing and satisfaction. This isn't just a manicure—it's a premium ritual.",
     features: [
       {
         icon: "Shield",
@@ -120,23 +120,23 @@ export const IVA_STANDARD = {
       },
       {
         icon: "Leaf",
-        title: "10-Free Vegan Formulas",
-        description: "Our polishes are free from formaldehyde, toluene, DBP, formaldehyde resin, camphor, TPHP, xylene, ethyl tosylamide, parabens, and fragrances.",
-        benefit: "Hormonal safety and reduced chemical absorption",
+        title: "Premium 10-Free Formulas",
+        description: "Our polishes are free from the 10 most harmful chemicals. Only the finest, gentlest formulas touch your nails.",
+        benefit: "Long-lasting beauty without compromise",
       },
       {
         icon: "Heart",
-        title: "Pregnancy-Safe Certification",
-        description: "Every product, tool, and process is certified safe for expecting mothers. If it's safe for a baby in formation, it's safe for you.",
-        benefit: "Peace of mind backed by clinical standards",
+        title: "Private Studio Experience",
+        description: "You are my only client during your appointment. No distractions, no rushing, no sharing space. Complete, undivided attention.",
+        benefit: "A truly personalized luxury experience",
       },
     ],
-    cta: "Your biology deserves this level of care",
+    cta: "You deserve this level of care",
   },
   es: {
     title: "El Estándar IVA",
-    subtitle: "Lujo de Grado Clínico. Beneficios Biológicos.",
-    intro: "Cada elemento de tu experiencia está diseñado para tu bienestar celular. Esto no es solo una manicura—es un protocolo de bienestar.",
+    subtitle: "Lujo Clínico. Calidad Sin Compromisos.",
+    intro: "Cada elemento de tu experiencia está diseñado para tu bienestar y satisfacción. Esto no es solo una manicura—es un ritual premium.",
     features: [
       {
         icon: "Shield",
@@ -152,18 +152,18 @@ export const IVA_STANDARD = {
       },
       {
         icon: "Leaf",
-        title: "Fórmulas Veganas 10-Free",
-        description: "Nuestros esmaltes están libres de formaldehído, tolueno, DBP, resina de formaldehído, alcanfor, TPHP, xileno, etil tosilamida, parabenos y fragancias.",
-        benefit: "Seguridad hormonal y absorción química reducida",
+        title: "Fórmulas Premium 10-Free",
+        description: "Nuestros esmaltes están libres de los 10 químicos más dañinos. Solo las fórmulas más finas y suaves tocan tus uñas.",
+        benefit: "Belleza duradera sin compromisos",
       },
       {
         icon: "Heart",
-        title: "Certificación Segura para Embarazo",
-        description: "Cada producto, herramienta y proceso está certificado como seguro para futuras madres. Si es seguro para un bebé en formación, es seguro para ti.",
-        benefit: "Tranquilidad respaldada por estándares clínicos",
+        title: "Experiencia de Estudio Privado",
+        description: "Eres mi única clienta durante tu cita. Sin distracciones, sin prisas, sin compartir espacio. Atención completa y dedicada.",
+        benefit: "Una experiencia de lujo verdaderamente personalizada",
       },
     ],
-    cta: "Tu biología merece este nivel de cuidado",
+    cta: "Mereces este nivel de cuidado",
   },
 };
 
@@ -185,7 +185,7 @@ export interface LuxuryRitual {
   includesEs: string[];
   recommended: string[];
   recommendedEs: string[];
-  category: "signature" | "maternity" | "wellness";
+  category: "signature" | "wellness";
   featured?: boolean;
   trends?: string[]; // 2025 nail trends
 }
@@ -225,48 +225,48 @@ export const LUXURY_RITUALS: LuxuryRitual[] = [
     trends: ["Soap Nails", "Milky Sheer Tones", "Clean Girl Aesthetic"],
   },
   {
-    id: "maternity-sanctuary",
-    name: "The Maternity Sanctuary Protocol",
-    nameEs: "Protocolo Santuario de Maternidad",
-    tagline: "For Miracles in Formation",
-    taglineEs: "Para Milagros en Formación",
-    description: "The ultimate safe haven for expecting mothers. Includes gentle lymphatic drainage to reduce pregnancy swelling, certified pregnancy-safe products, and extended rest periods.",
-    descriptionEs: "El refugio definitivo para futuras madres. Incluye drenaje linfático suave para reducir la hinchazón del embarazo, productos certificados seguros y períodos de descanso extendidos.",
+    id: "ultimate-relaxation",
+    name: "The Ultimate Relaxation Ritual",
+    nameEs: "El Ritual de Relajación Total",
+    tagline: "Deep Wellness Experience",
+    taglineEs: "Experiencia de Bienestar Profundo",
+    description: "The ultimate escape from everyday stress. Includes gentle lymphatic massage to reduce tension, aromatherapy, hot towel therapy, and extended rest periods for complete rejuvenation.",
+    descriptionEs: "El escape definitivo del estrés diario. Incluye masaje linfático suave para reducir tensión, aromaterapia, terapia con toallas calientes y períodos de descanso extendidos para rejuvenecimiento total.",
     priceMin: 155,
     priceMax: 170,
     duration: "90-105 min",
     includes: [
       "All Purest Ritual features",
-      "Gentle lymphatic drainage massage (20 min)",
-      "Pregnancy-certified products only",
+      "Relaxing lymphatic massage (20 min)",
+      "Hot towel hand & arm therapy",
       "Cooling foot relief treatment",
-      "Elevated positioning for comfort",
-      "Extended rest breaks as needed",
+      "Luxury reclining position",
+      "Extended rest breaks",
       "Complimentary herbal tea service",
     ],
     includesEs: [
       "Todo lo del Ritual Más Puro",
-      "Masaje de drenaje linfático suave (20 min)",
-      "Solo productos certificados para embarazo",
+      "Masaje linfático relajante (20 min)",
+      "Terapia de toallas calientes para manos y brazos",
       "Tratamiento refrescante para pies",
-      "Posición elevada para comodidad",
-      "Descansos extendidos según necesidad",
+      "Posición reclinable de lujo",
+      "Descansos extendidos",
       "Servicio de té herbal de cortesía",
     ],
-    recommended: ["Prenatal Aromatherapy (+$20)", "Compression Sock Treatment (+$30)"],
-    recommendedEs: ["Aromaterapia Prenatal (+$20)", "Tratamiento con Medias de Compresión (+$30)"],
-    category: "maternity",
+    recommended: ["Hot Stone Therapy (+$30)", "Premium Aromatherapy (+$20)"],
+    recommendedEs: ["Terapia con Piedras Calientes (+$30)", "Aromaterapia Premium (+$20)"],
+    category: "signature",
     featured: true,
     trends: ["Soft Pink Tones", "Neutral Elegance"],
   },
   {
-    id: "recovery-health",
-    name: "The Recovery & Health Ritual",
-    nameEs: "Ritual de Recuperación y Salud",
-    tagline: "Gentle Restoration",
-    taglineEs: "Restauración Suave",
-    description: "Designed for sensitive skin, post-surgery recovery, or those with health sensitivities. Extra-gentle products and techniques for compromised or delicate systems.",
-    descriptionEs: "Diseñado para piel sensible, recuperación post-cirugía o quienes tienen sensibilidades de salud. Productos y técnicas extra-suaves para sistemas comprometidos o delicados.",
+    id: "gentle-touch",
+    name: "The Gentle Touch Ritual",
+    nameEs: "El Ritual del Toque Suave",
+    tagline: "For Sensitive Souls",
+    taglineEs: "Para Almas Sensibles",
+    description: "Designed for those who appreciate extra-gentle care. Perfect for sensitive skin or anyone seeking the most delicate, nurturing experience possible.",
+    descriptionEs: "Diseñado para quienes aprecian un cuidado extra-suave. Perfecto para piel sensible o cualquier persona que busque la experiencia más delicada y reconfortante posible.",
     priceMin: 135,
     priceMax: 155,
     duration: "75-90 min",
@@ -402,20 +402,20 @@ export const WELLNESS_BUNDLES: WellnessBundle[] = [
     savings: 30,
   },
   {
-    id: "mama-glow",
-    name: "Mama Glow Bundle",
-    nameEs: "Bundle Mamá Resplandeciente",
-    description: "Complete maternity pampering with all pregnancy-safe upgrades",
-    descriptionEs: "Consentimiento completo de maternidad con todos los extras seguros",
+    id: "total-glow",
+    name: "Total Glow Bundle",
+    nameEs: "Bundle Resplandor Total",
+    description: "Complete relaxation with all premium upgrades included",
+    descriptionEs: "Relajación completa con todos los extras premium incluidos",
     includes: [
-      "Maternity Sanctuary Protocol",
+      "Ultimate Relaxation Ritual",
       "Hot Stone Hand Therapy",
-      "Prenatal Aromatherapy",
+      "Premium Aromatherapy",
     ],
     includesEs: [
-      "Protocolo Santuario de Maternidad",
+      "Ritual de Relajación Total",
       "Terapia con Piedras Calientes",
-      "Aromaterapia Prenatal",
+      "Aromaterapia Premium",
     ],
     originalPrice: 215,
     bundlePrice: 185,

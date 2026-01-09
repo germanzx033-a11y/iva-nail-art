@@ -159,7 +159,7 @@ export default function LuxuryGallery({ instagramHandle = "ivanailart" }: Luxury
                       <ZoomIn className="w-4 h-4" />
                       <span className="text-sm font-medium">View Details</span>
                     </div>
-                    <p className="text-white/80 text-xs">By IVA Nail Art</p>
+                    <p className="text-white text-xs">By IVA Nail Art</p>
                   </div>
                 </div>
               </div>
@@ -367,7 +367,7 @@ export default function LuxuryGallery({ instagramHandle = "ivanailart" }: Luxury
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-white font-serif text-xl mb-1">IVA Nail Art</p>
-                    <p className="text-white/60 text-sm">Premium nail design</p>
+                    <p className="text-white text-sm">Premium nail design</p>
                   </div>
                   <button
                     onClick={(e) => toggleLike(selectedImage.id, e)}

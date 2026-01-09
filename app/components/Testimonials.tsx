@@ -153,7 +153,7 @@ export default function Testimonials() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="text-white/50 max-w-md mx-auto text-lg"
+            className="text-white max-w-md mx-auto text-lg"
           >
             Discover why our clients choose IVA for their luxury nail experience
           </motion.p>
@@ -218,7 +218,7 @@ export default function Testimonials() {
 
                   {/* Content */}
                   <blockquote className="text-center mb-10">
-                    <p className="text-xl md:text-2xl lg:text-3xl text-white/90 leading-relaxed font-light italic">
+                    <p className="text-xl md:text-2xl lg:text-3xl text-white leading-relaxed font-light italic">
                       &ldquo;{testimonials[current].content}&rdquo;
                     </p>
                   </blockquote>
@@ -238,7 +238,7 @@ export default function Testimonials() {
                     <p className="font-serif text-xl text-white mb-1">
                       {testimonials[current].name}
                     </p>
-                    <p className="text-sm text-[#FFD700]/80 uppercase tracking-wider">
+                    <p className="text-sm text-[#FFD700] uppercase tracking-wider">
                       {testimonials[current].role}
                     </p>
                   </div>
@@ -252,14 +252,14 @@ export default function Testimonials() {
               className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center hover:bg-white/10 transition-all border border-white/10 hover:border-[#FFD700]/50 group"
               aria-label="Previous testimonial"
             >
-              <ChevronLeft className="w-6 h-6 text-white/70 group-hover:text-[#FFD700] transition-colors" />
+              <ChevronLeft className="w-6 h-6 text-white group-hover:text-[#FFD700] transition-colors" />
             </button>
             <button
               onClick={next}
               className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/5 backdrop-blur-sm flex items-center justify-center hover:bg-white/10 transition-all border border-white/10 hover:border-[#FFD700]/50 group"
               aria-label="Next testimonial"
             >
-              <ChevronRight className="w-6 h-6 text-white/70 group-hover:text-[#FFD700] transition-colors" />
+              <ChevronRight className="w-6 h-6 text-white group-hover:text-[#FFD700] transition-colors" />
             </button>
           </div>
 
@@ -298,7 +298,7 @@ export default function Testimonials() {
               <p className="font-serif text-3xl md:text-5xl bg-gradient-to-r from-[#FFD700] to-[#B76E79] bg-clip-text text-transparent mb-2">
                 {stat.value}
               </p>
-              <p className="text-xs uppercase tracking-wider text-white/40 group-hover:text-white/60 transition-colors">
+              <p className="text-xs uppercase tracking-wider text-white group-hover:text-white transition-colors">
                 {stat.label}
               </p>
             </div>

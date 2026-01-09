@@ -138,7 +138,7 @@ export default function FloatingTestimonials({ lang = "en" }: FloatingTestimonia
             {/* Header */}
             <div className="bg-gradient-to-r from-[#722F37] to-[#B76E79] px-4 py-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Quote className="w-4 h-4 text-white/80" />
+                <Quote className="w-4 h-4 text-white" />
                 <span className="text-white text-xs font-medium">{text.title}</span>
               </div>
               <button

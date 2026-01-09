@@ -2,18 +2,13 @@
 
 /**
  * IVA Nail Art - Products Shop
- * E-commerce section for nail care products
+ * Products showcase - prices via WhatsApp inquiry
  */
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ShoppingBag,
   Heart,
-  Plus,
-  Minus,
-  X,
-  Check,
   Sparkles,
   Leaf,
   Star,
@@ -23,152 +18,138 @@ import {
 interface Product {
   id: string;
   name: string;
+  nameEs: string;
   description: string;
-  price: number;
-  originalPrice?: number;
+  descriptionEs: string;
   image: string;
   category: "cuticle-oil" | "hand-cream" | "nail-kit" | "accessories";
   badge?: string;
+  badgeEs?: string;
   rating: number;
   reviews: number;
   features: string[];
-  inStock: boolean;
+  featuresEs: string[];
 }
 
 const PRODUCTS: Product[] = [
   {
     id: "cuticle-oil-rose",
     name: "Rose Gold Cuticle Oil",
+    nameEs: "Aceite de Cutícula Rose Gold",
     description: "Luxurious organic jojoba oil infused with rose hip and vitamin E. Strengthens and nourishes cuticles.",
-    price: 28,
+    descriptionEs: "Lujoso aceite de jojoba orgánico con rosa mosqueta y vitamina E. Fortalece y nutre las cutículas.",
     image: "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg",
     category: "cuticle-oil",
     badge: "Best Seller",
+    badgeEs: "Más Vendido",
     rating: 4.9,
     reviews: 87,
-    features: ["10-Free Formula", "Organic Ingredients", "Pregnancy Safe"],
-    inStock: true,
+    features: ["10-Free Formula", "Organic Ingredients"],
+    featuresEs: ["Fórmula 10-Free", "Ingredientes Orgánicos"],
   },
   {
     id: "hand-cream-luxury",
     name: "Luxury Hand Cream",
+    nameEs: "Crema de Manos de Lujo",
     description: "Rich, fast-absorbing cream with shea butter and collagen. Keeps hands soft for 24 hours.",
-    price: 35,
-    originalPrice: 42,
+    descriptionEs: "Crema rica de rápida absorción con manteca de karité y colágeno. Manos suaves por 24 horas.",
     image: "/gallery/afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg",
     category: "hand-cream",
-    badge: "20% Off",
     rating: 4.8,
     reviews: 64,
-    features: ["Anti-Aging", "Non-Greasy", "Subtle Rose Scent"],
-    inStock: true,
+    features: ["Anti-Aging", "Non-Greasy"],
+    featuresEs: ["Anti-Edad", "No Grasoso"],
   },
   {
     id: "nail-kit-home",
     name: "At-Home Nail Care Kit",
+    nameEs: "Kit de Cuidado de Uñas",
     description: "Complete kit with file, buffer, cuticle pusher, and our signature cuticle oil. Perfect between appointments.",
-    price: 65,
+    descriptionEs: "Kit completo con lima, pulidor, empujador de cutículas y nuestro aceite signature. Perfecto entre citas.",
     image: "/gallery/f0d71275-94d3-4325-9592-55cbe28a5bdd.jpg",
     category: "nail-kit",
     badge: "New",
+    badgeEs: "Nuevo",
     rating: 5.0,
     reviews: 23,
-    features: ["Professional Tools", "Travel Case", "Tutorial Included"],
-    inStock: true,
+    features: ["Professional Tools", "Travel Case"],
+    featuresEs: ["Herramientas Profesionales", "Estuche de Viaje"],
   },
   {
     id: "cuticle-oil-lavender",
     name: "Lavender Dream Cuticle Oil",
+    nameEs: "Aceite de Cutícula Lavanda",
     description: "Calming lavender oil blend that promotes nail growth and relaxation. Perfect for bedtime routine.",
-    price: 28,
+    descriptionEs: "Mezcla calmante de lavanda que promueve el crecimiento de uñas y relajación. Perfecto para la noche.",
     image: "/gallery/1c77f4d1-58a0-4b2f-b1ca-f7054eeb9627.jpg",
     category: "cuticle-oil",
     rating: 4.7,
     reviews: 45,
-    features: ["Promotes Sleep", "Nail Growth", "Aromatherapy"],
-    inStock: true,
+    features: ["Promotes Sleep", "Nail Growth"],
+    featuresEs: ["Promueve el Sueño", "Crecimiento de Uñas"],
   },
   {
     id: "nail-strengthener",
     name: "Diamond Nail Strengthener",
+    nameEs: "Fortalecedor de Uñas Diamond",
     description: "Professional-grade treatment that repairs and strengthens damaged nails. Visible results in 2 weeks.",
-    price: 32,
+    descriptionEs: "Tratamiento profesional que repara y fortalece uñas dañadas. Resultados visibles en 2 semanas.",
     image: "/gallery/810c6eb7-e2e7-49eb-87e4-c6867d09f390.jpg",
     category: "accessories",
     rating: 4.9,
     reviews: 156,
-    features: ["Keratin Formula", "Clear Finish", "10-Free"],
-    inStock: true,
+    features: ["Keratin Formula", "Clear Finish"],
+    featuresEs: ["Fórmula de Keratina", "Acabado Transparente"],
   },
   {
     id: "gift-set",
     name: "IVA Signature Gift Set",
+    nameEs: "Set de Regalo IVA Signature",
     description: "Our most popular products in a beautiful gift box. Includes cuticle oil, hand cream, and nail file.",
-    price: 85,
-    originalPrice: 98,
+    descriptionEs: "Nuestros productos más populares en una hermosa caja de regalo. Incluye aceite, crema y lima.",
     image: "/gallery/599ff034-b45d-48af-8a8e-9996f5d98a8b.jpg",
     category: "nail-kit",
     badge: "Gift Ready",
+    badgeEs: "Listo para Regalo",
     rating: 5.0,
     reviews: 34,
-    features: ["Gift Wrapped", "Personal Note", "Free Shipping"],
-    inStock: true,
+    features: ["Gift Wrapped", "Free Shipping"],
+    featuresEs: ["Envuelto para Regalo", "Envío Gratis"],
   },
 ];
 
-const CATEGORIES = [
-  { id: "all", label: "All Products" },
-  { id: "cuticle-oil", label: "Cuticle Oils" },
-  { id: "hand-cream", label: "Hand Care" },
-  { id: "nail-kit", label: "Kits & Sets" },
-  { id: "accessories", label: "Accessories" },
-];
+const CATEGORIES = {
+  en: [
+    { id: "all", label: "All Products" },
+    { id: "cuticle-oil", label: "Cuticle Oils" },
+    { id: "hand-cream", label: "Hand Care" },
+    { id: "nail-kit", label: "Kits & Sets" },
+    { id: "accessories", label: "Accessories" },
+  ],
+  es: [
+    { id: "all", label: "Todos" },
+    { id: "cuticle-oil", label: "Aceites" },
+    { id: "hand-cream", label: "Cremas" },
+    { id: "nail-kit", label: "Kits" },
+    { id: "accessories", label: "Accesorios" },
+  ],
+};
 
-interface CartItem extends Product {
-  quantity: number;
+interface ProductsShopProps {
+  lang?: "en" | "es";
 }
 
-export default function ProductsShop() {
+export default function ProductsShop({ lang = "en" }: ProductsShopProps) {
   const [activeCategory, setActiveCategory] = useState("all");
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+
+  const isEn = lang === "en";
+  const categories = isEn ? CATEGORIES.en : CATEGORIES.es;
 
   const filteredProducts =
     activeCategory === "all"
       ? PRODUCTS
       : PRODUCTS.filter((p) => p.category === activeCategory);
-
-  const addToCart = (product: Product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { ...product, quantity: 1 }];
-    });
-  };
-
-  const removeFromCart = (productId: string) => {
-    setCart((prev) => prev.filter((item) => item.id !== productId));
-  };
-
-  const updateQuantity = (productId: string, delta: number) => {
-    setCart((prev) =>
-      prev
-        .map((item) =>
-          item.id === productId
-            ? { ...item, quantity: Math.max(0, item.quantity + delta) }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
-  };
 
   const toggleFavorite = (productId: string) => {
     setFavorites((prev) => {
@@ -182,18 +163,11 @@ export default function ProductsShop() {
     });
   };
 
-  const cartTotal = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  const handleCheckout = () => {
-    const items = cart
-      .map((item) => `${item.quantity}x ${item.name} ($${item.price * item.quantity})`)
-      .join("\n");
-
-    const message = `Hi! I'd like to order these products:\n\n${items}\n\nTotal: $${cartTotal}\n\nPlease let me know the payment and delivery options!`;
+  const handleInquiry = (product: Product) => {
+    const productName = isEn ? product.name : product.nameEs;
+    const message = isEn
+      ? `Hi! I'm interested in the "${productName}". Could you tell me more about it and the price?`
+      : `¡Hola! Estoy interesada en "${productName}". ¿Podrías darme más información y el precio?`;
 
     window.open(
       `https://wa.me/19296257273?text=${encodeURIComponent(message)}`,
@@ -202,34 +176,39 @@ export default function ProductsShop() {
   };
 
   return (
-    <section id="shop" className="py-16 md:py-24 px-6 md:px-8 bg-gradient-to-b from-[#F9F8F6] to-white">
+    <section id="shop" className="py-16 md:py-24 px-6 md:px-8 bg-gradient-to-b from-[#1A1A1A] to-[#0D0D0D]">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#B76E79]/10 to-[#722F37]/10 rounded-full mb-4">
-            <Leaf className="w-4 h-4 text-[#722F37]" />
-            <span className="text-xs uppercase tracking-[0.2em] text-[#722F37] font-medium">
-              Clean Beauty
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full mb-4">
+            <Leaf className="w-4 h-4 text-[#B76E79]" />
+            <span className="text-xs uppercase tracking-[0.2em] text-[#B76E79] font-medium">
+              {isEn ? "Clean Beauty" : "Belleza Limpia"}
             </span>
           </div>
-          <h2 className="font-serif text-3xl md:text-5xl text-[#0D0D0D] mb-4">
-            Shop Our <span className="bg-gradient-to-r from-[#B76E79] to-[#722F37] bg-clip-text text-transparent">Products</span>
+          <h2 className="font-serif text-3xl md:text-5xl text-white mb-4">
+            {isEn ? "Shop Our " : "Nuestros "}
+            <span className="bg-gradient-to-r from-[#B76E79] to-[#E8B4B8] bg-clip-text text-transparent">
+              {isEn ? "Products" : "Productos"}
+            </span>
           </h2>
-          <p className="text-[#6B6B6B] max-w-lg mx-auto">
-            Professional-grade, pregnancy-safe products to maintain your nails between appointments
+          <p className="text-white max-w-lg mx-auto">
+            {isEn
+              ? "Professional-grade products to maintain your nails between appointments"
+              : "Productos profesionales para mantener tus uñas entre citas"}
           </p>
         </div>
 
         {/* Category Tabs */}
         <div className="flex flex-wrap justify-center gap-2 mb-10">
-          {CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
               className={`px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
                 activeCategory === cat.id
                   ? "bg-gradient-to-r from-[#722F37] to-[#8B3A44] text-white shadow-lg"
-                  : "bg-white border border-[#EBE8E2] text-[#6B6B6B] hover:border-[#722F37] hover:text-[#722F37]"
+                  : "bg-white/10 border border-white/20 text-white hover:border-[#B76E79] hover:text-white"
               }`}
             >
               {cat.label}
@@ -248,37 +227,30 @@ export default function ProductsShop() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ delay: i * 0.05 }}
-                className="group bg-white rounded-2xl overflow-hidden border border-[#EBE8E2] hover:shadow-xl hover:border-[#B76E79]/30 transition-all"
+                className="group bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:border-[#B76E79]/50 transition-all"
               >
                 {/* Product Image */}
-                <div
-                  className="relative aspect-square bg-[#F5F3EF] cursor-pointer overflow-hidden"
-                  onClick={() => setSelectedProduct(product)}
-                >
-                  {/* Product Image */}
+                <div className="relative aspect-square bg-[#1A1A1A] overflow-hidden">
                   <img
                     src={product.image}
-                    alt={product.name}
+                    alt={isEn ? product.name : product.nameEs}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
 
                   {/* Badge */}
                   {product.badge && (
                     <span className="absolute top-3 left-3 px-3 py-1 bg-gradient-to-r from-[#722F37] to-[#8B3A44] text-white text-xs font-medium rounded-full">
-                      {product.badge}
+                      {isEn ? product.badge : product.badgeEs}
                     </span>
                   )}
 
                   {/* Favorite Button */}
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleFavorite(product.id);
-                    }}
+                    onClick={() => toggleFavorite(product.id)}
                     className={`absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center transition-all ${
                       favorites.has(product.id)
                         ? "bg-[#722F37] text-white"
-                        : "bg-white/80 text-[#6B6B6B] hover:text-[#722F37]"
+                        : "bg-black/50 text-white hover:text-white"
                     }`}
                   >
                     <Heart
@@ -287,19 +259,6 @@ export default function ProductsShop() {
                       }`}
                     />
                   </button>
-
-                  {/* Quick Add */}
-                  <div className="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addToCart(product);
-                      }}
-                      className="w-full py-3 bg-white text-[#722F37] rounded-xl font-medium text-sm shadow-lg hover:bg-[#722F37] hover:text-white transition-colors"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
                 </div>
 
                 {/* Product Info */}
@@ -313,287 +272,66 @@ export default function ProductsShop() {
                           className={`w-3.5 h-3.5 ${
                             i < Math.floor(product.rating)
                               ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-300"
+                              : "text-white/20"
                           }`}
                         />
                       ))}
                     </div>
-                    <span className="text-xs text-[#7A7A7A]">
+                    <span className="text-xs text-white">
                       ({product.reviews})
                     </span>
                   </div>
 
-                  <h3 className="font-serif text-lg text-[#1A1A1A] mb-1">
-                    {product.name}
+                  <h3 className="font-serif text-lg text-white mb-1">
+                    {isEn ? product.name : product.nameEs}
                   </h3>
-                  <p className="text-sm text-[#7A7A7A] line-clamp-2 mb-3">
-                    {product.description}
+                  <p className="text-sm text-white line-clamp-2 mb-3">
+                    {isEn ? product.description : product.descriptionEs}
                   </p>
 
                   {/* Features */}
                   <div className="flex flex-wrap gap-1 mb-4">
-                    {product.features.slice(0, 2).map((feature) => (
+                    {(isEn ? product.features : product.featuresEs).map((feature) => (
                       <span
                         key={feature}
-                        className="text-[10px] px-2 py-1 bg-[#F5F3EF] text-[#6B6B6B] rounded-full"
+                        className="text-[10px] px-2 py-1 bg-white/10 text-white rounded-full"
                       >
                         {feature}
                       </span>
                     ))}
                   </div>
 
-                  {/* Price */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-baseline gap-2">
-                      <span className="font-serif text-xl text-[#722F37]">
-                        ${product.price}
-                      </span>
-                      {product.originalPrice && (
-                        <span className="text-sm text-[#A3A3A3] line-through">
-                          ${product.originalPrice}
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => addToCart(product)}
-                      className="w-10 h-10 bg-[#F5F3EF] rounded-full flex items-center justify-center text-[#722F37] hover:bg-[#722F37] hover:text-white transition-colors"
-                    >
-                      <Plus className="w-5 h-5" />
-                    </button>
-                  </div>
+                  {/* WhatsApp Inquiry Button */}
+                  <button
+                    onClick={() => handleInquiry(product)}
+                    className="w-full py-3 bg-gradient-to-r from-[#25D366] to-[#128C7E] text-white rounded-xl font-medium text-sm flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    {isEn ? "Ask for Price" : "Preguntar Precio"}
+                  </button>
                 </div>
               </motion.div>
             ))}
           </AnimatePresence>
         </div>
 
-        {/* Floating Cart Button */}
-        {cartCount > 0 && (
-          <motion.button
-            initial={{ y: 100 }}
-            animate={{ y: 0 }}
-            onClick={() => setIsCartOpen(true)}
-            className="fixed bottom-24 right-6 z-40 flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-[#722F37] to-[#8B3A44] text-white rounded-full shadow-2xl"
+        {/* CTA */}
+        <div className="text-center mt-12">
+          <p className="text-white text-sm mb-4">
+            {isEn
+              ? "Questions about our products? We're here to help!"
+              : "¿Preguntas sobre nuestros productos? ¡Estamos aquí para ayudarte!"}
+          </p>
+          <a
+            href="https://wa.me/19296257273"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 border border-white/20 rounded-full text-white hover:bg-white/20 transition-colors"
           >
-            <ShoppingBag className="w-5 h-5" />
-            <span className="font-medium">{cartCount} items</span>
-            <span className="w-px h-4 bg-white/30" />
-            <span className="font-serif">${cartTotal}</span>
-          </motion.button>
-        )}
-
-        {/* Cart Drawer */}
-        <AnimatePresence>
-          {isCartOpen && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
-              onClick={() => setIsCartOpen(false)}
-            >
-              <motion.div
-                initial={{ x: "100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "100%" }}
-                transition={{ type: "spring", damping: 25 }}
-                onClick={(e) => e.stopPropagation()}
-                className="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl"
-              >
-                {/* Cart Header */}
-                <div className="p-6 border-b border-[#EBE8E2]">
-                  <div className="flex items-center justify-between">
-                    <h2 className="font-serif text-xl text-[#1A1A1A]">
-                      Your Cart ({cartCount})
-                    </h2>
-                    <button
-                      onClick={() => setIsCartOpen(false)}
-                      className="p-2 hover:bg-[#F5F3EF] rounded-full transition-colors"
-                    >
-                      <X className="w-5 h-5 text-[#7A7A7A]" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Cart Items */}
-                <div className="flex-1 overflow-y-auto p-6 space-y-4" style={{ maxHeight: "calc(100vh - 250px)" }}>
-                  {cart.length === 0 ? (
-                    <div className="text-center py-12">
-                      <ShoppingBag className="w-12 h-12 text-[#EBE8E2] mx-auto mb-3" />
-                      <p className="text-[#7A7A7A]">Your cart is empty</p>
-                    </div>
-                  ) : (
-                    cart.map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex gap-4 p-4 bg-[#F9F8F6] rounded-xl"
-                      >
-                        {/* Product Image */}
-                        <div className="w-20 h-20 bg-[#EBE8E2] rounded-lg overflow-hidden flex-shrink-0">
-                          <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                        </div>
-
-                        <div className="flex-1">
-                          <h4 className="font-medium text-[#1A1A1A] text-sm">
-                            {item.name}
-                          </h4>
-                          <p className="text-sm text-[#722F37] mt-1">
-                            ${item.price}
-                          </p>
-
-                          {/* Quantity Controls */}
-                          <div className="flex items-center gap-2 mt-2">
-                            <button
-                              onClick={() => updateQuantity(item.id, -1)}
-                              className="w-7 h-7 bg-white rounded-full flex items-center justify-center border border-[#EBE8E2]"
-                            >
-                              <Minus className="w-3 h-3" />
-                            </button>
-                            <span className="w-8 text-center text-sm">
-                              {item.quantity}
-                            </span>
-                            <button
-                              onClick={() => updateQuantity(item.id, 1)}
-                              className="w-7 h-7 bg-white rounded-full flex items-center justify-center border border-[#EBE8E2]"
-                            >
-                              <Plus className="w-3 h-3" />
-                            </button>
-                          </div>
-                        </div>
-
-                        <button
-                          onClick={() => removeFromCart(item.id)}
-                          className="text-[#A3A3A3] hover:text-red-500 transition-colors"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ))
-                  )}
-                </div>
-
-                {/* Cart Footer */}
-                {cart.length > 0 && (
-                  <div className="absolute bottom-0 left-0 right-0 p-6 bg-white border-t border-[#EBE8E2]">
-                    <div className="flex justify-between mb-4">
-                      <span className="text-[#7A7A7A]">Subtotal</span>
-                      <span className="font-serif text-xl text-[#1A1A1A]">
-                        ${cartTotal}
-                      </span>
-                    </div>
-                    <button
-                      onClick={handleCheckout}
-                      className="w-full py-4 bg-gradient-to-r from-[#722F37] to-[#8B3A44] text-white rounded-xl font-medium flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
-                    >
-                      <MessageCircle className="w-5 h-5" />
-                      Checkout via WhatsApp
-                    </button>
-                    <p className="text-center text-xs text-[#7A7A7A] mt-3">
-                      Free shipping on orders over $75
-                    </p>
-                  </div>
-                )}
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Product Detail Modal */}
-        <AnimatePresence>
-          {selectedProduct && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
-              onClick={() => setSelectedProduct(null)}
-            >
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-                className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-hidden"
-              >
-                {/* Product Image */}
-                <div className="relative aspect-video bg-[#F5F3EF] overflow-hidden">
-                  <img
-                    src={selectedProduct.image}
-                    alt={selectedProduct.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <button
-                    onClick={() => setSelectedProduct(null)}
-                    className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-
-                {/* Product Details */}
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < Math.floor(selectedProduct.rating)
-                              ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-sm text-[#7A7A7A]">
-                      {selectedProduct.reviews} reviews
-                    </span>
-                  </div>
-
-                  <h2 className="font-serif text-2xl text-[#1A1A1A] mb-2">
-                    {selectedProduct.name}
-                  </h2>
-                  <p className="text-[#6B6B6B] mb-4">
-                    {selectedProduct.description}
-                  </p>
-
-                  {/* Features */}
-                  <div className="space-y-2 mb-6">
-                    {selectedProduct.features.map((feature) => (
-                      <div key={feature} className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-[#722F37]" />
-                        <span className="text-sm text-[#3D3D3D]">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Price & Add to Cart */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-baseline gap-2">
-                      <span className="font-serif text-2xl text-[#722F37]">
-                        ${selectedProduct.price}
-                      </span>
-                      {selectedProduct.originalPrice && (
-                        <span className="text-[#A3A3A3] line-through">
-                          ${selectedProduct.originalPrice}
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => {
-                        addToCart(selectedProduct);
-                        setSelectedProduct(null);
-                      }}
-                      className="px-6 py-3 bg-gradient-to-r from-[#722F37] to-[#8B3A44] text-white rounded-xl font-medium hover:opacity-90 transition-opacity"
-                    >
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            <Sparkles className="w-4 h-4 text-[#B76E79]" />
+            {isEn ? "Chat with Iva" : "Chatea con Iva"}
+          </a>
+        </div>
       </div>
     </section>
   );

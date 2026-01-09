@@ -1,11 +1,48 @@
 "use client";
 
+/**
+ * IVA Nail Art - Exit Intent Popup
+ * Modelo 360 - Loss Aversion Trigger (Limbic Brain)
+ * Captures departing visitors with irresistible offer
+ */
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Gift, Heart, Sparkles } from "lucide-react";
+import { X, Gift, Heart, Sparkles, Clock } from "lucide-react";
 
-export default function ExitIntentPopup() {
+interface ExitIntentPopupProps {
+  language?: "en" | "es";
+  onBook?: () => void;
+}
+
+export default function ExitIntentPopup({ language = "en", onBook }: ExitIntentPopupProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const isEn = language === "en";
+
+  const COPY = {
+    en: {
+      waitTitle: "Wait! Don't Go Yet...",
+      subtitle: "We have a special gift just for you!",
+      offerTitle: "FREE Nail Art Upgrade",
+      offerDescription: "Book any ritual today and get a complimentary nail art design on two nails (worth $25)!",
+      code: "STAYWITHIVA",
+      cta: "Claim My Free Gift",
+      noThanks: "No thanks, I'll pay full price",
+      urgency: "Offer expires in 24 hours",
+    },
+    es: {
+      waitTitle: "¡Espera! No Te Vayas...",
+      subtitle: "¡Tenemos un regalo especial para ti!",
+      offerTitle: "Nail Art GRATIS",
+      offerDescription: "¡Reserva cualquier ritual hoy y obtén un diseño de nail art gratis en dos uñas (valor $25)!",
+      code: "QUEDATECONIVA",
+      cta: "Reclamar Mi Regalo",
+      noThanks: "No gracias, pagaré precio completo",
+      urgency: "Oferta expira en 24 horas",
+    },
+  };
+
+  const copy = isEn ? COPY.en : COPY.es;
 
   useEffect(() => {
     // Check if already shown
@@ -23,10 +60,10 @@ export default function ExitIntentPopup() {
       }
     };
 
-    // Only add listener after 10 seconds on page
+    // Only add listener after 8 seconds on page
     const timer = setTimeout(() => {
       document.addEventListener("mouseleave", handleMouseLeave);
-    }, 10000);
+    }, 8000);
 
     return () => {
       clearTimeout(timer);
@@ -39,11 +76,18 @@ export default function ExitIntentPopup() {
   };
 
   const handleClaim = () => {
-    const message = encodeURIComponent(
-      "Hi! I almost left but saw your special offer. I'd love to get my FREE nail art upgrade! 💅✨"
-    );
-    window.open(`https://wa.me/19296257273?text=${message}`, "_blank");
-    handleClose();
+    if (onBook) {
+      onBook();
+      handleClose();
+    } else {
+      const message = encodeURIComponent(
+        isEn
+          ? "Hi! I saw your special offer. I'd love to get my FREE nail art upgrade! 💅✨"
+          : "¡Hola! Vi tu oferta especial. ¡Me encantaría obtener mi nail art GRATIS! 💅✨"
+      );
+      window.open(`https://wa.me/19296257273?text=${message}`, "_blank");
+      handleClose();
+    }
   };
 
   return (
@@ -117,10 +161,10 @@ export default function ExitIntentPopup() {
 
                 {/* Title */}
                 <h3 className="text-2xl font-light text-[#1A1A1A] mb-2">
-                  Wait! Don't Go Yet...
+                  {copy.waitTitle}
                 </h3>
                 <p className="text-[#7A7A7A] mb-6">
-                  We have a special gift just for you!
+                  {copy.subtitle}
                 </p>
 
                 {/* Offer */}
@@ -128,26 +172,30 @@ export default function ExitIntentPopup() {
                   <div className="flex items-center justify-center gap-2 mb-3">
                     <Gift className="w-6 h-6 text-[#D4AF37]" />
                     <span className="text-lg font-medium text-[#1A1A1A]">
-                      FREE Nail Art Upgrade
+                      {copy.offerTitle}
                     </span>
                   </div>
                   <p className="text-[#7A7A7A] text-sm mb-4">
-                    Book any service today and get a complimentary nail art design
-                    on two nails (worth $15)!
+                    {copy.offerDescription}
                   </p>
                   <div className="inline-block bg-white border border-[#D4AF37]/30 rounded-lg px-4 py-2">
                     <span className="text-[#D4AF37] font-mono tracking-wider">
-                      STAYWITHIVA
+                      {copy.code}
                     </span>
+                  </div>
+                  {/* Urgency */}
+                  <div className="flex items-center justify-center gap-2 mt-3 text-[#722F37]">
+                    <Clock className="w-4 h-4" />
+                    <span className="text-xs font-medium">{copy.urgency}</span>
                   </div>
                 </div>
 
                 {/* CTA */}
                 <button
                   onClick={handleClaim}
-                  className="w-full py-4 bg-gradient-to-r from-[#B76E79] to-[#D4AF37] text-white font-medium rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg"
+                  className="w-full py-4 bg-gradient-to-r from-[#722F37] to-[#8B3A44] text-white font-medium rounded-xl hover:from-[#8B3A44] hover:to-[#A04550] transition-all flex items-center justify-center gap-2 shadow-lg"
                 >
-                  <span>Claim My Free Gift</span>
+                  <span>{copy.cta}</span>
                   <Sparkles className="w-4 h-4" />
                 </button>
 
@@ -155,7 +203,7 @@ export default function ExitIntentPopup() {
                   onClick={handleClose}
                   className="mt-4 text-sm text-[#7A7A7A] hover:text-[#1A1A1A] transition-colors"
                 >
-                  No thanks, I'll pay full price
+                  {copy.noThanks}
                 </button>
               </div>
             </div>

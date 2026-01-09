@@ -17,6 +17,8 @@ import {
   Maximize2,
   Minimize2,
   FlipHorizontal,
+  SwitchCamera,
+  Smartphone,
 } from 'lucide-react';
 import { useSavedDesigns, useARHistory } from '../hooks/useLocalStorage';
 
@@ -25,21 +27,121 @@ interface ARNailStudioProps {
   onClose?: () => void;
 }
 
-// Nail color options
-const NAIL_COLORS = [
-  { name: 'Burgundy', hex: '#4A0404' },
-  { name: 'Rose Gold', hex: '#B76E79' },
-  { name: 'Champagne', hex: '#F7E7CE' },
-  { name: 'Midnight', hex: '#191970' },
-  { name: 'Cherry', hex: '#DE3163' },
-  { name: 'Forest', hex: '#228B22' },
-  { name: 'Gold', hex: '#FFD700' },
-  { name: 'Silver', hex: '#C0C0C0' },
-  { name: 'Coral', hex: '#FF7F50' },
-  { name: 'Lavender', hex: '#E6E6FA' },
-  { name: 'Nude', hex: '#E8D0C4' },
-  { name: 'Black', hex: '#1A1A1A' },
-];
+// Nail color categories with 50+ options
+const NAIL_COLOR_CATEGORIES = {
+  reds: {
+    name: { en: 'Reds & Wines', es: 'Rojos & Vinos' },
+    colors: [
+      { name: 'Classic Red', hex: '#C41E3A' },
+      { name: 'Burgundy', hex: '#4A0404' },
+      { name: 'Wine', hex: '#722F37' },
+      { name: 'Cherry', hex: '#DE3163' },
+      { name: 'Ruby', hex: '#9B111E' },
+      { name: 'Crimson', hex: '#DC143C' },
+      { name: 'Blood Red', hex: '#8A0303' },
+      { name: 'Scarlet', hex: '#FF2400' },
+    ],
+  },
+  pinks: {
+    name: { en: 'Pinks & Blush', es: 'Rosas & Rubor' },
+    colors: [
+      { name: 'Hot Pink', hex: '#FF69B4' },
+      { name: 'Rose Gold', hex: '#B76E79' },
+      { name: 'Blush', hex: '#E8B4B8' },
+      { name: 'Coral Pink', hex: '#F88379' },
+      { name: 'Magenta', hex: '#FF0090' },
+      { name: 'Dusty Rose', hex: '#D4A5A5' },
+      { name: 'Salmon', hex: '#FA8072' },
+      { name: 'Bubblegum', hex: '#FFC1CC' },
+      { name: 'Fuchsia', hex: '#C154C1' },
+    ],
+  },
+  nudes: {
+    name: { en: 'Nudes & Neutrals', es: 'Nude & Neutros' },
+    colors: [
+      { name: 'Nude', hex: '#E8D0C4' },
+      { name: 'Champagne', hex: '#F7E7CE' },
+      { name: 'Beige', hex: '#D4B5A0' },
+      { name: 'Caramel', hex: '#C19A6B' },
+      { name: 'Almond', hex: '#EFDECD' },
+      { name: 'Mocha', hex: '#967259' },
+      { name: 'Toffee', hex: '#A47551' },
+      { name: 'Cafe Latte', hex: '#C8A276' },
+    ],
+  },
+  metallics: {
+    name: { en: 'Metallics', es: 'Metálicos' },
+    colors: [
+      { name: 'Gold', hex: '#FFD700' },
+      { name: 'Rose Gold', hex: '#E8A4B8' },
+      { name: 'Silver', hex: '#C0C0C0' },
+      { name: 'Chrome', hex: '#DBE4EB' },
+      { name: 'Copper', hex: '#B87333' },
+      { name: 'Bronze', hex: '#CD7F32' },
+      { name: 'Platinum', hex: '#E5E4E2' },
+      { name: 'Holographic', hex: '#B4A7D6' },
+    ],
+  },
+  purples: {
+    name: { en: 'Purples', es: 'Morados' },
+    colors: [
+      { name: 'Lavender', hex: '#E6E6FA' },
+      { name: 'Purple', hex: '#9B59B6' },
+      { name: 'Violet', hex: '#8B00FF' },
+      { name: 'Plum', hex: '#8E4585' },
+      { name: 'Orchid', hex: '#DA70D6' },
+      { name: 'Grape', hex: '#6F2DA8' },
+      { name: 'Mauve', hex: '#E0B0FF' },
+    ],
+  },
+  blues: {
+    name: { en: 'Blues', es: 'Azules' },
+    colors: [
+      { name: 'Navy', hex: '#191970' },
+      { name: 'Royal Blue', hex: '#4169E1' },
+      { name: 'Sky Blue', hex: '#87CEEB' },
+      { name: 'Teal', hex: '#008080' },
+      { name: 'Turquoise', hex: '#40E0D0' },
+      { name: 'Ocean', hex: '#0077B6' },
+      { name: 'Ice Blue', hex: '#A5F2F3' },
+    ],
+  },
+  greens: {
+    name: { en: 'Greens', es: 'Verdes' },
+    colors: [
+      { name: 'Forest', hex: '#228B22' },
+      { name: 'Emerald', hex: '#50C878' },
+      { name: 'Sage', hex: '#9CAF88' },
+      { name: 'Mint', hex: '#98FF98' },
+      { name: 'Olive', hex: '#808000' },
+      { name: 'Hunter', hex: '#355E3B' },
+    ],
+  },
+  darks: {
+    name: { en: 'Darks & Dramatic', es: 'Oscuros & Dramáticos' },
+    colors: [
+      { name: 'Black', hex: '#1A1A1A' },
+      { name: 'Jet Black', hex: '#0A0A0A' },
+      { name: 'Charcoal', hex: '#36454F' },
+      { name: 'Midnight', hex: '#191970' },
+      { name: 'Dark Chocolate', hex: '#3D2B1F' },
+      { name: 'Oxblood', hex: '#4A0000' },
+    ],
+  },
+  special: {
+    name: { en: 'French & Special', es: 'Francés & Especiales' },
+    colors: [
+      { name: 'French White', hex: '#FFFFF0' },
+      { name: 'French Pink', hex: '#FFE4E1' },
+      { name: 'Pearl', hex: '#F5E6D3' },
+      { name: 'Glitter Gold', hex: '#FFE5B4' },
+      { name: 'Clear', hex: '#FFEEF2' },
+    ],
+  },
+};
+
+// Flatten colors for simple access
+const NAIL_COLORS = Object.values(NAIL_COLOR_CATEGORIES).flatMap(cat => cat.colors);
 
 // Finger tip landmark indices from MediaPipe
 const FINGER_TIPS = [4, 8, 12, 16, 20]; // Thumb, Index, Middle, Ring, Pinky
@@ -55,6 +157,8 @@ export default function ARNailStudio({ isSpanish = false, onClose }: ARNailStudi
   const [isMirrored, setIsMirrored] = useState(true);
   const [showColorPicker, setShowColorPicker] = useState(true);
   const [handDetected, setHandDetected] = useState(false);
+  const [useBackCamera, setUseBackCamera] = useState(true); // Default to back camera for better nail viewing
+  const [selectedCategory, setSelectedCategory] = useState<keyof typeof NAIL_COLOR_CATEGORIES>('reds');
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -85,6 +189,10 @@ export default function ARNailStudio({ isSpanish = false, onClose }: ARNailStudi
       fullscreen: 'Fullscreen',
       permissionDenied: 'Camera permission denied. Please allow camera access.',
       tip: 'Hold your hand palm-down for best results',
+      switchCamera: 'Switch Camera',
+      backCamera: 'Back Camera',
+      frontCamera: 'Front Camera',
+      categories: 'Categories',
     },
     es: {
       title: 'Estudio AR',
@@ -103,6 +211,10 @@ export default function ARNailStudio({ isSpanish = false, onClose }: ARNailStudi
       fullscreen: 'Pantalla completa',
       permissionDenied: 'Permiso de cámara denegado. Por favor permite el acceso.',
       tip: 'Mantén la mano con la palma hacia abajo para mejores resultados',
+      switchCamera: 'Cambiar Cámara',
+      backCamera: 'Cámara Trasera',
+      frontCamera: 'Cámara Frontal',
+      categories: 'Categorías',
     },
   };
 
@@ -151,13 +263,23 @@ export default function ARNailStudio({ isSpanish = false, onClose }: ARNailStudi
   // Fallback simple camera without MediaPipe
   const startSimpleCamera = async () => {
     try {
+      // Use back camera (environment) for better nail viewing on phones
+      const facingMode = useBackCamera ? 'environment' : 'user';
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: 1280, height: 720 },
+        video: {
+          facingMode: { ideal: facingMode },
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
       });
 
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
+        // Don't mirror when using back camera
+        if (useBackCamera) {
+          setIsMirrored(false);
+        }
         drawSimpleOverlay();
       }
     } catch (err) {
@@ -236,15 +358,15 @@ export default function ARNailStudio({ isSpanish = false, onClose }: ARNailStudi
     }
   };
 
-  // Draw nail overlays on hand landmarks
+  // Draw nail overlays on hand landmarks - Enhanced with realistic effects
   const drawNailsOnHand = (
     ctx: CanvasRenderingContext2D,
     landmarks: { x: number; y: number; z: number }[],
     width: number,
     height: number
   ) => {
-    const nailWidth = width * 0.025; // Nail width relative to video
-    const nailHeight = width * 0.04; // Nail height
+    const baseNailWidth = width * 0.028; // Slightly larger for better visibility
+    const baseNailHeight = width * 0.045;
 
     for (let i = 0; i < FINGER_TIPS.length; i++) {
       const tipIdx = FINGER_TIPS[i];
@@ -254,7 +376,7 @@ export default function ARNailStudio({ isSpanish = false, onClose }: ARNailStudi
       const mid = landmarks[midIdx];
 
       // Calculate position (accounting for mirror)
-      let x = isMirrored ? (1 - tip.x) * width : tip.x * width;
+      const x = isMirrored ? (1 - tip.x) * width : tip.x * width;
       const y = tip.y * height;
 
       // Calculate angle from mid to tip
@@ -262,39 +384,85 @@ export default function ARNailStudio({ isSpanish = false, onClose }: ARNailStudi
       const dy = tip.y - mid.y;
       const angle = Math.atan2(dy, dx) - Math.PI / 2;
 
-      // Draw nail shape
+      // Finger-specific size adjustments
+      const fingerSizes = [0.85, 0.95, 1, 0.95, 0.8]; // thumb, index, middle, ring, pinky
+      const w = baseNailWidth * fingerSizes[i];
+      const h = baseNailHeight * fingerSizes[i];
+
       ctx.save();
-      ctx.translate(x, y - nailHeight * 0.3);
+      ctx.translate(x, y - h * 0.35);
       ctx.rotate(angle);
 
-      // Nail gradient
-      const gradient = ctx.createLinearGradient(0, -nailHeight / 2, 0, nailHeight / 2);
-      gradient.addColorStop(0, adjustColor(selectedColor, 20));
-      gradient.addColorStop(0.5, selectedColor);
-      gradient.addColorStop(1, adjustColor(selectedColor, -20));
+      // === LAYER 1: Base nail with gradient ===
+      const baseGradient = ctx.createLinearGradient(0, -h / 2, 0, h / 2);
+      baseGradient.addColorStop(0, adjustColor(selectedColor, 25));
+      baseGradient.addColorStop(0.3, selectedColor);
+      baseGradient.addColorStop(0.7, selectedColor);
+      baseGradient.addColorStop(1, adjustColor(selectedColor, -30));
 
-      // Draw rounded nail shape
+      // Premium almond nail shape
       ctx.beginPath();
-      const w = nailWidth * (i === 0 ? 0.9 : 1); // Thumb slightly smaller
-      const h = nailHeight * (i === 0 ? 0.85 : 1);
-
-      // Almond shape
       ctx.moveTo(-w / 2, h / 3);
-      ctx.quadraticCurveTo(-w / 2, -h / 3, -w / 4, -h / 2);
-      ctx.quadraticCurveTo(0, -h / 1.5, w / 4, -h / 2);
-      ctx.quadraticCurveTo(w / 2, -h / 3, w / 2, h / 3);
-      ctx.quadraticCurveTo(w / 2, h / 2, 0, h / 2);
-      ctx.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 3);
+      ctx.bezierCurveTo(-w / 2, 0, -w / 2.5, -h / 2.5, -w / 6, -h / 1.8);
+      ctx.bezierCurveTo(0, -h / 1.5, w / 6, -h / 1.8, w / 6, -h / 1.8);
+      ctx.bezierCurveTo(w / 2.5, -h / 2.5, w / 2, 0, w / 2, h / 3);
+      ctx.bezierCurveTo(w / 2, h / 2.2, w / 4, h / 2, 0, h / 2);
+      ctx.bezierCurveTo(-w / 4, h / 2, -w / 2, h / 2.2, -w / 2, h / 3);
       ctx.closePath();
 
-      ctx.fillStyle = gradient;
+      // Apply base color with slight shadow
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetY = 2;
+      ctx.fillStyle = baseGradient;
+      ctx.fill();
+      ctx.shadowColor = 'transparent';
+
+      // === LAYER 2: Side shadows for 3D effect ===
+      const leftShadow = ctx.createLinearGradient(-w / 2, 0, -w / 4, 0);
+      leftShadow.addColorStop(0, 'rgba(0, 0, 0, 0.25)');
+      leftShadow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = leftShadow;
       ctx.fill();
 
-      // Glossy shine effect
-      ctx.beginPath();
-      ctx.ellipse(-w / 4, -h / 4, w / 6, h / 4, -0.3, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      const rightShadow = ctx.createLinearGradient(w / 2, 0, w / 4, 0);
+      rightShadow.addColorStop(0, 'rgba(0, 0, 0, 0.2)');
+      rightShadow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = rightShadow;
       ctx.fill();
+
+      // === LAYER 3: Main glossy highlight ===
+      ctx.beginPath();
+      ctx.ellipse(-w / 6, -h / 5, w / 4, h / 3.5, -0.2, 0, Math.PI * 2);
+      const glossGradient = ctx.createRadialGradient(-w / 6, -h / 5, 0, -w / 6, -h / 5, h / 3);
+      glossGradient.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
+      glossGradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.3)');
+      glossGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.fillStyle = glossGradient;
+      ctx.fill();
+
+      // === LAYER 4: Small secondary highlight ===
+      ctx.beginPath();
+      ctx.ellipse(w / 5, -h / 8, w / 10, h / 8, 0.3, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+      ctx.fill();
+
+      // === LAYER 5: Top edge shine ===
+      ctx.beginPath();
+      ctx.moveTo(-w / 4, -h / 2.2);
+      ctx.quadraticCurveTo(0, -h / 1.8, w / 4, -h / 2.2);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+      ctx.lineWidth = 1.5;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+
+      // === LAYER 6: Cuticle line (subtle) ===
+      ctx.beginPath();
+      ctx.moveTo(-w / 2.5, h / 2.5);
+      ctx.quadraticCurveTo(0, h / 1.8, w / 2.5, h / 2.5);
+      ctx.strokeStyle = adjustColor(selectedColor, -40);
+      ctx.lineWidth = 1;
+      ctx.stroke();
 
       ctx.restore();
     }
@@ -347,6 +515,40 @@ export default function ARNailStudio({ isSpanish = false, onClose }: ARNailStudi
 
     setIsActive(false);
     setHandDetected(false);
+  };
+
+  // Switch between front and back camera
+  const switchCamera = async () => {
+    // Stop current camera
+    if (videoRef.current?.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach((track) => track.stop());
+    }
+
+    // Toggle camera
+    const newUseBackCamera = !useBackCamera;
+    setUseBackCamera(newUseBackCamera);
+    setIsMirrored(!newUseBackCamera); // Mirror front camera, don't mirror back
+
+    // Restart with new camera
+    try {
+      const facingMode = newUseBackCamera ? 'environment' : 'user';
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: facingMode },
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+      });
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+        drawSimpleOverlay();
+      }
+    } catch (err) {
+      console.error('[AR] Camera switch error:', err);
+    }
   };
 
   // Capture screenshot
@@ -407,9 +609,19 @@ export default function ARNailStudio({ isSpanish = false, onClose }: ARNailStudi
         <div className="flex items-center justify-between">
           <div className="text-white">
             <h3 className="text-lg font-serif">{t[lang].title}</h3>
-            <p className="text-sm text-white/70">{t[lang].subtitle}</p>
+            <p className="text-sm text-white">{t[lang].subtitle}</p>
           </div>
           <div className="flex gap-2">
+            {/* Camera switch button - important for mobile users */}
+            {isActive && (
+              <button
+                onClick={switchCamera}
+                className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 flex items-center justify-center hover:from-amber-600 hover:to-amber-700 transition text-white shadow-lg"
+                title={t[lang].switchCamera}
+              >
+                <SwitchCamera className="w-5 h-5" />
+              </button>
+            )}
             <button
               onClick={() => setIsMirrored(!isMirrored)}
               className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition text-white"
@@ -506,7 +718,7 @@ export default function ARNailStudio({ isSpanish = false, onClose }: ARNailStudi
 
       {/* Bottom Controls */}
       <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 to-transparent p-4">
-        {/* Color Picker */}
+        {/* Color Picker with Categories */}
         <AnimatePresence>
           {showColorPicker && isActive && (
             <motion.div
@@ -515,23 +727,75 @@ export default function ARNailStudio({ isSpanish = false, onClose }: ARNailStudi
               exit={{ opacity: 0, y: 20 }}
               className="mb-4"
             >
-              <p className="text-white/70 text-sm mb-2">{t[lang].selectColor}</p>
+              {/* Category tabs */}
+              <div className="flex gap-1 overflow-x-auto pb-2 mb-3 scrollbar-hide">
+                {Object.entries(NAIL_COLOR_CATEGORIES).map(([key, category]) => (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedCategory(key as keyof typeof NAIL_COLOR_CATEGORIES)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+                      selectedCategory === key
+                        ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-[#1A1A1A] shadow-lg'
+                        : 'bg-white/10 text-white hover:bg-white/20'
+                    }`}
+                  >
+                    {category.name[lang]}
+                  </button>
+                ))}
+              </div>
+
+              {/* Selected category colors */}
+              <p className="text-white text-xs mb-2">
+                {NAIL_COLOR_CATEGORIES[selectedCategory].name[lang]} • {NAIL_COLOR_CATEGORIES[selectedCategory].colors.length} {lang === 'en' ? 'colors' : 'colores'}
+              </p>
               <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                {NAIL_COLORS.map((color) => (
+                {NAIL_COLOR_CATEGORIES[selectedCategory].colors.map((color) => (
                   <button
                     key={color.hex}
                     onClick={() => {
                       setSelectedColor(color.hex);
                       setSelectedColorName(color.name);
                     }}
-                    className={`w-10 h-10 rounded-full flex-shrink-0 transition-transform ${
-                      selectedColor === color.hex ? 'scale-125 ring-2 ring-white' : 'hover:scale-110'
+                    className={`relative w-12 h-12 rounded-xl flex-shrink-0 transition-all shadow-lg ${
+                      selectedColor === color.hex
+                        ? 'scale-110 ring-2 ring-white ring-offset-2 ring-offset-transparent'
+                        : 'hover:scale-105'
                     }`}
-                    style={{ backgroundColor: color.hex }}
+                    style={{
+                      background: `linear-gradient(135deg, ${adjustColor(color.hex, 30)}, ${color.hex}, ${adjustColor(color.hex, -20)})`,
+                    }}
                     title={color.name}
-                  />
+                  >
+                    {/* Glossy shine effect */}
+                    <div className="absolute inset-0 rounded-xl overflow-hidden">
+                      <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent rounded-t-xl" />
+                    </div>
+                    {selectedColor === color.hex && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="absolute inset-0 flex items-center justify-center"
+                      >
+                        <Sparkles className="w-5 h-5 text-white drop-shadow-lg" />
+                      </motion.div>
+                    )}
+                  </button>
                 ))}
               </div>
+
+              {/* Selected color name */}
+              {selectedColorName && (
+                <motion.div
+                  key={selectedColorName}
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-2 text-center"
+                >
+                  <span className="px-3 py-1 bg-white/10 rounded-full text-white text-sm font-medium">
+                    {selectedColorName}
+                  </span>
+                </motion.div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>

@@ -1,0 +1,31 @@
+<svg width="512" height="320" viewBox="0 0 512 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">IVA Nail Art Logo</title>
+  <desc id="desc">Rose gold IVA monogram with a diamond above the I</desc>
+  <defs>
+    <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EBC7A4"/>
+      <stop offset="45%" stop-color="#D4A574"/>
+      <stop offset="100%" stop-color="#B67A4D"/>
+    </linearGradient>
+    <radialGradient id="gem" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="40%" stop-color="#E7F5FF" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#A3C4E6" stop-opacity="0.55"/>
+    </radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#000" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <rect x="0" y="0" width="512" height="320" fill="none"/>
+  <g filter="url(#shadow)" transform="translate(40 35)">
+    <text x="0" y="190" font-family="Times New Roman, 'Playfair Display', serif" font-size="200" fill="url(#rg)" letter-spacing="2" font-weight="600">I</text>
+    <text x="100" y="190" font-family="Times New Roman, 'Playfair Display', serif" font-size="200" fill="url(#rg)" letter-spacing="2" font-weight="600">V</text>
+    <text x="230" y="190" font-family="Times New Roman, 'Playfair Display', serif" font-size="200" fill="url(#rg)" letter-spacing="2" font-weight="600">A</text>
+    <!-- Polished teardrop accent on V -->
+    <path d="M205 50 C235 40 255 70 248 130 C242 180 215 195 195 178 C180 160 175 130 185 95 C190 75 195 60 205 50 Z" fill="url(#rg)" />
+    <!-- Diamond above I -->
+    <circle cx="38" cy="40" r="26" fill="url(#gem)" stroke="url(#rg)" stroke-width="4"/>
+  </g>
+</svg>
+
+

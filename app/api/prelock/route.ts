@@ -3,13 +3,12 @@
  * Golden Gate Protocol - Phase A
  *
  * Blocks a slot for 5 minutes using SET NX
- * Rate Limited: 3 attempts per IP/24h
+ * RATE LIMITING DESACTIVADO: Permite múltiples dispositivos en la misma red
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import {
   createPreLock,
-  checkRateLimit,
   getAppStatus,
   checkCapacity,
   getLock,
@@ -59,21 +58,14 @@ export async function POST(request: NextRequest): Promise<NextResponse<PreLockRe
       );
     }
 
-    // 2. Get client IP
+    // 2. Get client IP (solo para logging, NO para rate limiting)
+    // RATE LIMITING DESACTIVADO: No bloqueamos por IP para evitar problemas
+    // cuando múltiples dispositivos comparten la misma red (PC + iPhone)
     const clientIP = getClientIP(request);
+    console.log(`[PreLock] Request from IP: ${clientIP.substring(0, 15)}...`);
 
-    // 3. Check Rate Limit (3 attempts per IP/24h)
-    const rateLimit = await checkRateLimit(clientIP);
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: ERROR_MESSAGES.RATE_LIMIT_EXCEEDED,
-          errorCode: 'RATE_LIMIT_EXCEEDED',
-        },
-        { status: 429 }
-      );
-    }
+    // RATE LIMITING DESACTIVADO - Ya no bloqueamos por IP
+    // Esto permite que múltiples dispositivos en la misma red funcionen correctamente
 
     // 4. Parse request body
     const body: PreLockRequest = await request.json();

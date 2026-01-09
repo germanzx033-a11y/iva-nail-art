@@ -365,30 +365,15 @@ export async function isProcessed(sessionId: string): Promise<boolean> {
 // RATE LIMITING
 // =============================================
 
-const RATE_LIMIT_MAX = 3;
-const RATE_LIMIT_WINDOW = 24 * 60 * 60 * 1000; // 24 hours
+// RATE LIMITING DESACTIVADO PERMANENTEMENTE
+// Esto evita bloqueos cuando múltiples dispositivos (PC + iPhone) 
+// comparten la misma IP pública en la misma red WiFi
+// La protección contra abusos se maneja a nivel de capacidad diaria (2 reservas/día)
 
 export async function checkRateLimit(ip: string): Promise<{ allowed: boolean; remaining: number }> {
-  try {
-    const key = kvKeys.rateLimit(ip);
-    const data = await kv.get<RateLimitData>(key);
-
-    if (!data || Date.now() > data.resetAt) {
-      // New window
-      await kv.set(key, { count: 1, resetAt: Date.now() + RATE_LIMIT_WINDOW }, { ex: 86400 });
-      return { allowed: true, remaining: RATE_LIMIT_MAX - 1 };
-    }
-
-    if (data.count >= RATE_LIMIT_MAX) {
-      return { allowed: false, remaining: 0 };
-    }
-
-    // Increment
-    await kv.set(key, { count: data.count + 1, resetAt: data.resetAt }, { ex: 86400 });
-    return { allowed: true, remaining: RATE_LIMIT_MAX - data.count - 1 };
-  } catch {
-    return { allowed: true, remaining: RATE_LIMIT_MAX };
-  }
+  // SIEMPRE permitir - Rate limiting desactivado
+  // La protección real viene del límite de capacidad (2 reservas por día)
+  return { allowed: true, remaining: 999 };
 }
 
 // =============================================

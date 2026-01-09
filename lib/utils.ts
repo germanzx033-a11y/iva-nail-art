@@ -58,17 +58,42 @@ export function isValidBookingDate(dateStr: string): boolean {
 // IP EXTRACTION
 // =============================================
 
+/**
+ * Extrae la IP real del cliente de manera robusta
+ * Maneja correctamente proxies y CDNs (Vercel, Cloudflare, etc.)
+ * NO detecta VPN - solo extrae la IP para rate limiting
+ */
 export function getClientIP(request: Request): string {
+  // En Vercel/Next.js, la IP real viene en diferentes headers
+  // x-forwarded-for puede contener múltiples IPs: cliente, proxy1, proxy2...
   const forwarded = request.headers.get('x-forwarded-for');
   if (forwarded) {
-    return forwarded.split(',')[0].trim();
+    // La primera IP en la lista es la del cliente original
+    const firstIP = forwarded.split(',')[0].trim();
+    if (firstIP) {
+      return firstIP;
+    }
   }
 
+  // Header de Cloudflare (si se usa Cloudflare)
+  const cfConnectingIP = request.headers.get('cf-connecting-ip');
+  if (cfConnectingIP) {
+    return cfConnectingIP;
+  }
+
+  // Header x-real-ip (común en muchos proxies)
   const realIP = request.headers.get('x-real-ip');
   if (realIP) {
     return realIP;
   }
 
+  // Header específico de Vercel
+  const vercelIP = request.headers.get('x-vercel-forwarded-for');
+  if (vercelIP) {
+    return vercelIP.split(',')[0].trim();
+  }
+
+  // Fallback para desarrollo local
   return '127.0.0.1';
 }
 
@@ -180,4 +205,13 @@ export const ERROR_MESSAGES = {
   KV_ERROR: 'An error occurred. Please try again.',
   PAYMENT_FAILED: 'Payment could not be processed. Please try again.',
   OVERBOOKING_DETECTED: 'We apologize, this slot was just booked. Your payment will be refunded.',
+  // Mensajes en español
+  SLOT_ALREADY_LOCKED_ES: 'Este horario está siendo reservado por otro cliente.',
+  RATE_LIMIT_EXCEEDED_ES: 'Has excedido el máximo de intentos de reserva. Por favor intenta de nuevo mañana.',
+  INVALID_TOKEN_ES: 'Tu sesión de reserva ha expirado. Por favor comienza de nuevo.',
+  CAPACITY_EXCEEDED_ES: 'Esta fecha está completamente reservada. Por favor selecciona otra fecha.',
+  GHOST_MODE_ACTIVE_ES: 'IVA está en un merecido descanso. ¡Únete a la lista VIP!',
+  KV_ERROR_ES: 'Ocurrió un error. Por favor intenta de nuevo.',
+  PAYMENT_FAILED_ES: 'El pago no pudo ser procesado. Por favor intenta de nuevo.',
+  OVERBOOKING_DETECTED_ES: 'Lo sentimos, este horario acaba de ser reservado. Tu pago será reembolsado.',
 };

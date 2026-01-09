@@ -11,13 +11,11 @@ interface LuxuryRitualsProps {
 
 const categoryIcons = {
   signature: Sparkles,
-  maternity: Heart,
   wellness: Leaf,
 };
 
 const categoryColors = {
   signature: "from-[#B76E79] to-[#722F37]",
-  maternity: "from-[#E8B4B8] to-[#B76E79]",
   wellness: "from-[#8B9A7D] to-[#5C6B4F]",
 };
 
@@ -79,7 +77,7 @@ export default function LuxuryRituals({ language, onBookRitual }: LuxuryRitualsP
           <p className="text-sm md:text-base font-medium">
             {isEn ? SCARCITY_CTAS.en.web : SCARCITY_CTAS.es.web}
           </p>
-          <p className="text-xs text-white/70 mt-1">
+          <p className="text-xs text-white mt-1">
             {isEn ? SCARCITY_CTAS.en.urgency : SCARCITY_CTAS.es.urgency}
           </p>
         </div>
