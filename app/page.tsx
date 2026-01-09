@@ -24,6 +24,54 @@ import AboutIva from "@/app/components/AboutIva";
 import GallerySection from "@/app/components/GallerySection";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
 
+// ============================================================================
+// LOGO SVG COMPONENT - Rose Gold con Diamante
+// ============================================================================
+function IVALogo({ className = "h-12", showText = false }: { className?: string; showText?: boolean }) {
+  return (
+    <div className={`flex items-center gap-2 ${className}`}>
+      <svg viewBox="0 0 120 50" className="h-full w-auto" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="roseGold" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#E8B4B8" />
+            <stop offset="25%" stopColor="#D4A5A5" />
+            <stop offset="50%" stopColor="#C9A0A0" />
+            <stop offset="75%" stopColor="#B76E79" />
+            <stop offset="100%" stopColor="#A45A52" />
+          </linearGradient>
+          <linearGradient id="diamond" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="30%" stopColor="#F0F0F0" />
+            <stop offset="60%" stopColor="#E8E8E8" />
+            <stop offset="100%" stopColor="#D0D0D0" />
+          </linearGradient>
+          <linearGradient id="shine" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.4" />
+            <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.1" />
+            <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {/* Letter i */}
+        <path d="M8 18 L8 42 Q8 44 10 44 L14 44 Q16 44 16 42 L16 18 Q16 16 14 16 L10 16 Q8 16 8 18 Z" fill="url(#roseGold)" />
+        <path d="M8 18 L8 42 Q8 44 10 44 L12 44 L12 16 L10 16 Q8 16 8 18 Z" fill="url(#shine)" />
+        {/* Diamond */}
+        <circle cx="12" cy="7" r="6" fill="url(#diamond)" stroke="#C9A0A0" strokeWidth="0.5" />
+        <path d="M12 1 L14 7 L12 13 L10 7 Z" fill="url(#diamond)" opacity="0.8" />
+        <path d="M6 7 L12 5 L18 7 L12 9 Z" fill="url(#diamond)" opacity="0.6" />
+        <circle cx="10" cy="5" r="1" fill="white" opacity="0.9" />
+        {/* Letter V */}
+        <path d="M28 16 Q26 16 25 18 L40 44 Q41 46 43 46 L47 46 Q49 46 50 44 L65 18 Q66 16 64 16 L60 16 Q58 16 57 18 L45 38 L33 18 Q32 16 30 16 Z" fill="url(#roseGold)" />
+        <path d="M28 16 Q26 16 25 18 L40 44 Q41 46 43 46 L45 46 L32 20 Q31 18 29 17 Z" fill="url(#shine)" />
+        {/* Letter A */}
+        <path d="M75 44 Q73 44 72 42 L87 10 Q88 8 90 8 L94 8 Q96 8 97 10 L112 42 Q113 44 111 44 L107 44 Q105 44 104 42 L100 34 L84 34 L80 42 Q79 44 77 44 Z M92 14 L86 28 L98 28 Z" fill="url(#roseGold)" />
+        <path d="M87 10 Q88 8 90 8 L92 8 L78 42 Q77 44 75 44 Q73 44 72 42 L87 10 Z" fill="url(#shine)" />
+        <path d="M92 16 L87 27 L97 27 Z" fill="#FDF8F6" />
+      </svg>
+      {showText && <span className="font-serif text-[#4A0404]">Nail Art</span>}
+    </div>
+  );
+}
+
 // Componente de contador animado PREMIUM
 function AnimatedCounter({ end, duration = 2000, suffix = "", prefix = "" }: {
   end: number;
@@ -910,8 +958,8 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       {/* ================================================================== */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-[#FDF8F6]/90 backdrop-blur-md border-b border-[#4A0404]/10">
         <nav className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <a href="#" className="font-serif text-2xl text-[#4A0404] tracking-wide">
-            IVA <span className="font-light">Nail Art</span>
+          <a href="#" className="group">
+            <IVALogo className="h-10 md:h-12 transition-transform group-hover:scale-105" />
           </a>
 
           <div className="flex items-center gap-6">
@@ -992,13 +1040,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
           <div className="relative mx-auto mb-10 flex justify-center">
             <div className="relative rounded-3xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/25 shadow-[0_20px_60px_rgba(0,0,0,0.35)] p-6 sm:p-8 backdrop-blur-xl">
               <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-[#D4AF37]/40 via-[#E8C9A8]/30 to-transparent blur-xl opacity-70 animate-pulse" aria-hidden="true" />
-              <img
-                src="/logo-iva.png"
-                alt="IVA Nail Art logo"
-                className="relative w-40 sm:w-48 h-auto drop-shadow-[0_12px_35px_rgba(0,0,0,0.35)]"
-                loading="lazy"
-                decoding="async"
-              />
+              <IVALogo className="h-16 sm:h-20 relative drop-shadow-[0_12px_35px_rgba(0,0,0,0.35)]" />
             </div>
           </div>
 
@@ -1085,13 +1127,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       <section className="relative overflow-hidden py-16 md:py-20 px-6 bg-gradient-to-br from-[#FDF8F5] via-white to-[#FAF5F2]">
         {/* Marca de agua IVA */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-10">
-          <img
-            src="/logo-iva.png"
-            alt="IVA watermark"
-            className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
-            loading="lazy"
-            decoding="async"
-          />
+          <IVALogo className="h-32 sm:h-40 drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)]" />
         </div>
 
         <div className="max-w-6xl mx-auto relative z-10">
@@ -1461,31 +1497,16 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
         <div className="absolute inset-0 bg-gradient-to-t from-[#D4AF37]/5 via-transparent to-transparent"></div>
 
         {/* Marca de agua del logo en footer */}
-        <div className="pointer-events-none absolute -right-16 -bottom-10 w-80 sm:w-96 opacity-10 rotate-6">
-          <img
-            src="/logo-iva.png"
-            alt="IVA watermark footer"
-            className="w-full h-auto drop-shadow-[0_25px_45px_rgba(0,0,0,0.25)]"
-            loading="lazy"
-            decoding="async"
-          />
+        <div className="pointer-events-none absolute -right-16 -bottom-10 opacity-10 rotate-6">
+          <IVALogo className="h-24 sm:h-32 drop-shadow-[0_25px_45px_rgba(0,0,0,0.25)]" />
         </div>
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid md:grid-cols-4 gap-10 mb-12">
             {/* Brand PREMIUM */}
             <div>
-              <h3 className="font-serif text-3xl mb-5 bg-gradient-to-r from-white via-[#D4AF37] to-white bg-clip-text text-transparent font-bold">
-                IVA <span className="font-light">Nail Art</span>
-              </h3>
               <div className="flex items-center gap-3 mb-4">
-                <img
-                  src="/logo-iva.png"
-                  alt="IVA Nail Art logo footer"
-                  className="w-16 h-auto drop-shadow-[0_10px_20px_rgba(0,0,0,0.25)]"
-                  loading="lazy"
-                  decoding="async"
-                />
+                <IVALogo className="h-12 drop-shadow-[0_10px_20px_rgba(0,0,0,0.25)]" />
                 <p className="text-[#D4AF37] text-sm font-semibold tracking-wide">
                   Luxury Nails · NY
                 </p>
