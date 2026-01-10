@@ -991,18 +991,15 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
             <span className="typing-effect inline-block">{t.hero.tagline}</span>
           </p>
 
-          {/* Destacado de logo IVA */}
+          {/* Logo IVA - Elegante y natural */}
           <div className="relative mx-auto mb-10 flex justify-center">
-            <div className="relative rounded-3xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/25 shadow-[0_20px_60px_rgba(0,0,0,0.35)] p-6 sm:p-8 backdrop-blur-xl">
-              <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-[#D4AF37]/40 via-[#E8C9A8]/30 to-transparent blur-xl opacity-70 animate-pulse" aria-hidden="true" />
-              <img
-                src="/logo-iva.png"
-                alt="IVA Nail Art logo"
-                className="relative w-40 sm:w-48 h-auto drop-shadow-[0_12px_35px_rgba(0,0,0,0.35)]"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
+            <img
+              src="/logo-iva.png"
+              alt="IVA Nail Art logo"
+              className="w-52 sm:w-64 h-auto rounded-2xl"
+              loading="eager"
+              decoding="async"
+            />
           </div>
 
           <a
@@ -1485,7 +1482,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                 <img
                   src="/logo-iva.png"
                   alt="IVA Nail Art logo footer"
-                  className="w-16 h-auto drop-shadow-[0_10px_20px_rgba(0,0,0,0.25)]"
+                  className="w-16 h-auto rounded-lg"
                   loading="lazy"
                   decoding="async"
                 />
