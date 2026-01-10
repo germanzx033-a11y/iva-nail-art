@@ -1,31 +1,79 @@
-<svg width="512" height="320" viewBox="0 0 512 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">IVA Nail Art Logo</title>
-  <desc id="desc">Rose gold IVA monogram with a diamond above the I</desc>
+<svg width="400" height="160" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#EBC7A4"/>
-      <stop offset="45%" stop-color="#D4A574"/>
-      <stop offset="100%" stop-color="#B67A4D"/>
+    <!-- Rose Gold 3D Gradient -->
+    <linearGradient id="roseGold3D" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8C4B8"/>
+      <stop offset="20%" stop-color="#D4A69A"/>
+      <stop offset="40%" stop-color="#C9988C"/>
+      <stop offset="60%" stop-color="#B8847A"/>
+      <stop offset="80%" stop-color="#A67068"/>
+      <stop offset="100%" stop-color="#8B5A50"/>
     </linearGradient>
-    <radialGradient id="gem" cx="50%" cy="50%" r="60%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
-      <stop offset="40%" stop-color="#E7F5FF" stop-opacity="0.9"/>
-      <stop offset="100%" stop-color="#A3C4E6" stop-opacity="0.55"/>
+
+    <!-- Highlight gradient -->
+    <linearGradient id="highlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F5E0DA"/>
+      <stop offset="50%" stop-color="#E8C4B8"/>
+      <stop offset="100%" stop-color="#C9988C"/>
+    </linearGradient>
+
+    <!-- Diamond sparkle -->
+    <radialGradient id="diamondGem" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="40%" stop-color="#F8F8F8"/>
+      <stop offset="70%" stop-color="#E8E8E8"/>
+      <stop offset="100%" stop-color="#D0D0D0"/>
     </radialGradient>
-    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#000" flood-opacity="0.28"/>
+
+    <!-- Shadow -->
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="5" stdDeviation="4" flood-color="#3D1A1A" flood-opacity="0.35"/>
+    </filter>
+
+    <!-- Inner glow for 3D effect -->
+    <filter id="innerGlow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+      <feOffset in="blur" dx="1" dy="1" result="offsetBlur"/>
+      <feComposite in="SourceGraphic" in2="offsetBlur" operator="over"/>
     </filter>
   </defs>
-  <rect x="0" y="0" width="512" height="320" fill="none"/>
-  <g filter="url(#shadow)" transform="translate(40 35)">
-    <text x="0" y="190" font-family="Times New Roman, 'Playfair Display', serif" font-size="200" fill="url(#rg)" letter-spacing="2" font-weight="600">I</text>
-    <text x="100" y="190" font-family="Times New Roman, 'Playfair Display', serif" font-size="200" fill="url(#rg)" letter-spacing="2" font-weight="600">V</text>
-    <text x="230" y="190" font-family="Times New Roman, 'Playfair Display', serif" font-size="200" fill="url(#rg)" letter-spacing="2" font-weight="600">A</text>
-    <!-- Polished teardrop accent on V -->
-    <path d="M205 50 C235 40 255 70 248 130 C242 180 215 195 195 178 C180 160 175 130 185 95 C190 75 195 60 205 50 Z" fill="url(#rg)" />
-    <!-- Diamond above I -->
-    <circle cx="38" cy="40" r="26" fill="url(#gem)" stroke="url(#rg)" stroke-width="4"/>
+
+  <!-- Letter i -->
+  <g filter="url(#softShadow)">
+    <!-- i stem with 3D effect -->
+    <path d="M45 55 C45 50, 50 45, 58 45 L62 45 C70 45, 75 50, 75 55 L75 130 C75 138, 70 145, 62 145 L58 145 C50 145, 45 138, 45 130 Z"
+          fill="url(#roseGold3D)"/>
+    <path d="M48 55 C48 52, 52 48, 58 48 L60 48 C64 48, 66 50, 66 52 L66 60 L48 60 Z"
+          fill="url(#highlight)" opacity="0.6"/>
+
+    <!-- Diamond above i -->
+    <circle cx="60" cy="22" r="16" fill="url(#diamondGem)" stroke="#C9A86C" stroke-width="2"/>
+    <!-- Diamond facets -->
+    <path d="M60 8 L64 18 L60 22 L56 18 Z" fill="white" opacity="0.8"/>
+    <path d="M60 22 L64 18 L72 22 L64 26 Z" fill="#F0F0F0" opacity="0.6"/>
+    <path d="M60 22 L56 18 L48 22 L56 26 Z" fill="#E8E8E8" opacity="0.6"/>
+    <!-- Sparkle -->
+    <circle cx="54" cy="16" r="2" fill="white"/>
+  </g>
+
+  <!-- Letter V -->
+  <g filter="url(#softShadow)">
+    <path d="M95 45 C92 45, 90 47, 88 52 L140 140 C142 145, 145 148, 150 148 C155 148, 158 145, 160 140 L212 52 C214 47, 212 45, 208 45 L195 45 C190 45, 187 47, 185 52 L150 115 L115 52 C113 47, 110 45, 105 45 Z"
+          fill="url(#roseGold3D)"/>
+    <path d="M98 45 L105 45 C108 45, 110 46, 111 48 L115 55 L100 55 C97 55, 95 52, 95 49 C95 46, 96 45, 98 45 Z"
+          fill="url(#highlight)" opacity="0.5"/>
+    <path d="M195 45 L208 45 C210 45, 212 47, 211 50 L205 55 L188 55 L192 48 C193 46, 194 45, 195 45 Z"
+          fill="url(#highlight)" opacity="0.5"/>
+  </g>
+
+  <!-- Letter A -->
+  <g filter="url(#softShadow)">
+    <path d="M230 140 C228 145, 230 148, 235 148 L248 148 C253 148, 256 145, 258 140 L268 115 L312 115 L322 140 C324 145, 327 148, 332 148 L345 148 C350 148, 352 145, 350 140 L305 52 C303 47, 298 42, 290 42 C282 42, 277 47, 275 52 Z M290 70 L305 105 L275 105 Z"
+          fill="url(#roseGold3D)"/>
+    <path d="M290 50 L295 50 C298 50, 300 52, 301 55 L305 65 L290 70 L275 65 L279 55 C280 52, 282 50, 285 50 Z"
+          fill="url(#highlight)" opacity="0.5"/>
+    <!-- A crossbar highlight -->
+    <path d="M275 105 L305 105 L302 112 L278 112 Z"
+          fill="url(#highlight)" opacity="0.3"/>
   </g>
 </svg>
-
-
