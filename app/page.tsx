@@ -1474,11 +1474,11 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid md:grid-cols-4 gap-10 mb-12">
             {/* Brand PREMIUM */}
-            <div>
+            <div className="text-center md:text-left">
               <h3 className="font-serif text-3xl mb-5 bg-gradient-to-r from-white via-[#D4AF37] to-white bg-clip-text text-transparent font-bold">
                 IVA <span className="font-light">Nail Art</span>
               </h3>
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
                 <img
                   src="/logo-iva.png"
                   alt="IVA Nail Art logo footer"
@@ -1494,8 +1494,8 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
             </div>
 
             {/* Hours */}
-            <div>
-              <h4 className="font-medium mb-4 flex items-center gap-2">
+            <div className="text-center md:text-left">
+              <h4 className="font-medium mb-4 flex items-center justify-center md:justify-start gap-2">
                 <Clock className="w-4 h-4 text-[#D4AF37]" />
                 {t.footer.hours}
               </h4>
@@ -1504,8 +1504,8 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
             </div>
 
             {/* Location */}
-            <div>
-              <h4 className="font-medium mb-4 flex items-center gap-2">
+            <div className="text-center md:text-left">
+              <h4 className="font-medium mb-4 flex items-center justify-center md:justify-start gap-2">
                 <MapPin className="w-4 h-4 text-[#D4AF37]" />
                 {t.footer.location}
               </h4>
@@ -1513,13 +1513,13 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
             </div>
 
             {/* Contact */}
-            <div>
-              <h4 className="font-medium mb-4 flex items-center gap-2">
+            <div className="text-center md:text-left">
+              <h4 className="font-medium mb-4 flex items-center justify-center md:justify-start gap-2">
                 <Phone className="w-4 h-4 text-[#D4AF37]" />
                 {t.footer.contact}
               </h4>
               <p className="text-white/60 text-sm">{CONFIG.phone}</p>
-              <div className="flex gap-4 mt-4">
+              <div className="flex justify-center md:justify-start gap-4 mt-4">
                 <a
                   href={CONFIG.instagramUrl}
                   target="_blank"
