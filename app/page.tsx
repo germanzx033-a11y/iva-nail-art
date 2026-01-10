@@ -991,19 +991,15 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
             <span className="typing-effect inline-block">{t.hero.tagline}</span>
           </p>
 
-          {/* Logo IVA - Elegante enmarcado */}
+          {/* Logo IVA - Transparente */}
           <div className="relative mx-auto mb-10 flex justify-center">
-            <div className="relative group">
-              {/* Marco dorado sutil */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#D4AF37]/60 via-[#E8C9A8]/40 to-[#D4AF37]/60 rounded-2xl blur-sm opacity-75"></div>
-              <img
-                src="/logo-iva.png"
-                alt="IVA Nail Art logo"
-                className="relative w-48 sm:w-56 h-auto rounded-xl shadow-2xl border-2 border-[#D4AF37]/30"
-                loading="eager"
-                decoding="async"
-              />
-            </div>
+            <img
+              src="/logo-iva.png"
+              alt="IVA Nail Art logo"
+              className="w-56 sm:w-72 h-auto drop-shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+              loading="eager"
+              decoding="async"
+            />
           </div>
 
           <a
