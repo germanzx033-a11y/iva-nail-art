@@ -994,7 +994,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
           {/* Logo IVA - Transparente */}
           <div className="relative mx-auto mb-10 flex justify-center">
             <img
-              src="/logo-iva.svg"
+              src="/logo-iva.png"
               alt="IVA Nail Art logo"
               className="w-56 sm:w-72 h-auto drop-shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
               loading="eager"
@@ -1086,7 +1086,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
         {/* Marca de agua IVA */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-10">
           <img
-            src="/logo-iva.svg"
+            src="/logo-iva.png"
             alt="IVA watermark"
             className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
             loading="lazy"
@@ -1463,7 +1463,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
         {/* Marca de agua del logo en footer */}
         <div className="pointer-events-none absolute -right-16 -bottom-10 w-80 sm:w-96 opacity-10 rotate-6">
           <img
-            src="/logo-iva.svg"
+            src="/logo-iva.png"
             alt="IVA watermark footer"
             className="w-full h-auto drop-shadow-[0_25px_45px_rgba(0,0,0,0.25)]"
             loading="lazy"
@@ -1480,7 +1480,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
               </h3>
               <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
                 <img
-                  src="/logo-iva.svg"
+                  src="/logo-iva.png"
                   alt="IVA Nail Art logo footer"
                   className="w-16 h-auto rounded-lg"
                   loading="lazy"
