@@ -44,9 +44,6 @@ import {
   Sunrise,
   Sunset,
 } from "lucide-react";
-import dynamic from "next/dynamic";
-
-const WhatsAppScripts = dynamic(() => import("../components/WhatsAppScripts"), { ssr: false });
 
 // =============================================
 // TYPES
@@ -783,8 +780,10 @@ export default function AdminPage() {
 
         {/* ==================== SCRIPTS TAB ==================== */}
         {activeTab === "scripts" && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl border border-[#EBE8E2] overflow-hidden">
-            <WhatsAppScripts language="en" />
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl border border-[#EBE8E2] overflow-hidden p-8 text-center">
+            <Sparkles className="w-12 h-12 mx-auto text-[#B76E79] mb-4" />
+            <h3 className="text-xl font-semibold text-[#2D1810] mb-2">WhatsApp Templates</h3>
+            <p className="text-[#6B5C4C]">Coming soon - Quick response templates for client communication</p>
           </motion.div>
         )}
 

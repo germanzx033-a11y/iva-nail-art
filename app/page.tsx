@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useId } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Phone,
   MapPin,
@@ -23,349 +23,6 @@ import { formatDate, getMinBookingDate, isValidEmail, isValidPhone } from "@/lib
 import AboutIva from "@/app/components/AboutIva";
 import GallerySection from "@/app/components/GallerySection";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
-import FloatingWhatsApp from "@/app/components/FloatingWhatsApp";
-import SocialProofNotification from "@/app/components/SocialProofNotification";
-import InstallAppPrompt from "@/app/components/InstallAppPrompt";
-import ServiceWorkerRegistration from "@/app/components/ServiceWorkerRegistration";
-import BackToTop from "@/app/components/BackToTop";
-
-// ============================================================================
-// LOGO SVG COMPONENT - Rose Gold con Diamante
-// ============================================================================
-function IVALogo({ className = "h-12" }: { className?: string }) {
-  const uniqueId = useId().replace(/:/g, '');
-
-  return (
-    <svg
-      viewBox="0 0 120 50"
-      className={className}
-      style={{ minWidth: '80px' }}
-      xmlns="http://www.w3.org/2000/svg"
-      aria-label="IVA Nail Art"
-    >
-      <defs>
-        <linearGradient id={`rg-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#E8B4B8" />
-          <stop offset="25%" stopColor="#D4A5A5" />
-          <stop offset="50%" stopColor="#C9A0A0" />
-          <stop offset="75%" stopColor="#B76E79" />
-          <stop offset="100%" stopColor="#A45A52" />
-        </linearGradient>
-        <linearGradient id={`dm-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFFFFF" />
-          <stop offset="30%" stopColor="#F0F0F0" />
-          <stop offset="60%" stopColor="#E8E8E8" />
-          <stop offset="100%" stopColor="#D0D0D0" />
-        </linearGradient>
-        <linearGradient id={`sh-${uniqueId}`} x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.4" />
-          <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.1" />
-          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      {/* Letter i */}
-      <path d="M8 18 L8 42 Q8 44 10 44 L14 44 Q16 44 16 42 L16 18 Q16 16 14 16 L10 16 Q8 16 8 18 Z" fill={`url(#rg-${uniqueId})`} />
-      <path d="M8 18 L8 42 Q8 44 10 44 L12 44 L12 16 L10 16 Q8 16 8 18 Z" fill={`url(#sh-${uniqueId})`} />
-      {/* Diamond */}
-      <circle cx="12" cy="7" r="6" fill={`url(#dm-${uniqueId})`} stroke="#C9A0A0" strokeWidth="0.5" />
-      <path d="M12 1 L14 7 L12 13 L10 7 Z" fill={`url(#dm-${uniqueId})`} opacity="0.8" />
-      <path d="M6 7 L12 5 L18 7 L12 9 Z" fill={`url(#dm-${uniqueId})`} opacity="0.6" />
-      <circle cx="10" cy="5" r="1" fill="white" opacity="0.9" />
-      {/* Letter V */}
-      <path d="M28 16 Q26 16 25 18 L40 44 Q41 46 43 46 L47 46 Q49 46 50 44 L65 18 Q66 16 64 16 L60 16 Q58 16 57 18 L45 38 L33 18 Q32 16 30 16 Z" fill={`url(#rg-${uniqueId})`} />
-      <path d="M28 16 Q26 16 25 18 L40 44 Q41 46 43 46 L45 46 L32 20 Q31 18 29 17 Z" fill={`url(#sh-${uniqueId})`} />
-      {/* Letter A */}
-      <path d="M75 44 Q73 44 72 42 L87 10 Q88 8 90 8 L94 8 Q96 8 97 10 L112 42 Q113 44 111 44 L107 44 Q105 44 104 42 L100 34 L84 34 L80 42 Q79 44 77 44 Z M92 14 L86 28 L98 28 Z" fill={`url(#rg-${uniqueId})`} />
-      <path d="M87 10 Q88 8 90 8 L92 8 L78 42 Q77 44 75 44 Q73 44 72 42 L87 10 Z" fill={`url(#sh-${uniqueId})`} />
-      <path d="M92 16 L87 27 L97 27 Z" fill="#FDF8F6" />
-    </svg>
-  );
-}
-
-// ============================================================================
-// TIME-BASED GREETING - Saludo elegante según hora
-// ============================================================================
-function useTimeGreeting(lang: string) {
-  const [greeting, setGreeting] = useState("");
-
-  useEffect(() => {
-    const hour = new Date().getHours();
-    if (hour >= 5 && hour < 12) {
-      setGreeting(lang === "en" ? "Good morning" : "Buenos días");
-    } else if (hour >= 12 && hour < 18) {
-      setGreeting(lang === "en" ? "Good afternoon" : "Buenas tardes");
-    } else {
-      setGreeting(lang === "en" ? "Good evening" : "Buenas noches");
-    }
-  }, [lang]);
-
-  return greeting;
-}
-
-// ============================================================================
-// ACTIVE SECTION TRACKER - Para navegación inteligente
-// ============================================================================
-function useActiveSection() {
-  const [activeSection, setActiveSection] = useState("");
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = ["services", "gallery"];
-      const scrollPosition = window.scrollY + 200;
-
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section);
-            return;
-          }
-        }
-      }
-      setActiveSection("");
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  return activeSection;
-}
-
-// ============================================================================
-// SOCIAL PROOF NOTIFICATIONS - Más sutil, menos frecuente
-// ============================================================================
-const FAKE_BOOKINGS = [
-  { name: "María G.", service: "Gel Manicure", time: "hace 3 min" },
-  { name: "Sofia R.", service: "Nail Art 3D", time: "hace 7 min" },
-  { name: "Isabella M.", service: "Luxury Pedicure", time: "hace 12 min" },
-  { name: "Valentina L.", service: "Chrome Nails", time: "hace 18 min" },
-  { name: "Camila P.", service: "Full Set Acrylic", time: "hace 25 min" },
-  { name: "Lucia T.", service: "French Manicure", time: "hace 32 min" },
-];
-
-function SocialProofToast({ lang }: { lang: string }) {
-  const [show, setShow] = useState(false);
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    const showNotification = () => {
-      setCurrent(Math.floor(Math.random() * FAKE_BOOKINGS.length));
-      setShow(true);
-      setTimeout(() => setShow(false), 4000);
-    };
-
-    // Primera notificación después de 15 segundos (más sutil)
-    const firstTimeout = setTimeout(showNotification, 15000);
-
-    // Repetir cada 45-60 segundos (menos intrusivo)
-    const interval = setInterval(() => {
-      showNotification();
-    }, 45000 + Math.random() * 15000);
-
-    return () => {
-      clearTimeout(firstTimeout);
-      clearInterval(interval);
-    };
-  }, []);
-
-  const booking = FAKE_BOOKINGS[current];
-
-  return (
-    <div
-      className={`fixed bottom-24 left-4 z-50 transition-all duration-500 ${
-        show ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
-      }`}
-    >
-      <div className="bg-white rounded-2xl shadow-2xl border border-[#D4AF37]/20 p-4 max-w-xs">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#D4AF37] to-[#B8964D] flex items-center justify-center text-white font-bold text-sm">
-            {booking.name.charAt(0)}
-          </div>
-          <div className="flex-1">
-            <p className="text-sm font-medium text-[#4A0404]">
-              {booking.name} {lang === "en" ? "just booked" : "acaba de reservar"}
-            </p>
-            <p className="text-xs text-[#4A0404]/60">{booking.service}</p>
-            <p className="text-xs text-[#D4AF37] mt-1">{booking.time}</p>
-          </div>
-          <span className="text-green-500 text-lg">✓</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ============================================================================
-// CONFETTI EFFECT - Celebración al reservar
-// ============================================================================
-function ConfettiEffect({ active }: { active: boolean }) {
-  const [particles, setParticles] = useState<Array<{ id: number; x: number; color: string; delay: number }>>([]);
-
-  useEffect(() => {
-    if (active) {
-      const newParticles = Array.from({ length: 50 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        color: ['#D4AF37', '#E8B4B8', '#B76E79', '#4A0404', '#FFD700'][Math.floor(Math.random() * 5)],
-        delay: Math.random() * 0.5,
-      }));
-      setParticles(newParticles);
-      setTimeout(() => setParticles([]), 3000);
-    }
-  }, [active]);
-
-  if (!active || particles.length === 0) return null;
-
-  return (
-    <div className="fixed inset-0 pointer-events-none z-[100]">
-      {particles.map((p) => (
-        <div
-          key={p.id}
-          className="absolute w-3 h-3 animate-confetti"
-          style={{
-            left: `${p.x}%`,
-            top: '-20px',
-            backgroundColor: p.color,
-            animationDelay: `${p.delay}s`,
-            borderRadius: Math.random() > 0.5 ? '50%' : '0',
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-// ============================================================================
-// EASTER EGG - Click secreto en logo
-// ============================================================================
-function useEasterEgg() {
-  const [clicks, setClicks] = useState(0);
-  const [showSecret, setShowSecret] = useState(false);
-
-  const handleLogoClick = () => {
-    setClicks(prev => prev + 1);
-    if (clicks + 1 >= 5) {
-      setShowSecret(true);
-      setClicks(0);
-      setTimeout(() => setShowSecret(false), 5000);
-    }
-  };
-
-  return { handleLogoClick, showSecret };
-}
-
-function SecretMessage({ show, lang }: { show: boolean; lang: string }) {
-  if (!show) return null;
-
-  return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="bg-gradient-to-br from-[#D4AF37] to-[#B8964D] p-8 rounded-3xl text-center max-w-sm mx-4 animate-bounce-in">
-        <p className="text-4xl mb-4">💎✨💅</p>
-        <h3 className="text-2xl font-serif text-white mb-2">
-          {lang === "en" ? "You found it!" : "¡Lo encontraste!"}
-        </h3>
-        <p className="text-white/90">
-          {lang === "en"
-            ? "Use code SECRETIVA for 10% off your first visit!"
-            : "¡Usa el código SECRETIVA para 10% de descuento en tu primera visita!"}
-        </p>
-        <p className="text-white/60 text-sm mt-4">
-          {lang === "en" ? "Tell Iva you found the secret!" : "¡Dile a Iva que encontraste el secreto!"}
-        </p>
-      </div>
-    </div>
-  );
-}
-
-// ============================================================================
-// TESTIMONIALS CAROUSEL
-// ============================================================================
-const TESTIMONIALS = [
-  {
-    name: "Jennifer M.",
-    text: "Best nail artist in Brooklyn! My nails have never looked better. The attention to detail is incredible.",
-    textEs: "¡La mejor artista de uñas en Brooklyn! Mis uñas nunca se han visto mejor. La atención al detalle es increíble.",
-    rating: 5,
-    service: "Gel Manicure + Nail Art",
-  },
-  {
-    name: "Stephanie K.",
-    text: "Finally found someone who understands exactly what I want. Iva is a true artist!",
-    textEs: "Finalmente encontré a alguien que entiende exactamente lo que quiero. ¡Iva es una verdadera artista!",
-    rating: 5,
-    service: "3D Nail Art",
-  },
-  {
-    name: "Amanda R.",
-    text: "The luxury experience I was looking for. Clean, professional, and beautiful results every time.",
-    textEs: "La experiencia de lujo que buscaba. Limpio, profesional y resultados hermosos cada vez.",
-    rating: 5,
-    service: "Luxury Pedicure",
-  },
-];
-
-function TestimonialsSection({ lang }: { lang: string }) {
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActive(prev => (prev + 1) % TESTIMONIALS.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <section className="py-20 px-4 bg-gradient-to-br from-[#FDF8F6] to-white overflow-hidden">
-      <div className="max-w-4xl mx-auto text-center">
-        <p className="text-sm uppercase tracking-[0.3em] text-[#D4AF37] mb-4">
-          {lang === "en" ? "Client Love" : "Amor de Clientes"}
-        </p>
-        <h2 className="font-serif text-3xl md:text-4xl text-[#4A0404] mb-12">
-          {lang === "en" ? "What They Say" : "Lo Que Dicen"}
-        </h2>
-
-        <div className="relative h-64">
-          {TESTIMONIALS.map((t, i) => (
-            <div
-              key={i}
-              className={`absolute inset-0 transition-all duration-700 ${
-                i === active ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"
-              }`}
-            >
-              <div className="bg-white rounded-3xl shadow-xl p-8 border border-[#D4AF37]/10">
-                <div className="flex justify-center gap-1 mb-4">
-                  {[...Array(t.rating)].map((_, j) => (
-                    <span key={j} className="text-[#D4AF37] text-xl">★</span>
-                  ))}
-                </div>
-                <p className="text-lg text-[#4A0404]/80 italic mb-6 leading-relaxed">
-                  &ldquo;{lang === "en" ? t.text : t.textEs}&rdquo;
-                </p>
-                <p className="font-medium text-[#4A0404]">{t.name}</p>
-                <p className="text-sm text-[#D4AF37]">{t.service}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Dots */}
-        <div className="flex justify-center gap-2 mt-6">
-          {TESTIMONIALS.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActive(i)}
-              className={`w-2 h-2 rounded-full transition-all ${
-                i === active ? "bg-[#D4AF37] w-6" : "bg-[#D4AF37]/30"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // Componente de contador animado PREMIUM
 function AnimatedCounter({ end, duration = 2000, suffix = "", prefix = "" }: {
@@ -669,7 +326,6 @@ export default function Home() {
   const [lang, setLang] = useState<"en" | "es">("en");
   const [selectedCategory, setSelectedCategory] = useState("manicure");
   const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
   const [bookingData, setBookingData] = useState<BookingState>({
     step: 1,
     service: null,
@@ -683,11 +339,6 @@ export default function Home() {
   });
 
   const t = translations[lang];
-
-  // Hooks elegantes
-  const { handleLogoClick, showSecret } = useEasterEgg();
-  const greeting = useTimeGreeting(lang);
-  const activeSection = useActiveSection();
 
   // Estado para animaciones de scroll reveal
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
@@ -834,10 +485,13 @@ export default function Home() {
     return () => window.removeEventListener('click', handleClick);
   }, []);
 
-  // Hook para scroll parallax
+  // Hook para scroll parallax y progress
   useEffect(() => {
     const handleScroll = () => {
       setScrollY(window.scrollY);
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollHeight > 0 ? Math.min((window.scrollY / scrollHeight) * 100, 100) : 0;
+      setScrollProgress(progress);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -940,7 +594,7 @@ export default function Home() {
   const formatBookingDate = (dateStr: string): string => {
     if (!dateStr) return '';
     try {
-      return formatDate(dateStr, lang);
+    return formatDate(dateStr, lang);
     } catch (error) {
       console.error('Error formatting date:', error);
       return dateStr;
@@ -950,7 +604,7 @@ export default function Home() {
   // Validación por paso
   const canProceed = (): boolean => {
     const errors: BookingState["errors"] = {};
-
+    
     switch (bookingData.step) {
       case 1:
         return bookingData.service !== null;
@@ -961,28 +615,28 @@ export default function Home() {
         if (bookingData.name.trim() === "") {
           errors.name = lang === "en" ? "Name is required" : "El nombre es requerido";
         }
-
+        
         // Validar teléfono
         if (bookingData.phone.trim() === "") {
           errors.phone = lang === "en" ? "Phone is required" : "El teléfono es requerido";
         } else if (!isValidPhone(bookingData.phone)) {
           errors.phone = lang === "en" ? "Invalid phone number" : "Número de teléfono inválido";
         }
-
+        
         // Validar email si está presente
         if (bookingData.email.trim() !== "" && !isValidEmail(bookingData.email)) {
           errors.email = lang === "en" ? "Invalid email address" : "Dirección de email inválida";
         }
-
+        
         // Actualizar errores
         if (Object.keys(errors).length > 0) {
           setBookingData({ ...bookingData, errors });
           return false;
         }
-
-        return bookingData.name.trim() !== "" &&
-          bookingData.phone.trim() !== "" &&
-          bookingData.acceptedPolicies;
+        
+        return bookingData.name.trim() !== "" && 
+               bookingData.phone.trim() !== "" && 
+               bookingData.acceptedPolicies;
       default:
         return true;
     }
@@ -991,12 +645,12 @@ export default function Home() {
   // Enviar a WhatsApp
   const sendToWhatsApp = () => {
     try {
-      const serviceName = lang === "en" ? bookingData.service?.name : bookingData.service?.nameEs;
+    const serviceName = lang === "en" ? bookingData.service?.name : bookingData.service?.nameEs;
       const formattedDate = bookingData.date ? formatBookingDate(bookingData.date) : '';
 
-      const message =
-        lang === "en"
-          ? `✨ *New Appointment Request* ✨
+    const message =
+      lang === "en"
+        ? `✨ *New Appointment Request* ✨
 
 👤 *Name:* ${bookingData.name || ''}
 📱 *Phone:* ${bookingData.phone || ''}
@@ -1008,7 +662,7 @@ ${bookingData.email ? `📧 *Email:* ${bookingData.email}` : ""}
 
 I understand a $${CONFIG.deposit} deposit is required.
 Please confirm availability! 💕`
-          : `✨ *Nueva Solicitud de Cita* ✨
+        : `✨ *Nueva Solicitud de Cita* ✨
 
 👤 *Nombre:* ${bookingData.name || ''}
 📱 *Teléfono:* ${bookingData.phone || ''}
@@ -1021,26 +675,22 @@ ${bookingData.email ? `📧 *Email:* ${bookingData.email}` : ""}
 Entiendo que se requiere depósito de $${CONFIG.deposit}.
 ¡Por favor confirma disponibilidad! 💕`;
 
-      // Trigger confetti celebration!
-      setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 3000);
-
-      window.open(
-        `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`,
-        "_blank"
-      );
-      setIsBookingOpen(false);
-      setBookingData({
-        step: 1,
-        service: null,
-        date: "",
-        time: "",
-        name: "",
-        phone: "",
-        email: "",
-        acceptedPolicies: false,
-        errors: {},
-      });
+    window.open(
+      `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
+    setIsBookingOpen(false);
+    setBookingData({
+      step: 1,
+      service: null,
+      date: "",
+      time: "",
+      name: "",
+      phone: "",
+      email: "",
+      acceptedPolicies: false,
+      errors: {},
+    });
     } catch (error) {
       console.error('Error sending to WhatsApp:', error);
       alert(lang === "en" ? "An error occurred. Please try again." : "Ocurrió un error. Por favor intenta de nuevo.");
@@ -1063,11 +713,6 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
 
   return (
     <main className="min-h-screen bg-[#FDF8F6] relative overflow-x-hidden">
-      {/* ============ SURPRISE FEATURES ============ */}
-      <SocialProofToast lang={lang} />
-      <ConfettiEffect active={showConfetti} />
-      <SecretMessage show={showSecret} lang={lang} />
-
       {/* Spotlight mágico que sigue el mouse */}
       <div
         className="fixed pointer-events-none z-40 transition-opacity duration-300"
@@ -1268,37 +913,17 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       {/* ================================================================== */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-[#FDF8F6]/90 backdrop-blur-md border-b border-[#4A0404]/10">
         <nav className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <button onClick={handleLogoClick} className="group cursor-pointer">
-            <IVALogo className="h-10 md:h-12 transition-transform group-hover:scale-105" />
-          </button>
+          <a href="#" className="font-serif text-2xl text-[#4A0404] tracking-wide">
+            IVA <span className="font-light">Nail Art</span>
+          </a>
 
           <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-6 text-sm">
-              <a
-                href="#services"
-                className={`transition-all duration-300 ${
-                  activeSection === "services"
-                    ? "text-[#D4AF37] font-medium"
-                    : "text-[#4A0404]/70 hover:text-[#4A0404]"
-                }`}
-              >
+            <div className="hidden md:flex items-center gap-6 text-sm text-[#4A0404]/70">
+              <a href="#services" className="hover:text-[#4A0404] transition-colors">
                 {t.nav.services}
-                {activeSection === "services" && (
-                  <span className="block h-0.5 bg-[#D4AF37] mt-1 rounded-full" />
-                )}
               </a>
-              <a
-                href="#gallery"
-                className={`transition-all duration-300 ${
-                  activeSection === "gallery"
-                    ? "text-[#D4AF37] font-medium"
-                    : "text-[#4A0404]/70 hover:text-[#4A0404]"
-                }`}
-              >
+              <a href="#gallery" className="hover:text-[#4A0404] transition-colors">
                 {t.nav.gallery}
-                {activeSection === "gallery" && (
-                  <span className="block h-0.5 bg-[#D4AF37] mt-1 rounded-full" />
-                )}
               </a>
             </div>
 
@@ -1357,7 +982,6 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
         {/* Content */}
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
           <p className="text-[#D4AF37] tracking-[0.3em] text-sm mb-4 font-medium">
-            {greeting && <span className="opacity-80">{greeting}, </span>}
             {t.hero.welcome}
           </p>
           <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight animate-slide-in-up">
@@ -1371,7 +995,13 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
           <div className="relative mx-auto mb-10 flex justify-center">
             <div className="relative rounded-3xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/25 shadow-[0_20px_60px_rgba(0,0,0,0.35)] p-6 sm:p-8 backdrop-blur-xl">
               <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-[#D4AF37]/40 via-[#E8C9A8]/30 to-transparent blur-xl opacity-70 animate-pulse" aria-hidden="true" />
-              <IVALogo className="h-16 sm:h-20 relative drop-shadow-[0_12px_35px_rgba(0,0,0,0.35)]" />
+              <img
+                src="/logo-iva.png"
+                alt="IVA Nail Art logo"
+                className="relative w-40 sm:w-48 h-auto drop-shadow-[0_12px_35px_rgba(0,0,0,0.35)]"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           </div>
 
@@ -1387,7 +1017,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
             aria-label={t.hero.cta}
           >
             <span className="relative z-10 flex items-center gap-2">
-              {t.hero.cta}
+            {t.hero.cta}
               <ChevronRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
             </span>
             <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
@@ -1458,7 +1088,13 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       <section className="relative overflow-hidden py-16 md:py-20 px-6 bg-gradient-to-br from-[#FDF8F5] via-white to-[#FAF5F2]">
         {/* Marca de agua IVA */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-10">
-          <IVALogo className="h-32 sm:h-40 drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)]" />
+          <img
+            src="/logo-iva.png"
+            alt="IVA watermark"
+            className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
 
         <div className="max-w-6xl mx-auto relative z-10">
@@ -1660,8 +1296,8 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                 : `¡Hola! Me interesa ${service.nameEs}. ¿Puedes contarme más sobre este servicio? 💅`;
 
               return (
-                <div
-                  key={service.id}
+              <div
+                key={service.id}
                   data-card-id={service.id}
                   onMouseEnter={() => setHoveredCard(service.id)}
                   onMouseLeave={() => setHoveredCard(null)}
@@ -1682,7 +1318,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                       }}
                     />
                     <div className={`absolute inset-0 bg-gradient-to-br ${getCategoryGradient()} opacity-60 group-hover:opacity-80 transition-opacity duration-500`}></div>
-                  </div>
+                </div>
 
                   {/* Imagen principal del servicio */}
                   <div className="relative h-48 overflow-hidden rounded-t-2xl mb-4 group-hover:mb-6 transition-all duration-500">
@@ -1692,11 +1328,11 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                       className="w-full h-full object-cover transform scale-110 group-hover:scale-100 transition-transform duration-700"
                       loading="lazy"
                       decoding="async"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                      }}
-                    />
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
+                />
                     {/* Overlay con gradiente */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#4A0404]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
@@ -1704,8 +1340,8 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                     <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                       <div className="bg-gradient-to-r from-[#D4AF37] to-[#E8C9A8] text-[#4A0404] px-3 py-1.5 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm">
                         {service.category === "manicure" ? "💅" : service.category === "pedicure" ? "🦶" : service.category === "nailart" ? "🎨" : service.category === "acrylic" ? "✨" : "✂️"} {lang === "en" ? service.category.charAt(0).toUpperCase() + service.category.slice(1) : service.category === "manicure" ? "Manicura" : service.category === "pedicure" ? "Pedicura" : service.category === "nailart" ? "Nail Art" : service.category === "acrylic" ? "Acrílico" : "Extras"}
-                      </div>
-                    </div>
+              </div>
+          </div>
 
                     {/* Icono flotante animado */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform scale-0 group-hover:scale-100">
@@ -1742,8 +1378,8 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                     {/* Botón de WhatsApp Elegante - Estilo Premium con gradiente */}
                     <a
                       href={`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+              target="_blank"
+              rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
                       className="group/btn w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-[#25D366] via-[#128C7E] to-[#25D366] text-white rounded-full font-semibold text-sm tracking-wide hover:from-[#128C7E] hover:via-[#25D366] hover:to-[#128C7E] transition-all duration-500 hover:shadow-xl hover:scale-105 mt-auto relative overflow-hidden"
                       style={{
@@ -1756,7 +1392,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
 
                       <svg className="w-5 h-5 transition-transform duration-300 group-hover/btn:scale-110 group-hover/btn:rotate-12 relative z-10" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                      </svg>
+              </svg>
                       <span className="relative z-10 font-semibold">{lang === "en" ? "Ask for Price" : "Preguntar Precio"}</span>
                       <ChevronRight className="w-4 h-4 opacity-0 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 transition-all duration-300 relative z-10" />
                     </a>
@@ -1821,11 +1457,6 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       </section>
 
       {/* ================================================================== */}
-      {/* TESTIMONIALS SECTION */}
-      {/* ================================================================== */}
-      <TestimonialsSection lang={lang} />
-
-      {/* ================================================================== */}
       {/* FOOTER PREMIUM */}
       {/* ================================================================== */}
       <footer className="bg-gradient-to-br from-[#1a0202] via-[#2a0404] to-[#1a0202] text-white py-16 md:py-20 px-6 relative overflow-hidden">
@@ -1833,16 +1464,31 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
         <div className="absolute inset-0 bg-gradient-to-t from-[#D4AF37]/5 via-transparent to-transparent"></div>
 
         {/* Marca de agua del logo en footer */}
-        <div className="pointer-events-none absolute -right-16 -bottom-10 opacity-10 rotate-6">
-          <IVALogo className="h-24 sm:h-32 drop-shadow-[0_25px_45px_rgba(0,0,0,0.25)]" />
+        <div className="pointer-events-none absolute -right-16 -bottom-10 w-80 sm:w-96 opacity-10 rotate-6">
+          <img
+            src="/logo-iva.png"
+            alt="IVA watermark footer"
+            className="w-full h-auto drop-shadow-[0_25px_45px_rgba(0,0,0,0.25)]"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid md:grid-cols-4 gap-10 mb-12">
             {/* Brand PREMIUM */}
             <div>
+              <h3 className="font-serif text-3xl mb-5 bg-gradient-to-r from-white via-[#D4AF37] to-white bg-clip-text text-transparent font-bold">
+                IVA <span className="font-light">Nail Art</span>
+              </h3>
               <div className="flex items-center gap-3 mb-4">
-                <IVALogo className="h-12 drop-shadow-[0_10px_20px_rgba(0,0,0,0.25)]" />
+                <img
+                  src="/logo-iva.png"
+                  alt="IVA Nail Art logo footer"
+                  className="w-16 h-auto drop-shadow-[0_10px_20px_rgba(0,0,0,0.25)]"
+                  loading="lazy"
+                  decoding="async"
+                />
                 <p className="text-[#D4AF37] text-sm font-semibold tracking-wide">
                   Luxury Nails · NY
                 </p>
@@ -1953,21 +1599,21 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
 
                 {/* Progress Steps PREMIUM */}
                 <div className="flex justify-between mt-8 gap-2">
-                  {t.booking.steps.map((step, index) => (
-                    <div key={index} className="flex flex-col items-center flex-1">
-                      <div
+                {t.booking.steps.map((step, index) => (
+                  <div key={index} className="flex flex-col items-center flex-1">
+                    <div
                         className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${bookingData.step > index + 1
                           ? "bg-gradient-to-r from-[#D4AF37] to-[#E8C9A8] text-[#4A0404] shadow-xl scale-110"
                           : bookingData.step === index + 1
                             ? "bg-white text-[#4A0404] shadow-xl scale-110 ring-2 ring-[#D4AF37]"
                             : "bg-white/20 text-white/60"
-                          }`}
-                      >
+                      }`}
+                    >
                         {bookingData.step > index + 1 ? <Check className="w-5 h-5" /> : index + 1}
-                      </div>
-                      <span className="text-xs mt-2 text-white/90 hidden sm:block font-medium">{step}</span>
                     </div>
-                  ))}
+                      <span className="text-xs mt-2 text-white/90 hidden sm:block font-medium">{step}</span>
+                  </div>
+                ))}
                 </div>
               </div>
             </div>
@@ -1986,9 +1632,9 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                         key={cat.id}
                         onClick={() => setSelectedCategory(cat.id)}
                         className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedCategory === cat.id
-                          ? "bg-[#4A0404] text-white"
-                          : "bg-[#4A0404]/10 text-[#4A0404]"
-                          }`}
+                            ? "bg-[#4A0404] text-white"
+                            : "bg-[#4A0404]/10 text-[#4A0404]"
+                        }`}
                       >
                         {lang === "en" ? cat.en : cat.es}
                       </button>
@@ -2002,9 +1648,9 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                         key={service.id}
                         onClick={() => setBookingData({ ...bookingData, service })}
                         className={`w-full p-4 rounded-xl text-left transition-all ${bookingData.service?.id === service.id
-                          ? "bg-[#4A0404] text-white"
-                          : "bg-[#FDF8F6] hover:bg-[#4A0404]/10 text-[#4A0404]"
-                          }`}
+                            ? "bg-[#4A0404] text-white"
+                            : "bg-[#FDF8F6] hover:bg-[#4A0404]/10 text-[#4A0404]"
+                        }`}
                       >
                         <div className="flex justify-between items-center">
                           <span className="font-medium">
@@ -2072,9 +1718,9 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                         value={bookingData.name}
                         onChange={(e) => handleFieldChange("name", e.target.value)}
                         className={`w-full p-3 rounded-xl border focus:outline-none transition-colors ${bookingData.errors.name
-                          ? "border-red-500 focus:border-red-600"
-                          : "border-[#4A0404]/20 focus:border-[#4A0404]"
-                          }`}
+                            ? "border-red-500 focus:border-red-600"
+                            : "border-[#4A0404]/20 focus:border-[#4A0404]"
+                        }`}
                         aria-label={t.booking.name}
                         aria-invalid={!!bookingData.errors.name}
                         aria-describedby={bookingData.errors.name ? "name-error" : undefined}
@@ -2094,9 +1740,9 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                         value={bookingData.phone}
                         onChange={(e) => handleFieldChange("phone", e.target.value)}
                         className={`w-full p-3 rounded-xl border focus:outline-none transition-colors ${bookingData.errors.phone
-                          ? "border-red-500 focus:border-red-600"
-                          : "border-[#4A0404]/20 focus:border-[#4A0404]"
-                          }`}
+                            ? "border-red-500 focus:border-red-600"
+                            : "border-[#4A0404]/20 focus:border-[#4A0404]"
+                        }`}
                         aria-label={t.booking.phone}
                         aria-invalid={!!bookingData.errors.phone}
                         aria-describedby={bookingData.errors.phone ? "phone-error" : undefined}
@@ -2116,9 +1762,9 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                         value={bookingData.email}
                         onChange={(e) => handleFieldChange("email", e.target.value)}
                         className={`w-full p-3 rounded-xl border focus:outline-none transition-colors ${bookingData.errors.email
-                          ? "border-red-500 focus:border-red-600"
-                          : "border-[#4A0404]/20 focus:border-[#4A0404]"
-                          }`}
+                            ? "border-red-500 focus:border-red-600"
+                            : "border-[#4A0404]/20 focus:border-[#4A0404]"
+                        }`}
                         aria-label={t.booking.email}
                         aria-invalid={!!bookingData.errors.email}
                         aria-describedby={bookingData.errors.email ? "email-error" : undefined}
@@ -2222,9 +1868,9 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                     }}
                     disabled={!canProceed()}
                     className={`flex-1 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${canProceed()
-                      ? "bg-[#4A0404] text-white hover:bg-[#6B0606]"
-                      : "bg-[#4A0404]/30 text-white/50 cursor-not-allowed"
-                      }`}
+                        ? "bg-[#4A0404] text-white hover:bg-[#6B0606]"
+                        : "bg-[#4A0404]/30 text-white/50 cursor-not-allowed"
+                    }`}
                     aria-label={t.booking.next}
                   >
                     {t.booking.next}
@@ -2238,13 +1884,51 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       )}
 
       {/* ================================================================== */}
-      {/* PWA & ENGAGEMENT COMPONENTS */}
+      {/* FLOATING WHATSAPP BUTTON */}
       {/* ================================================================== */}
-      <ServiceWorkerRegistration />
-      <FloatingWhatsApp lang={lang} phoneNumber={CONFIG.whatsappNumber} />
-      <SocialProofNotification lang={lang} />
-      <InstallAppPrompt lang={lang} />
-      <BackToTop />
+      <a
+        href={`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(
+          lang === "en"
+            ? "Hi! I'd like information about your nail services 💅"
+            : "¡Hola! Me gustaría información sobre tus servicios de uñas 💅"
+        )}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:bg-[#128C7E] hover:scale-110 transition-all z-40 group"
+        aria-label="Contact via WhatsApp"
+      >
+        <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+        </svg>
+        <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-[#4A0404] text-white text-sm px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
+          {t.floatingBtn}
+        </span>
+      </a>
+
+      {/* ================================================================== */}
+      {/* BACK TO TOP BUTTON */}
+      {/* ================================================================== */}
+      {scrollY > 500 && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-6 left-6 bg-[#4A0404]/90 text-white p-3 rounded-full shadow-2xl hover:bg-[#4A0404] hover:scale-110 transition-all z-40 backdrop-blur-sm border border-[#D4AF37]/30"
+          aria-label="Back to top"
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+          </svg>
+        </button>
+      )}
+
+      {/* ================================================================== */}
+      {/* SCROLL PROGRESS BAR */}
+      {/* ================================================================== */}
+      <div
+        className="fixed top-0 left-0 h-1 bg-gradient-to-r from-[#D4AF37] via-[#E8C9A8] to-[#D4AF37] z-50 transition-all duration-150"
+        style={{
+          width: `${scrollProgress}%`,
+        }}
+      />
     </main>
   );
 }
