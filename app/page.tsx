@@ -996,7 +996,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
             <div className="relative rounded-3xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/25 shadow-[0_20px_60px_rgba(0,0,0,0.35)] p-6 sm:p-8 backdrop-blur-xl">
               <div className="absolute -inset-1 rounded-3xl bg-gradient-to-r from-[#D4AF37]/40 via-[#E8C9A8]/30 to-transparent blur-xl opacity-70 animate-pulse" aria-hidden="true" />
               <img
-                src="/logo-iva.svg"
+                src="/logo-iva.png"
                 alt="IVA Nail Art logo"
                 className="relative w-40 sm:w-48 h-auto drop-shadow-[0_12px_35px_rgba(0,0,0,0.35)]"
                 loading="lazy"
@@ -1089,7 +1089,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
         {/* Marca de agua IVA */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-10">
           <img
-            src="/logo-iva.svg"
+            src="/logo-iva.png"
             alt="IVA watermark"
             className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
             loading="lazy"
@@ -1466,7 +1466,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
         {/* Marca de agua del logo en footer */}
         <div className="pointer-events-none absolute -right-16 -bottom-10 w-80 sm:w-96 opacity-10 rotate-6">
           <img
-            src="/logo-iva.svg"
+            src="/logo-iva.png"
             alt="IVA watermark footer"
             className="w-full h-auto drop-shadow-[0_25px_45px_rgba(0,0,0,0.25)]"
             loading="lazy"
@@ -1483,7 +1483,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
               </h3>
               <div className="flex items-center gap-3 mb-4">
                 <img
-                  src="/logo-iva.svg"
+                  src="/logo-iva.png"
                   alt="IVA Nail Art logo footer"
                   className="w-16 h-auto drop-shadow-[0_10px_20px_rgba(0,0,0,0.25)]"
                   loading="lazy"
