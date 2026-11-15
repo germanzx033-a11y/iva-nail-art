@@ -5,6 +5,8 @@ export interface GalleryImage {
   id: string;
   src: string;
   alt: string;
+  /** Spanish title; falls back to `alt` when missing. */
+  altEs?: string;
   category: GalleryCategory;
   featured?: boolean;
 }
@@ -19,6 +21,21 @@ export const GALLERY_CATEGORIES: { id: GalleryCategory; label: string; labelEs: 
 // Gallery images - All nail art portfolio photos
 // Featured images are carefully selected for variety (4 unique designs)
 export const GALLERY_IMAGES: GalleryImage[] = [
+  // Latest work (added first so it leads the gallery and the service cards)
+  { id: "new-gold-wire-pearl-nude", src: "/gallery/gold-wire-pearl-nude.jpg", alt: "Gold Wire & Pearl Nude", altEs: "Nude con Hilo Dorado y Perlas", category: "nails", featured: true },
+  { id: "new-milky-white-square", src: "/gallery/milky-white-square.jpg", alt: "Milky White Square", altEs: "Blanco Lechoso Cuadrado", category: "nails" },
+  { id: "new-chocolate-cat-eye", src: "/gallery/chocolate-cat-eye.jpg", alt: "Chocolate Cat-Eye", altEs: "Ojo de Gato Chocolate", category: "nails" },
+  { id: "new-tortoiseshell-french-tips", src: "/gallery/tortoiseshell-french-tips.jpg", alt: "Tortoiseshell French Tips", altEs: "Francesa Carey", category: "nails" },
+  { id: "new-aurora-chrome-gold", src: "/gallery/aurora-chrome-gold.jpg", alt: "Aurora Chrome & Gold", altEs: "Cromo Aurora y Dorado", category: "nails" },
+  { id: "new-blush-aura-french", src: "/gallery/blush-aura-french.jpg", alt: "Blush Aura French", altEs: "Francesa Aura Rosada", category: "nails" },
+  { id: "new-lilac-3d-orchid", src: "/gallery/lilac-3d-orchid.jpg", alt: "Lilac 3D Orchid", altEs: "Orquídea Lila 3D", category: "nails", featured: true },
+  { id: "new-blue-stone-gold-charms", src: "/gallery/blue-stone-gold-charms.jpg", alt: "Blue Stone & Gold Charms", altEs: "Piedra Azul y Detalles Dorados", category: "nails" },
+  { id: "new-amber-aura", src: "/gallery/amber-aura.jpg", alt: "Amber Aura", altEs: "Aura Ámbar", category: "nails" },
+  { id: "new-jewel-tone-abstract", src: "/gallery/jewel-tone-abstract.jpg", alt: "Jewel-Tone Abstract", altEs: "Abstracto en Tonos Joya", category: "nails" },
+  { id: "new-pastel-zebra-french", src: "/gallery/pastel-zebra-french.jpg", alt: "Pastel Zebra French", altEs: "Francesa Cebra Pastel", category: "nails" },
+  { id: "new-checkerboard-gold-studs", src: "/gallery/checkerboard-gold-studs.jpg", alt: "Checkerboard & Gold Studs", altEs: "Damero con Tachas Doradas", category: "nails" },
+  { id: "new-plum-croc-tortoise", src: "/gallery/plum-croc-tortoise.jpg", alt: "Plum Croc & Tortoise Mix", altEs: "Mezcla Ciruela, Croco y Carey", category: "nails" },
+  { id: "new-pastel-star-polka-dots", src: "/gallery/pastel-star-polka-dots.jpg", alt: "Pastel Star & Polka Dots", altEs: "Estrella Pastel y Lunares", category: "nails" },
   // Featured 1 - Orange flowers (main hero)
   { id: "img-1", src: "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg", alt: "Orange Daisy Nail Art", category: "nails", featured: true },
   { id: "img-2", src: "/gallery/afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg", alt: "Nail Art Design", category: "nails" },
