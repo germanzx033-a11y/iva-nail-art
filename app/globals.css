@@ -889,36 +889,6 @@ p {
   animation: glitch 0.1s infinite;
 }
 
-/* Efecto de typing */
-@keyframes typing {
-  from {
-    width: 0;
-  }
-
-  to {
-    width: 100%;
-  }
-}
-
-@keyframes blink-caret {
-
-  from,
-  to {
-    border-color: transparent;
-  }
-
-  50% {
-    border-color: #D4AF37;
-  }
-}
-
-.typing-effect {
-  overflow: hidden;
-  border-right: 3px solid #D4AF37;
-  white-space: nowrap;
-  animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
-}
-
 /* Scroll progress bar avanzado */
 .scroll-progress {
   position: fixed;
