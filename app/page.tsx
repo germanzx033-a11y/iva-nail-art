@@ -948,7 +948,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-300 ease-out"
           style={{
-            backgroundImage: "url('/portada.jpg')",
+            backgroundImage: "url('/hero.jpg')",
             transform: `translateY(${scrollY * 0.5}px) scale(1.1)`,
             backgroundPosition: `${50 + (mousePosition.x - 50) * 0.02}% ${50 + (mousePosition.y - 50) * 0.02}%`,
           }}

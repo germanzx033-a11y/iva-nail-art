@@ -24,6 +24,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
   const [visibleImages, setVisibleImages] = useState<number>(12);
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [hoveredImageId, setHoveredImageId] = useState<string | null>(null);
+  const titleOf = (img: GalleryImage) => (lang === "es" && img.altEs ? img.altEs : img.alt);
   const galleryRef = useRef<HTMLDivElement>(null);
   const imageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const mounted = useMounted();
@@ -258,7 +259,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
                   }}
                   role="button"
                   tabIndex={0}
-                  aria-label={image.alt}
+                  aria-label={titleOf(image)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
@@ -272,7 +273,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
                       // eslint-disable-next-line @next/next/no-img-element -- 60+ gallery photos with an onError fallback; kept as <img> to avoid pushing the whole gallery through the image optimizer
                       <img
                         src={image.src}
-                        alt={image.alt}
+                        alt={titleOf(image)}
                         className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-125 group-hover:rotate-2"
                         loading="lazy"
                         decoding="async"
@@ -470,7 +471,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
               {/* eslint-disable-next-line @next/next/no-img-element -- same gallery source as above; full-size modal view */}
               <img
                 src={selectedImage.src}
-                alt={selectedImage.alt}
+                alt={titleOf(selectedImage)}
                 className="max-w-full max-h-full object-contain rounded-lg shadow-2xl transform transition-transform duration-500 hover:scale-105"
                 id="modal-image"
               />
@@ -481,7 +482,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
 
             {/* Información de la imagen */}
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-6 md:p-8">
-              <p className="text-white text-lg md:text-xl font-semibold mb-2">{selectedImage.alt}</p>
+              <p className="text-white text-lg md:text-xl font-semibold mb-2">{titleOf(selectedImage)}</p>
               <p className="text-white/70 text-sm md:text-base">
                 {GALLERY_IMAGES.findIndex((img) => img.id === selectedImage.id) + 1} / {GALLERY_IMAGES.length}
               </p>
