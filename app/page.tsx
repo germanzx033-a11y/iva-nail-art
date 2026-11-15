@@ -10,10 +10,7 @@ import {
   ChevronLeft,
   Check,
   Sparkles,
-  Heart,
-  Star,
   X,
-  Award,
   Hand,
   Footprints,
   Palette,
@@ -951,104 +948,23 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       {/* ================================================================== */}
       {/* STATISTICS SECTION PREMIUM */}
       {/* ================================================================== */}
-      <section className="relative overflow-hidden py-16 md:py-20 px-6 bg-gradient-to-br from-[#FDF8F5] via-white to-[#FAF5F2]">
-        {/* Marca de agua IVA */}
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-10">
-          <Image
-src="/logo-iva.png"
-alt="IVA watermark"
-width={631}
-height={436}
-className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
-/>
-        </div>
-
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            {/* Stat 1: Years of Experience */}
-            <div className="text-center group">
-              <div className="mb-4 flex justify-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#D4A574]/20 to-[#B8864D]/20 flex items-center justify-center group-hover:from-[#D4A574]/30 group-hover:to-[#B8864D]/30 transition-all duration-300 group-hover:scale-110">
-                  <Star className="w-8 h-8 text-[#B8864D]" fill="#B8864D" />
-                </div>
+      <section className="bg-[#1C0A0A] px-6 py-14 md:px-10 md:py-20">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-y-10 md:grid-cols-4 md:divide-x md:divide-[#FDF8F5]/15">
+          {[
+            { end: 3, suffix: "", en: "Years of experience", es: "Años de experiencia" },
+            { end: 500, suffix: "+", en: "Happy clients", es: "Clientas felices" },
+            { end: 2000, suffix: "+", en: "Designs created", es: "Diseños creados" },
+            { end: 100, suffix: "%", en: "Satisfaction rate", es: "Satisfacción" },
+          ].map((stat) => (
+            <div key={stat.en} className="px-2 text-center md:px-8 md:text-left">
+              <div className="font-serif text-5xl text-[#E8C9A8] md:text-7xl">
+                <AnimatedCounter end={stat.end} suffix={stat.suffix} />
               </div>
-              <div className="font-serif text-4xl md:text-5xl font-bold mb-2"
-                style={{
-                  background: 'linear-gradient(135deg, #D4A574 0%, #B8864D 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>
-                <AnimatedCounter end={3} suffix="" />
-              </div>
-              <p className="text-[#3D2828] text-sm md:text-base font-medium">
-                {lang === "en" ? "Years Experience" : "Años de Experiencia"}
+              <p className="mt-3 text-xs font-medium uppercase tracking-[0.2em] text-[#FDF8F5]/70">
+                {lang === "en" ? stat.en : stat.es}
               </p>
             </div>
-
-            {/* Stat 2: Happy Clients */}
-            <div className="text-center group">
-              <div className="mb-4 flex justify-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#D4A574]/20 to-[#B8864D]/20 flex items-center justify-center group-hover:from-[#D4A574]/30 group-hover:to-[#B8864D]/30 transition-all duration-300 group-hover:scale-110">
-                  <Heart className="w-8 h-8 text-[#B8864D]" fill="#B8864D" />
-                </div>
-              </div>
-              <div className="font-serif text-4xl md:text-5xl font-bold mb-2"
-                style={{
-                  background: 'linear-gradient(135deg, #D4A574 0%, #B8864D 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>
-                <AnimatedCounter end={500} suffix="+" />
-              </div>
-              <p className="text-[#3D2828] text-sm md:text-base font-medium">
-                {lang === "en" ? "Happy Clients" : "Clientas Felices"}
-              </p>
-            </div>
-
-            {/* Stat 3: Designs Created */}
-            <div className="text-center group">
-              <div className="mb-4 flex justify-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#D4A574]/20 to-[#B8864D]/20 flex items-center justify-center group-hover:from-[#D4A574]/30 group-hover:to-[#B8864D]/30 transition-all duration-300 group-hover:scale-110">
-                  <Sparkles className="w-8 h-8 text-[#B8864D]" />
-                </div>
-              </div>
-              <div className="font-serif text-4xl md:text-5xl font-bold mb-2"
-                style={{
-                  background: 'linear-gradient(135deg, #D4A574 0%, #B8864D 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>
-                <AnimatedCounter end={2000} suffix="+" />
-              </div>
-              <p className="text-[#3D2828] text-sm md:text-base font-medium">
-                {lang === "en" ? "Designs Created" : "Diseños Creados"}
-              </p>
-            </div>
-
-            {/* Stat 4: Satisfaction Rate */}
-            <div className="text-center group">
-              <div className="mb-4 flex justify-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#D4A574]/20 to-[#B8864D]/20 flex items-center justify-center group-hover:from-[#D4A574]/30 group-hover:to-[#B8864D]/30 transition-all duration-300 group-hover:scale-110">
-                  <Award className="w-8 h-8 text-[#B8864D]" />
-                </div>
-              </div>
-              <div className="font-serif text-4xl md:text-5xl font-bold mb-2"
-                style={{
-                  background: 'linear-gradient(135deg, #D4A574 0%, #B8864D 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>
-                <AnimatedCounter end={100} suffix="%" />
-              </div>
-              <p className="text-[#3D2828] text-sm md:text-base font-medium">
-                {lang === "en" ? "Satisfaction Rate" : "Tasa de Satisfacción"}
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
@@ -1291,24 +1207,39 @@ className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0
       {/* ================================================================== */}
       {/* CTA SECTION */}
       {/* ================================================================== */}
-      <section className="py-24 px-6 bg-[#4A0404]">
-        <div className="max-w-4xl mx-auto text-center">
-          <Sparkles className="w-10 h-10 text-[#D4AF37] mx-auto mb-6" />
-          <h2 className="font-serif text-3xl md:text-4xl text-white mb-6">
-            {lang === "en" ? "Ready to Get Beautiful Nails?" : "¿Lista para Uñas Hermosas?"}
+      <section className="relative isolate overflow-hidden bg-[#1C0A0A] px-6 py-24 md:px-10 md:py-36">
+        <Image
+          src="/gallery/aurora-chrome-gold.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="-z-10 object-cover opacity-25"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#1C0A0A] via-[#1C0A0A]/85 to-[#1C0A0A]/40" />
+        <div className="mx-auto max-w-7xl">
+          <p className="mb-6 text-xs font-semibold uppercase tracking-[0.3em] text-[#D4A574]">
+            {lang === "en" ? "By appointment only" : "Solo con cita"}
+          </p>
+          <h2 className="max-w-4xl font-serif text-[clamp(2.75rem,8vw,6.5rem)] leading-[0.95] text-[#FDF8F5]">
+            {lang === "en" ? "Your next set" : "Tu próximo diseño"}
+            <br />
+            <span className="italic text-[#E8C9A8]">{lang === "en" ? "starts with a DM" : "empieza con un mensaje"}</span>
           </h2>
-          <p className="text-white/70 mb-8 max-w-xl mx-auto">
+          <p className="mt-8 max-w-xl text-base leading-relaxed text-[#FDF8F5]/75 md:text-lg">
             {lang === "en"
-              ? "Book your appointment today and let's create something beautiful together."
-              : "Reserva tu cita hoy y creemos algo hermoso juntas."}
+              ? "Send a photo of the look you love, pick a time, and Iva takes care of the rest."
+              : "Envía una foto del diseño que te gusta, elige un horario e Iva se encarga del resto."}
           </p>
           <a
             href={CONFIG.instagramDmUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#D4AF37] text-[#4A0404] px-8 py-4 rounded-full font-semibold hover:bg-white transition-all shadow-2xl"
+            className="group mt-10 inline-flex items-center gap-3 rounded-full bg-[#E8C9A8] py-2 pl-7 pr-2 text-sm font-semibold tracking-wide text-[#1C0A0A] transition-colors hover:bg-white"
           >
-            {t.nav.book}
+            {t.hero.cta}
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1C0A0A] text-[#E8C9A8] transition-transform group-hover:rotate-45">
+              <ChevronRight className="h-4 w-4" />
+            </span>
           </a>
         </div>
       </section>
