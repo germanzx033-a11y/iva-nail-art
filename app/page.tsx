@@ -971,14 +971,14 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
 
         {/* Content */}
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          <p className="text-[#D4AF37] tracking-[0.3em] text-sm mb-4 font-medium">
+          <p className="text-[#D4AF37]! tracking-[0.3em] text-sm mb-4 font-medium">
             {t.hero.welcome}
           </p>
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight animate-slide-in-up">
+          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white! mb-6 leading-tight animate-slide-in-up">
             IVA <span className="font-light italic bg-gradient-to-r from-[#D4AF37] via-[#E8C9A8] to-[#D4AF37] bg-clip-text text-transparent animate-gradient-text">Nail Art</span>
           </h1>
-          <p className="text-white/90 text-lg md:text-xl max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
-            <span className="typing-effect inline-block">{t.hero.tagline}</span>
+          <p className="text-white/90! text-lg md:text-xl max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
+            <span>{t.hero.tagline}</span>
           </p>
 
           {/* Logo IVA - Transparente */}
