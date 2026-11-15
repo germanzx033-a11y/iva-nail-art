@@ -41,15 +41,13 @@ export default function BookingCancelPage() {
           </Link>
 
           <a
-            href={`https://wa.me/19296257273?text=${encodeURIComponent(
-              "Hi! I had trouble completing my booking. Can you help me schedule an appointment?"
-            )}`}
+            href="https://ig.me/m/iva_nailart_ny"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-3 w-full py-4 bg-white border border-[#EBE8E2] text-[#7A7A7A] text-[11px] font-medium uppercase tracking-[0.2em] hover:opacity-70 transition-all duration-500"
           >
             <MessageCircle className="w-4 h-4" />
-            Need Help? Chat with Us
+            Need Help? Message Us on Instagram
           </a>
         </div>
 

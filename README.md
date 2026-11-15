@@ -9,7 +9,7 @@ A beautiful, modern website for IVA Nail Art studio in Brooklyn, NY. Built with 
 - ✨ **Luxury Design** - Elegant color scheme and smooth animations
 - 🌍 **Bilingual** - Full support for English and Spanish
 - 📱 **Fully Responsive** - Perfect on mobile, tablet, and desktop
-- 📅 **WhatsApp Booking** - Integrated appointment booking system
+- 📅 **Instagram DM Booking** - Booking requests go to the studio's Instagram direct messages
 - 🎨 **Service Catalog** - Complete pricing and service information
 - 🖼️ **Gallery** - Showcase of beautiful nail art work
 - 🚀 **Lightning Fast** - Optimized with Next.js and Vercel
@@ -157,13 +157,12 @@ git push origin main
 
 Switch between English and Spanish with a single click. All content, including service descriptions and booking flow, is fully translated.
 
-### WhatsApp Integration
+### Instagram DM Integration
 
-The booking system generates a pre-filled WhatsApp message with:
+Every "Book" button opens the studio's Instagram direct messages (`https://ig.me/m/iva_nailart_ny`, set in `instagramDmUrl` in `app/constants/data.ts` and `app/page.tsx`). Instagram cannot pre-fill a message from a link, so the booking form copies the request to the clipboard and opens the chat for the client to paste. The request contains:
 - Selected service
 - Date and time
 - Customer information
-- Pricing details
 
 ### Responsive Design
 

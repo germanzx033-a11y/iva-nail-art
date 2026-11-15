@@ -40,7 +40,7 @@ export const TRANSLATIONS = {
       depositDue: "Deposit Due",
       back: "Back",
       next: "Continue",
-      confirm: "Pay & Reserve via WhatsApp",
+      confirm: "Pay & Reserve",
       bookNow: "Book Now",
     },
     footer: {
@@ -89,7 +89,7 @@ export const TRANSLATIONS = {
       depositDue: "Depósito a Pagar",
       back: "Atrás",
       next: "Continuar",
-      confirm: "Pagar y Reservar por WhatsApp",
+      confirm: "Pagar y Reservar",
       bookNow: "Reservar",
     },
     footer: {

@@ -105,20 +105,6 @@ export function getClientIP(request: Request): string {
   return '127.0.0.1';
 }
 
-// =============================================
-// WHATSAPP INTEGRATION
-// =============================================
-
-export const WHATSAPP_CONFIG = {
-  number: '13474735036', // IVA's WhatsApp number
-  businessName: 'IVA Nail Art',
-};
-
-export function generateWhatsAppURL(phone: string, message: string): string {
-  const cleanPhone = phone.replace(/\D/g, '');
-  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-}
-
 export function generateVIPConciergeMessage(name: string, date: string, slot: string): string {
   return `Hola ${name} ✨ Soy el Concierge de IVA. Iva ha abierto un espacio exclusivo para ${date} (${slot}) y el cupo es tuyo. ¿Confirmas? 💅`;
 }
