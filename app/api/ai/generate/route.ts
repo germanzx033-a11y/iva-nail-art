@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { RateLimiterMemory } from 'rate-limiter-flexible';
+import { getClientIP } from '@/lib/utils';
 
 /**
  * AI Image Generation API
@@ -17,6 +19,14 @@ const MODELS = {
   // Image-to-image for style transfer
   img2img: 'stability-ai/stable-diffusion-img2img:15a3689ee13b0d2616e98820eca31d4c3abcd36672df6afce5cb6feb1d66087d',
 };
+
+// Best-effort per-IP limit (in-memory: per serverless instance, so it only blunts
+// casual abuse; put the endpoint behind real auth or a shared store for hard limits).
+const limiter = new RateLimiterMemory({ points: 5, duration: 60 });
+
+const MAX_PROMPT_LENGTH = 500;
+const MAX_IMAGE_LENGTH = 7_000_000; // ~5 MB of base64
+const PREDICTION_ID_PATTERN = /^[A-Za-z0-9]{8,64}$/;
 
 interface GenerateRequest {
   prompt: string;
@@ -50,14 +60,32 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    try {
+      await limiter.consume(getClientIP(request));
+    } catch {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
+
     const body: GenerateRequest = await request.json();
     const { prompt, image, model = 'sdxl', style = 'elegant' } = body;
 
-    if (!prompt) {
+    if (typeof prompt !== 'string' || !prompt.trim()) {
       return NextResponse.json(
         { error: 'Prompt is required' },
         { status: 400 }
       );
+    }
+    if (prompt.length > MAX_PROMPT_LENGTH) {
+      return NextResponse.json({ error: 'Prompt is too long' }, { status: 400 });
+    }
+    if (!Object.prototype.hasOwnProperty.call(MODELS, model)) {
+      return NextResponse.json({ error: 'Invalid model' }, { status: 400 });
+    }
+    if (!Object.prototype.hasOwnProperty.call(STYLE_MODIFIERS, style)) {
+      return NextResponse.json({ error: 'Invalid style' }, { status: 400 });
+    }
+    if (image !== undefined && (typeof image !== 'string' || image.length > MAX_IMAGE_LENGTH)) {
+      return NextResponse.json({ error: 'Invalid image' }, { status: 400 });
     }
 
     // Enhance prompt with nail art context and style
@@ -115,11 +143,12 @@ export async function POST(request: NextRequest) {
     });
 
     if (!response.ok) {
-      const error = await response.json();
+      const error = await response.json().catch(() => null);
       console.error('[AI] Replicate error:', error);
+      // Do not forward the upstream error body to the client
       return NextResponse.json(
-        { error: 'AI generation failed', details: error },
-        { status: response.status }
+        { error: 'AI generation failed' },
+        { status: response.status === 429 ? 429 : 502 }
       );
     }
 
@@ -153,6 +182,11 @@ export async function GET(request: NextRequest) {
       { error: 'Prediction ID is required' },
       { status: 400 }
     );
+  }
+
+  // Only plain prediction ids: the value is interpolated into an upstream URL path
+  if (!id.startsWith('demo-') && !PREDICTION_ID_PATTERN.test(id)) {
+    return NextResponse.json({ error: 'Invalid prediction ID' }, { status: 400 });
   }
 
   // Demo mode

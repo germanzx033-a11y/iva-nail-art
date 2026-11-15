@@ -11,6 +11,7 @@ import {
   getAppStatus,
 } from '@/lib/kv';
 import { isValidEmail, isValidPhone, getTodayDate } from '@/lib/utils';
+import { requireAdmin } from '@/lib/auth';
 
 // =============================================
 // REQUEST TYPES
@@ -100,16 +101,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
-    // Simple auth check
-    const authHeader = request.headers.get('authorization');
-    const adminKey = process.env.ADMIN_SECRET_KEY;
-
-    if (adminKey && authHeader !== `Bearer ${adminKey}`) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
+    const unauthorized = requireAdmin(request);
+    if (unauthorized) return unauthorized;
 
     const { searchParams } = new URL(request.url);
     const date = searchParams.get('date') || getTodayDate();
@@ -137,16 +130,8 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
 export async function PATCH(request: NextRequest): Promise<NextResponse> {
   try {
-    // Simple auth check
-    const authHeader = request.headers.get('authorization');
-    const adminKey = process.env.ADMIN_SECRET_KEY;
-
-    if (adminKey && authHeader !== `Bearer ${adminKey}`) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
+    const unauthorized = requireAdmin(request);
+    if (unauthorized) return unauthorized;
 
     const body = await request.json();
     const { date, email } = body;
