@@ -3,10 +3,13 @@
  * Golden Gate Protocol - Phase A
  *
  * Blocks a slot for 5 minutes using SET NX
- * RATE LIMITING DESACTIVADO: Permite múltiples dispositivos en la misma red
+ * Rate limit per IP is deliberately generous so several devices on the same
+ * network (PC + phone) keep working, but it stops a client from re-locking
+ * every slot in a loop.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { RateLimiterMemory } from 'rate-limiter-flexible';
 import {
   createPreLock,
   getAppStatus,
@@ -18,8 +21,13 @@ import {
   generateClientId,
   getClientIP,
   isValidBookingDate,
+  isValidDateFormat,
   ERROR_MESSAGES,
 } from '@/lib/utils';
+
+// Best-effort per-IP limit on lock attempts (in-memory: per serverless instance).
+// 10 attempts / 5 min is far above normal use and well below hoarding behaviour.
+const lockLimiter = new RateLimiterMemory({ points: 10, duration: 300 });
 
 // =============================================
 // REQUEST TYPES
@@ -58,17 +66,23 @@ export async function POST(request: NextRequest): Promise<NextResponse<PreLockRe
       );
     }
 
-    // 2. Get client IP (solo para logging, NO para rate limiting)
-    // RATE LIMITING DESACTIVADO: No bloqueamos por IP para evitar problemas
-    // cuando múltiples dispositivos comparten la misma red (PC + iPhone)
+    // 2. Rate limit per IP (generous, see lockLimiter)
     const clientIP = getClientIP(request);
-    console.log(`[PreLock] Request from IP: ${clientIP.substring(0, 15)}...`);
-
-    // RATE LIMITING DESACTIVADO - Ya no bloqueamos por IP
-    // Esto permite que múltiples dispositivos en la misma red funcionen correctamente
+    try {
+      await lockLimiter.consume(clientIP);
+    } catch {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Too many attempts. Please wait a few minutes and try again.',
+          errorCode: 'RATE_LIMITED',
+        },
+        { status: 429 }
+      );
+    }
 
     // 4. Parse request body
-    const body: PreLockRequest = await request.json();
+    const body: PreLockRequest = await request.json().catch(() => ({} as PreLockRequest));
     const { date, slot } = body;
 
     // 5. Validate date
@@ -185,6 +199,12 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!date || !slot) {
       return NextResponse.json(
         { error: 'Date and slot are required' },
+        { status: 400 }
+      );
+    }
+    if (!isValidDateFormat(date) || (slot !== 'morning' && slot !== 'afternoon')) {
+      return NextResponse.json(
+        { error: 'Invalid date or slot' },
         { status: 400 }
       );
     }
