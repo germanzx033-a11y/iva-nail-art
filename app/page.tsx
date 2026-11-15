@@ -322,6 +322,15 @@ const translations = {
 // ============================================================================
 // COMPONENTE PRINCIPAL
 // ============================================================================
+function makeParticles(count: number) {
+  return Array.from({ length: count }, () => ({
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    delay: `${Math.random() * 8}s`,
+    duration: `${6 + Math.random() * 4}s`,
+  }));
+}
+
 export default function Home() {
   const [lang, setLang] = useState<"en" | "es">("en");
   const [selectedCategory, setSelectedCategory] = useState("manicure");
@@ -352,10 +361,23 @@ export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [scrollProgress, setScrollProgress] = useState(0);
   const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number }>>([]);
-  const [stars, setStars] = useState<Array<{ id: number; x: number; y: number; delay: number }>>([]);
+  // Valores aleatorios generados una sola vez (initializer lazy). Se renderizan solo
+  // cuando !isLoading, así que no hay desajuste de hidratación con el servidor.
+  const [stars] = useState<Array<{ id: number; x: number; y: number; delay: number }>>(() =>
+    Array.from({ length: 30 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      delay: Math.random() * 2,
+    }))
+  );
   const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([]);
-  const [heroParticles, setHeroParticles] = useState<Array<{ left: string; top: string; delay: string; duration: string }>>([]);
-  const [backgroundParticles, setBackgroundParticles] = useState<Array<{ left: string; top: string; delay: string; duration: string }>>([]);
+  const [heroParticles] = useState<Array<{ left: string; top: string; delay: string; duration: string }>>(() =>
+    makeParticles(15)
+  );
+  const [backgroundParticles] = useState<Array<{ left: string; top: string; delay: string; duration: string }>>(() =>
+    makeParticles(20)
+  );
 
   // Estados para efectos mágicos interactivos
   const [spotlightPosition, setSpotlightPosition] = useState({ x: 50, y: 50 });
@@ -424,45 +446,6 @@ export default function Home() {
 
     return () => clearTimeout(timer);
   }, []);
-
-  // Hook para generar estrellas (solo en cliente para evitar hidratación)
-  useEffect(() => {
-    if (!isLoading && typeof window !== 'undefined') {
-      const newStars = Array.from({ length: 30 }, (_, i) => ({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        delay: Math.random() * 2,
-      }));
-      setStars(newStars);
-    }
-  }, [isLoading]);
-
-  // Hook para generar partículas del hero (solo en cliente)
-  useEffect(() => {
-    if (!isLoading && typeof window !== 'undefined') {
-      const particles = Array.from({ length: 15 }, () => ({
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        delay: `${Math.random() * 8}s`,
-        duration: `${6 + Math.random() * 4}s`,
-      }));
-      setHeroParticles(particles);
-    }
-  }, [isLoading]);
-
-  // Hook para generar partículas de fondo (solo en cliente)
-  useEffect(() => {
-    if (!isLoading && typeof window !== 'undefined') {
-      const particles = Array.from({ length: 20 }, () => ({
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        delay: `${Math.random() * 8}s`,
-        duration: `${6 + Math.random() * 4}s`,
-      }));
-      setBackgroundParticles(particles);
-    }
-  }, [isLoading]);
 
   // Hook para crear ripples en clicks
   useEffect(() => {
@@ -800,7 +783,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       {!isLoading && <div className="grid-background" />}
 
       {/* Partículas de estrellas */}
-      {stars.map((star) => (
+      {!isLoading && stars.map((star) => (
         <div
           key={star.id}
           className="star-particle"
@@ -1039,7 +1022,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
 
         {/* Partículas flotantes decorativas PREMIUM */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-5">
-          {heroParticles.length > 0 && (
+          {!isLoading && heroParticles.length > 0 && (
             <>
               {heroParticles.map((particle, i) => (
                 <div

@@ -1,13 +1,21 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Instagram, X, ChevronLeft, ChevronRight, Sparkles, ZoomIn, Heart, Star } from "lucide-react";
 import { GALLERY_IMAGES, type GalleryImage } from "@/app/data/galleryData";
+import { useMounted } from "@/app/hooks/useMounted";
 
 interface GallerySectionProps {
   lang: "en" | "es";
-  t: any;
-  CONFIG: any;
+  t: {
+    gallery: { subtitle: string; title: string; description: string };
+  };
+  CONFIG: {
+    instagram: string;
+    instagramUrl: string;
+    tiktok: string;
+    tiktokUrl: string;
+  };
 }
 
 export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps) {
@@ -18,24 +26,25 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
   const [hoveredImageId, setHoveredImageId] = useState<string | null>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
   const imageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-  const particlesRef = useRef<Array<{ id: number; x: number; y: number; delay: number }>>([]);
-
-  // Efecto de partículas doradas
-  useEffect(() => {
-    const generateParticles = () => {
-      const particles: Array<{ id: number; x: number; y: number; delay: number }> = [];
-      for (let i = 0; i < 20; i++) {
-        particles.push({
-          id: i,
-          x: Math.random() * 100,
-          y: Math.random() * 100,
-          delay: Math.random() * 5,
-        });
-      }
-      particlesRef.current = particles;
-    };
-    generateParticles();
-  }, []);
+  const mounted = useMounted();
+  // Valores aleatorios generados una sola vez; solo se renderizan tras montar (sin desajuste de hidratación)
+  const [particles] = useState(() =>
+    Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      delay: Math.random() * 5,
+      duration: 8 + Math.random() * 4,
+    }))
+  );
+  const [sparkles] = useState(() =>
+    Array.from({ length: 15 }, () => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      delay: Math.random() * 3,
+      duration: 2 + Math.random() * 2,
+    }))
+  );
 
   // Seguir el mouse para efectos de spotlight
   useEffect(() => {
@@ -82,6 +91,15 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
     };
   }, [visibleImages]);
 
+  const navigateImage = useCallback((direction: number) => {
+    setSelectedImage((current) => {
+      if (!current) return current;
+      const currentIndex = GALLERY_IMAGES.findIndex((img) => img.id === current.id);
+      const newIndex = (currentIndex + direction + GALLERY_IMAGES.length) % GALLERY_IMAGES.length;
+      return GALLERY_IMAGES[newIndex];
+    });
+  }, []);
+
   // Navegación con teclado en el modal
   useEffect(() => {
     if (!selectedImage) return;
@@ -98,14 +116,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedImage]);
-
-  const navigateImage = (direction: number) => {
-    if (!selectedImage) return;
-    const currentIndex = GALLERY_IMAGES.findIndex((img) => img.id === selectedImage.id);
-    const newIndex = (currentIndex + direction + GALLERY_IMAGES.length) % GALLERY_IMAGES.length;
-    setSelectedImage(GALLERY_IMAGES[newIndex]);
-  };
+  }, [selectedImage, navigateImage]);
 
   const loadMoreImages = () => {
     setVisibleImages((prev) => Math.min(prev + 12, GALLERY_IMAGES.length));
@@ -113,13 +124,20 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
 
   const handleImageClick = (image: GalleryImage) => {
     setSelectedImage(image);
-    document.body.style.overflow = "hidden";
   };
 
   const closeModal = () => {
     setSelectedImage(null);
-    document.body.style.overflow = "";
   };
+
+  // Bloquear el scroll del body mientras el modal está abierto
+  useEffect(() => {
+    if (!selectedImage) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedImage]);
 
   return (
     <>
@@ -156,7 +174,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
           />
 
           {/* Partículas doradas flotantes */}
-          {particlesRef.current.map((particle) => (
+          {mounted && particles.map((particle) => (
             <div
               key={particle.id}
               className="absolute pointer-events-none animate-float-particle"
@@ -164,7 +182,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
                 left: `${particle.x}%`,
                 top: `${particle.y}%`,
                 animationDelay: `${particle.delay}s`,
-                animationDuration: `${8 + Math.random() * 4}s`,
+                animationDuration: `${particle.duration}s`,
               }}
             >
               <div className="w-2 h-2 bg-[#D4AF37] rounded-full blur-sm opacity-40 animate-sparkle"></div>
@@ -391,15 +409,15 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
         >
           {/* Efectos de fondo animados */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {[...Array(15)].map((_, i) => (
+            {mounted && sparkles.map((sp, i) => (
               <div
                 key={i}
                 className="absolute w-1 h-1 bg-[#D4AF37] rounded-full animate-sparkle"
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 3}s`,
-                  animationDuration: `${2 + Math.random() * 2}s`,
+                  left: `${sp.left}%`,
+                  top: `${sp.top}%`,
+                  animationDelay: `${sp.delay}s`,
+                  animationDuration: `${sp.duration}s`,
                   opacity: 0.3,
                 }}
               />
