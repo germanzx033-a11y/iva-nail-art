@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getAppStatus, setAppStatus, toggleAppStatus, AppStatus } from '@/lib/kv';
+import { requireAdmin } from '@/lib/auth';
 
 // =============================================
 // GET /api/status
@@ -36,16 +37,8 @@ export async function GET(): Promise<NextResponse> {
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
-    // Simple auth check (in production, use proper authentication)
-    const authHeader = request.headers.get('authorization');
-    const adminKey = process.env.ADMIN_SECRET_KEY;
-
-    if (adminKey && authHeader !== `Bearer ${adminKey}`) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
+    const unauthorized = requireAdmin(request);
+    if (unauthorized) return unauthorized;
 
     const body = await request.json().catch(() => ({}));
     let newStatus: AppStatus;

@@ -10,6 +10,7 @@ import {
   getAppStatus,
 } from '@/lib/kv';
 import { getTodayDate, formatDate } from '@/lib/utils';
+import { requireAdmin } from '@/lib/auth';
 
 // =============================================
 // TYPES
@@ -40,16 +41,8 @@ interface DailyBriefResponse {
 
 export async function GET(request: NextRequest): Promise<NextResponse<DailyBriefResponse | { error: string }>> {
   try {
-    // Simple auth check
-    const authHeader = request.headers.get('authorization');
-    const adminKey = process.env.ADMIN_SECRET_KEY;
-
-    if (adminKey && authHeader !== `Bearer ${adminKey}`) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
+    const unauthorized = requireAdmin(request);
+    if (unauthorized) return unauthorized;
 
     const { searchParams } = new URL(request.url);
     const date = searchParams.get('date') || getTodayDate();

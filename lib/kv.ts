@@ -352,6 +352,19 @@ export async function markProcessed(sessionId: string): Promise<boolean> {
   }
 }
 
+/**
+ * Releases the idempotency marker so Stripe can retry a webhook whose
+ * processing failed part-way (otherwise the retry would be skipped and a paid
+ * session would never produce a booking).
+ */
+export async function unmarkProcessed(sessionId: string): Promise<void> {
+  try {
+    await kv.del(kvKeys.processed(sessionId));
+  } catch (error) {
+    console.error('Failed to release processed marker:', error);
+  }
+}
+
 export async function isProcessed(sessionId: string): Promise<boolean> {
   try {
     const processed = await kv.get(kvKeys.processed(sessionId));
