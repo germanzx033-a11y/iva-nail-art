@@ -75,7 +75,7 @@ export const translations: Translations = {
   "shop.title": { en: "IVA Curated Shop", es: "Tienda Curada IVA" },
   "shop.cart": { en: "Cart", es: "Carrito" },
   "shop.addToCart": { en: "Add to Cart", es: "Agregar" },
-  "shop.checkout": { en: "Checkout via WhatsApp", es: "Pagar por WhatsApp" },
+  "shop.checkout": { en: "Checkout", es: "Pagar" },
 
   // Blog Section
   "blog.tagline": { en: "NAIL TIPS & TRENDS", es: "CONSEJOS Y TENDENCIAS" },
@@ -90,7 +90,7 @@ export const translations: Translations = {
     en: "Ready to experience the IVA difference? Book your appointment today.",
     es: "¿Lista para experimentar la diferencia IVA? Reserva tu cita hoy."
   },
-  "contact.book": { en: "Book via WhatsApp", es: "Reservar por WhatsApp" },
+  "contact.book": { en: "Book via Instagram", es: "Reservar por Instagram" },
   "contact.call": { en: "Call Us", es: "Llámanos" },
 
   // Footer

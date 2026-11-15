@@ -94,7 +94,8 @@ function AnimatedCounter({ end, duration = 2000, suffix = "", prefix = "" }: {
 const CONFIG = {
   businessName: "IVA Nail Art",
   phone: "+1 (929) 625-7273",
-  whatsappNumber: "19296257273",
+  // Instagram direct messages (ig.me opens the chat; Instagram cannot pre-fill text)
+  instagramDmUrl: "https://ig.me/m/iva_nailart_ny",
   instagram: "iva_nailart_ny",
   instagramUrl: "https://instagram.com/iva_nailart_ny",
   tiktok: "iva_nailart_ny",
@@ -237,7 +238,8 @@ const translations = {
       next: "Continue",
       back: "Back",
       summary: "Booking Summary",
-      sendWhatsApp: "Send via WhatsApp",
+      sendInstagram: "Send via Instagram",
+      dmHint: "We'll copy your booking details and open our Instagram chat: just paste them and send.",
       successMessage: `Click below to send your booking request. Iva will confirm availability and send Zelle payment instructions for the $${CONFIG.deposit} deposit.`,
     },
     footer: {
@@ -306,7 +308,8 @@ const translations = {
       next: "Continuar",
       back: "Volver",
       summary: "Resumen de Reserva",
-      sendWhatsApp: "Enviar por WhatsApp",
+      sendInstagram: "Enviar por Instagram",
+      dmHint: "Copiaremos los datos de tu reserva y abriremos nuestro chat de Instagram: solo pégalos y envía.",
       successMessage: `Haz clic abajo para enviar tu solicitud. Iva confirmará disponibilidad y te enviará instrucciones de pago Zelle para el depósito de $${CONFIG.deposit}.`,
     },
     footer: {
@@ -628,8 +631,8 @@ export default function Home() {
     }
   };
 
-  // Enviar a WhatsApp
-  const sendToWhatsApp = () => {
+  // Enviar por mensaje directo de Instagram
+  const sendViaInstagram = () => {
     try {
     const serviceName = lang === "en" ? bookingData.service?.name : bookingData.service?.nameEs;
       const formattedDate = bookingData.date ? formatBookingDate(bookingData.date) : '';
@@ -661,10 +664,15 @@ ${bookingData.email ? `📧 *Email:* ${bookingData.email}` : ""}
 Entiendo que se requiere depósito de $${CONFIG.deposit}.
 ¡Por favor confirma disponibilidad! 💕`;
 
-    window.open(
-      `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`,
-      "_blank"
-    );
+    // Instagram cannot pre-fill a DM from a link, so copy the details (without
+    // WhatsApp-style *bold* markers) and open the chat for the client to paste them.
+    const plainMessage = message.replace(/\*/g, '');
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(plainMessage).catch(() => alert(plainMessage));
+    } else {
+      alert(plainMessage);
+    }
+    window.open(CONFIG.instagramDmUrl, "_blank");
     setIsBookingOpen(false);
     setBookingData({
       step: 1,
@@ -678,7 +686,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       errors: {},
     });
     } catch (error) {
-      console.error('Error sending to WhatsApp:', error);
+      console.error('Error sending via Instagram:', error);
       alert(lang === "en" ? "An error occurred. Please try again." : "Ocurrió un error. Por favor intenta de nuevo.");
     }
   };
@@ -921,11 +929,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
             </button>
 
             <a
-              href={`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(
-                lang === "en"
-                  ? "Hi! I'd like to book an appointment for nails. Can you help me schedule? 💅"
-                  : "¡Hola! Quiero agendar una cita para uñas. ¿Me ayudas a programarla? 💅"
-              )}`}
+              href={CONFIG.instagramDmUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-[#4A0404] text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-[#6B0606] transition-colors shadow-lg shadow-[#4A0404]/20"
@@ -989,11 +993,7 @@ className="w-56 sm:w-72 h-auto drop-shadow-[0_8px_32px_rgba(0,0,0,0.4)]" priorit
           </div>
 
           <a
-            href={`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(
-              lang === "en"
-                ? "Hi! I'd like to book an appointment for your luxury nail services. Can we schedule now? 💅"
-                : "¡Hola! Quiero agendar una cita para tus servicios de uñas de lujo. ¿Podemos agendar ahora? 💅"
-            )}`}
+            href={CONFIG.instagramDmUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="group bg-gradient-to-r from-[#D4AF37] via-[#E8C9A8] to-[#D4AF37] text-[#4A0404] px-8 py-4 rounded-full font-bold text-sm tracking-wide hover:from-white hover:via-[#F5E6D3] hover:to-white transition-all shadow-2xl hover:shadow-[#D4AF37]/50 hover:scale-110 inline-flex items-center gap-2 relative overflow-hidden"
@@ -1273,10 +1273,6 @@ className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0
                 }
               };
 
-              // Mensaje para WhatsApp sin precio
-              const whatsappMessage = lang === "en"
-                ? `Hi! I'm interested in ${service.name}. Could you tell me more about this service? 💅`
-                : `¡Hola! Me interesa ${service.nameEs}. ¿Puedes contarme más sobre este servicio? 💅`;
 
               return (
               <div
@@ -1359,24 +1355,22 @@ className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0
                       </p>
                     </div>
 
-                    {/* Botón de WhatsApp Elegante - Estilo Premium con gradiente */}
+                    {/* Botón de mensaje directo - Estilo Premium con gradiente */}
                     <a
-                      href={`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`}
+                      href={CONFIG.instagramDmUrl}
               target="_blank"
               rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="group/btn w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-[#25D366] via-[#128C7E] to-[#25D366] text-white rounded-full font-semibold text-sm tracking-wide hover:from-[#128C7E] hover:via-[#25D366] hover:to-[#128C7E] transition-all duration-500 hover:shadow-xl hover:scale-105 mt-auto relative overflow-hidden"
+                      className="group/btn w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-[#4A0404] via-[#7A1F1F] to-[#4A0404] text-white rounded-full font-semibold text-sm tracking-wide hover:from-[#7A1F1F] hover:via-[#4A0404] hover:to-[#7A1F1F] transition-all duration-500 hover:shadow-xl hover:scale-105 mt-auto relative overflow-hidden"
                       style={{
                         backgroundSize: "200% 100%",
                       }}
-                      aria-label={`${lang === "en" ? "Contact via WhatsApp for" : "Contactar por WhatsApp para"} ${lang === "en" ? service.name : service.nameEs}`}
+                      aria-label={`${lang === "en" ? "Send a direct message on Instagram about" : "Enviar mensaje directo por Instagram sobre"} ${lang === "en" ? service.name : service.nameEs}`}
                     >
                       {/* Efecto shimmer en el botón */}
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000"></div>
 
-                      <svg className="w-5 h-5 transition-transform duration-300 group-hover/btn:scale-110 group-hover/btn:rotate-12 relative z-10" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-              </svg>
+                      <Instagram className="w-5 h-5 transition-transform duration-300 group-hover/btn:scale-110 group-hover/btn:rotate-12 relative z-10" />
                       <span className="relative z-10 font-semibold">{lang === "en" ? "Ask for Price" : "Preguntar Precio"}</span>
                       <ChevronRight className="w-4 h-4 opacity-0 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 transition-all duration-300 relative z-10" />
                     </a>
@@ -1426,11 +1420,7 @@ className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0
               : "Reserva tu cita hoy y creemos algo hermoso juntas."}
           </p>
           <a
-            href={`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(
-              lang === "en"
-                ? "Hi! I want to book an appointment for nails. Can we set it up? 💅"
-                : "¡Hola! Quiero reservar una cita para uñas. ¿Podemos agendar? 💅"
-            )}`}
+            href={CONFIG.instagramDmUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-[#D4AF37] text-[#4A0404] px-8 py-4 rounded-full font-semibold hover:bg-white transition-all shadow-2xl"
@@ -1641,7 +1631,7 @@ className="w-16 h-auto rounded-lg"
                             {lang === "en" ? service.name : service.nameEs}
                           </span>
                           <span className="text-xs uppercase tracking-wide text-[#D4AF37]">
-                            {lang === "en" ? "Price on WhatsApp" : "Precio por WhatsApp"}
+                            {lang === "en" ? "Price by DM" : "Precio por mensaje"}
                           </span>
                         </div>
                       </button>
@@ -1819,15 +1809,14 @@ className="w-16 h-auto rounded-lg"
                     </div>
                   </div>
 
-                  {/* WhatsApp Button */}
+                  {/* Instagram DM Button */}
+                  <p className="text-sm text-stone-600 text-center mb-3">{t.booking.dmHint}</p>
                   <button
-                    onClick={sendToWhatsApp}
-                    className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-4 rounded-xl font-semibold transition-colors flex items-center justify-center gap-3"
+                    onClick={sendViaInstagram}
+                    className="w-full bg-[#4A0404] hover:bg-[#6B0606] text-white py-4 rounded-xl font-semibold transition-colors flex items-center justify-center gap-3"
                   >
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                    </svg>
-                    {t.booking.sendWhatsApp}
+                    <Instagram className="w-6 h-6" />
+                    {t.booking.sendInstagram}
                   </button>
                 </div>
               )}
@@ -1868,22 +1857,16 @@ className="w-16 h-auto rounded-lg"
       )}
 
       {/* ================================================================== */}
-      {/* FLOATING WHATSAPP BUTTON */}
+      {/* FLOATING INSTAGRAM DM BUTTON */}
       {/* ================================================================== */}
       <a
-        href={`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(
-          lang === "en"
-            ? "Hi! I'd like information about your nail services 💅"
-            : "¡Hola! Me gustaría información sobre tus servicios de uñas 💅"
-        )}`}
+        href={CONFIG.instagramDmUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:bg-[#128C7E] hover:scale-110 transition-all z-40 group"
-        aria-label="Contact via WhatsApp"
+        className="fixed bottom-6 right-6 bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white p-4 rounded-full shadow-2xl hover:brightness-110 hover:scale-110 transition-all z-40 group"
+        aria-label={lang === "en" ? "Message us on Instagram" : "Escríbenos por Instagram"}
       >
-        <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-        </svg>
+        <Instagram className="w-7 h-7" />
         <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-[#4A0404] text-white text-sm px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
           {t.floatingBtn}
         </span>

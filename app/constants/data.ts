@@ -22,7 +22,7 @@ export type Language = "en" | "es";
 export const CONFIG = {
   businessName: "IVA Nail Art",
   phone: "+1 (929) 625-7273",
-  whatsappNumber: "19296257273",
+  instagramDmUrl: "https://ig.me/m/iva_nailart_ny",
   instagram: "iva_nailart_ny",
   instagramUrl: "https://www.instagram.com/iva_nailart_ny",
   tiktok: "iva_nailart_ny",

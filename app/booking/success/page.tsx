@@ -235,17 +235,15 @@ function SuccessContent() {
           transition={{ delay: 1 }}
         >
           <motion.a
-            href={`https://wa.me/19296257273?text=${encodeURIComponent(
-              "Hi! I just confirmed my booking at IVA Nail Art. Looking forward to my appointment!"
-            )}`}
+            href="https://ig.me/m/iva_nailart_ny"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-3 w-full py-4 bg-[#25D366] text-white text-[11px] font-medium uppercase tracking-[0.2em] hover:opacity-90 transition-all duration-300 rounded-lg shadow-lg"
+            className="flex items-center justify-center gap-3 w-full py-4 bg-[#4A0404] text-white text-[11px] font-medium uppercase tracking-[0.2em] hover:opacity-90 transition-all duration-300 rounded-lg shadow-lg"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
             <MessageCircle className="w-4 h-4" />
-            Chat on WhatsApp
+            Message us on Instagram
           </motion.a>
 
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
