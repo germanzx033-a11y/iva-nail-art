@@ -20,6 +20,7 @@ import {
   Scissors,
 } from "lucide-react";
 import { formatDate, getMinBookingDate, isValidEmail, isValidPhone } from "@/lib/utils";
+import Image from "next/image";
 import AboutIva from "@/app/components/AboutIva";
 import GallerySection from "@/app/components/GallerySection";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
@@ -45,13 +46,14 @@ function AnimatedCounter({ end, duration = 2000, suffix = "", prefix = "" }: {
       { threshold: 0.5 }
     );
 
-    if (counterRef.current) {
-      observer.observe(counterRef.current);
+    const counterEl = counterRef.current;
+    if (counterEl) {
+      observer.observe(counterEl);
     }
 
     return () => {
-      if (counterRef.current) {
-        observer.unobserve(counterRef.current);
+      if (counterEl) {
+        observer.unobserve(counterEl);
       }
     };
   }, [isVisible]);
@@ -360,7 +362,7 @@ export default function Home() {
   const [scrollY, setScrollY] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number }>>([]);
+  const [particles] = useState<Array<{ id: number; x: number; y: number }>>([]);
   // Valores aleatorios generados una sola vez (initializer lazy). Se renderizan solo
   // cuando !isLoading, así que no hay desajuste de hidratación con el servidor.
   const [stars] = useState<Array<{ id: number; x: number; y: number; delay: number }>>(() =>
@@ -398,12 +400,13 @@ export default function Home() {
       { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
     );
 
-    Object.values(sectionRefs.current).forEach((ref) => {
+    const sections = Object.values(sectionRefs.current);
+    sections.forEach((ref) => {
       if (ref) observer.observe(ref as Element);
     });
 
     return () => {
-      Object.values(sectionRefs.current).forEach((ref) => {
+      sections.forEach((ref) => {
         if (ref) observer.unobserve(ref as Element);
       });
     };
@@ -976,13 +979,13 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
 
           {/* Logo IVA - Transparente */}
           <div className="relative mx-auto mb-10 flex justify-center">
-            <img
-              src="/logo-iva.png"
-              alt="IVA Nail Art logo"
-              className="w-56 sm:w-72 h-auto drop-shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
-              loading="eager"
-              decoding="async"
-            />
+            <Image
+src="/logo-iva.png"
+alt="IVA Nail Art logo"
+width={631}
+height={436}
+className="w-56 sm:w-72 h-auto drop-shadow-[0_8px_32px_rgba(0,0,0,0.4)]" priority
+/>
           </div>
 
           <a
@@ -1068,13 +1071,13 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       <section className="relative overflow-hidden py-16 md:py-20 px-6 bg-gradient-to-br from-[#FDF8F5] via-white to-[#FAF5F2]">
         {/* Marca de agua IVA */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-10">
-          <img
-            src="/logo-iva.png"
-            alt="IVA watermark"
-            className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
-            loading="lazy"
-            decoding="async"
-          />
+          <Image
+src="/logo-iva.png"
+alt="IVA watermark"
+width={631}
+height={436}
+className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
+/>
         </div>
 
         <div className="max-w-6xl mx-auto relative z-10">
@@ -1302,6 +1305,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
 
                   {/* Imagen principal del servicio */}
                   <div className="relative h-48 overflow-hidden rounded-t-2xl mb-4 group-hover:mb-6 transition-all duration-500">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- dynamic per-service src with an onError fallback; kept as <img> to avoid pushing every service photo through the image optimizer */}
                     <img
                       src={serviceImage}
                       alt={lang === "en" ? service.name : service.nameEs}
@@ -1445,13 +1449,13 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
 
         {/* Marca de agua del logo en footer */}
         <div className="pointer-events-none absolute -right-16 -bottom-10 w-80 sm:w-96 opacity-10 rotate-6">
-          <img
-            src="/logo-iva.png"
-            alt="IVA watermark footer"
-            className="w-full h-auto drop-shadow-[0_25px_45px_rgba(0,0,0,0.25)]"
-            loading="lazy"
-            decoding="async"
-          />
+          <Image
+src="/logo-iva.png"
+alt="IVA watermark footer"
+width={631}
+height={436}
+className="w-full h-auto drop-shadow-[0_25px_45px_rgba(0,0,0,0.25)]"
+/>
         </div>
 
         <div className="max-w-6xl mx-auto relative z-10">
@@ -1462,13 +1466,13 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                 IVA <span className="font-light">Nail Art</span>
               </h3>
               <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
-                <img
-                  src="/logo-iva.png"
-                  alt="IVA Nail Art logo footer"
-                  className="w-16 h-auto rounded-lg"
-                  loading="lazy"
-                  decoding="async"
-                />
+                <Image
+src="/logo-iva.png"
+alt="IVA Nail Art logo footer"
+width={631}
+height={436}
+className="w-16 h-auto rounded-lg"
+/>
                 <p className="text-[#D4AF37] text-sm font-semibold tracking-wide">
                   Luxury Nails · NY
                 </p>

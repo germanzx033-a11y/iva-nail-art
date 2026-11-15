@@ -86,7 +86,7 @@ async function handleSuccessfulPayment(
 ): Promise<{ success: boolean; error?: string }> {
   const sessionId = session.id;
   const metadata = session.metadata!;
-  const { date, slot, lockToken, serviceName, fullPrice, customerName, customerPhone } = metadata;
+  const { date, slot, serviceName, fullPrice, customerName, customerPhone } = metadata;
   const email = session.customer_email!;
 
   // 1. Idempotency check
