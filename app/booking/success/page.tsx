@@ -6,6 +6,7 @@
  */
 
 import { Suspense, useEffect, useState } from "react";
+import { useMounted } from "@/app/hooks/useMounted";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
@@ -29,8 +30,14 @@ interface BookingDetails {
 
 // Confetti particle component
 function ConfettiParticle({ delay, x }: { delay: number; x: number }) {
-  const colors = ["#B76E79", "#722F37", "#FFD700", "#D4A5A5", "#8C6239"];
-  const color = colors[Math.floor(Math.random() * colors.length)];
+  // Color y duración aleatorios, fijados una sola vez por partícula
+  const [{ color, duration }] = useState(() => {
+    const colors = ["#B76E79", "#722F37", "#FFD700", "#D4A5A5", "#8C6239"];
+    return {
+      color: colors[Math.floor(Math.random() * colors.length)],
+      duration: 3 + Math.random() * 2,
+    };
+  });
 
   return (
     <motion.div
@@ -47,7 +54,7 @@ function ConfettiParticle({ delay, x }: { delay: number; x: number }) {
         opacity: [1, 1, 0],
       }}
       transition={{
-        duration: 3 + Math.random() * 2,
+        duration,
         delay: delay,
         ease: "easeIn",
       }}
@@ -57,16 +64,17 @@ function ConfettiParticle({ delay, x }: { delay: number; x: number }) {
 
 // Celebration confetti
 function Confetti() {
-  const [particles, setParticles] = useState<Array<{ id: number; x: number; delay: number }>>([]);
-
-  useEffect(() => {
-    const newParticles = Array.from({ length: 50 }, (_, i) => ({
+  const mounted = useMounted();
+  const [particles] = useState(() =>
+    Array.from({ length: 50 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       delay: Math.random() * 0.5,
-    }));
-    setParticles(newParticles);
-  }, []);
+    }))
+  );
+
+  // Solo tras montar, para evitar desajuste de hidratación con valores aleatorios
+  if (!mounted) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-50">

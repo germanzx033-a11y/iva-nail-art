@@ -140,6 +140,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     // Check localStorage first
     const saved = localStorage.getItem("iva-language") as Language;
     if (saved && (saved === "en" || saved === "es")) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza con localStorage solo al montar (no disponible en SSR)
       setLanguageState(saved);
       return;
     }

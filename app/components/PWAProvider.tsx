@@ -100,6 +100,7 @@ export default function PWAProvider({ children }: { children: ReactNode }) {
     const handleOffline = () => setIsOnline(false);
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza con el navegador solo al montar (no disponible en SSR)
     setIsOnline(navigator.onLine);
 
     // Check notification permission

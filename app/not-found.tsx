@@ -12,7 +12,7 @@ export default function NotFound() {
             Page Not Found
           </h2>
           <p className="text-[#4A0404]/60 mb-8">
-            Oops! This page doesn't exist. Let's get you back to our beautiful nail art gallery.
+            Oops! This page doesn&apos;t exist. Let&apos;s get you back to our beautiful nail art gallery.
           </p>
         </div>
 

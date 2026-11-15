@@ -24,6 +24,7 @@ export function useNotifications() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza con localStorage solo al montar (no disponible en SSR)
         setNotifications(JSON.parse(stored));
       }
     } catch (error) {
