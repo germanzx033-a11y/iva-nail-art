@@ -76,26 +76,24 @@ export default function AboutIva({ language }: AboutIvaProps) {
                 />
                 {/* Subtle gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
-                {/* Loading placeholder */}
-                <div className="absolute inset-0 bg-gradient-to-br from-[#F7F0EB] to-[#F5EDE6] animate-pulse" />
               </div>
             </div>
 
             {/* Floating Badge */}
-            <div className="absolute -top-6 -right-6 md:top-8 md:-right-8 bg-gradient-to-br from-[#D4A574] to-[#B8864D] text-white px-6 py-5 rounded-2xl shadow-2xl z-10">
+            <div className="absolute -top-6 -right-3 md:top-8 md:-right-8 bg-gradient-to-br from-[#D4A574] to-[#B8864D] text-white px-6 py-5 rounded-2xl shadow-2xl z-10">
               <div className="flex items-center gap-2 mb-1">
                 <Heart className="w-4 h-4 text-white/90" />
                 <span className="text-xs uppercase tracking-wider opacity-90 font-medium">
                   {isEn ? "Mom of Ezra" : "Mamá de Ezra"}
                 </span>
               </div>
-              <p className="text-xl font-serif font-semibold">
+              <p className="text-xl font-serif font-semibold text-white">
                 {isEn ? "Protecting Lives" : "Protegiendo Vidas"}
               </p>
             </div>
 
             {/* Bottom Stats Card */}
-            <div className="absolute -bottom-8 -left-8 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-5 border border-[#D4A574]/20 z-10">
+            <div className="absolute -bottom-8 -left-3 md:-left-8 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl p-5 border border-[#D4A574]/20 z-10">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#D4A574]/20 to-[#B8864D]/20 flex items-center justify-center">
                   <Award className="w-6 h-6 text-[#B8864D]" />
