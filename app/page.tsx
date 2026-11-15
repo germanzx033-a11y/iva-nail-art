@@ -22,6 +22,8 @@ import {
 import { formatDate, getMinBookingDate, isValidEmail, isValidPhone } from "@/lib/utils";
 import Image from "next/image";
 import AboutIva from "@/app/components/AboutIva";
+import HeroEditorial from "@/app/components/HeroEditorial";
+import PhotoMarquee from "@/app/components/PhotoMarquee";
 import GallerySection from "@/app/components/GallerySection";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
 
@@ -943,127 +945,8 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       {/* ================================================================== */}
       {/* HERO SECTION */}
       {/* ================================================================== */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Image con Parallax Avanzado */}
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-300 ease-out"
-          style={{
-            backgroundImage: "url('/hero.jpg')",
-            transform: `translateY(${scrollY * 0.5}px) scale(1.1)`,
-            backgroundPosition: `${50 + (mousePosition.x - 50) * 0.02}% ${50 + (mousePosition.y - 50) * 0.02}%`,
-          }}
-        />
-        {/* Overlay con gradiente dinámico */}
-        <div
-          className="absolute inset-0 transition-opacity duration-500"
-          style={{
-            background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(212, 175, 55, 0.1) 0%, transparent 50%), linear-gradient(to bottom, rgba(74, 4, 4, 0.8) 0%, rgba(74, 4, 4, 0.6) 50%, rgba(74, 4, 4, 0.85) 100%)`,
-          }}
-        />
-        {/* Efecto de luz dinámica que sigue el mouse */}
-        <div
-          className="absolute inset-0 pointer-events-none transition-opacity duration-500"
-          style={{
-            background: `radial-gradient(circle 400px at ${mousePosition.x}% ${mousePosition.y}%, rgba(212, 175, 55, 0.15) 0%, transparent 70%)`,
-            opacity: isHovering ? 1 : 0.5,
-          }}
-        />
-
-        {/* Content */}
-        <div className="relative z-10 text-center px-6 pt-28 pb-24 max-w-4xl mx-auto">
-          <p className="text-[#D4AF37] tracking-[0.3em] text-sm mb-4 font-medium">
-            {t.hero.welcome}
-          </p>
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight animate-slide-in-up">
-            IVA <span className="font-light italic bg-gradient-to-r from-[#D4AF37] via-[#E8C9A8] to-[#D4AF37] bg-clip-text text-transparent animate-gradient-text">Nail Art</span>
-          </h1>
-          <p className="text-white/90 text-lg md:text-xl max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
-            <span>{t.hero.tagline}</span>
-          </p>
-
-          {/* Logo IVA - Transparente */}
-          <div className="relative mx-auto mb-10 flex justify-center">
-            <Image
-src="/logo-iva.png"
-alt="IVA Nail Art logo"
-width={631}
-height={436}
-className="w-56 sm:w-72 h-auto drop-shadow-[0_8px_32px_rgba(0,0,0,0.4)]" priority
-/>
-          </div>
-
-          <a
-            href={CONFIG.instagramDmUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group bg-gradient-to-r from-[#D4AF37] via-[#E8C9A8] to-[#D4AF37] text-[#4A0404] px-8 py-4 rounded-full font-bold text-sm tracking-wide hover:from-white hover:via-[#F5E6D3] hover:to-white transition-all shadow-2xl hover:shadow-[#D4AF37]/50 hover:scale-110 inline-flex items-center gap-2 relative overflow-hidden"
-            aria-label={t.hero.cta}
-          >
-            <span className="relative z-10 flex items-center gap-2">
-            {t.hero.cta}
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-            </span>
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-          </a>
-
-          {/* Info Pills */}
-          <div className="flex flex-wrap justify-center gap-4 mt-12 text-white/70 text-sm">
-            <span className="flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full">
-              <MapPin className="w-4 h-4" />
-              {t.hero.location}
-            </span>
-            <span className="flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full">
-              <Clock className="w-4 h-4" />
-              {t.hero.hours}
-            </span>
-            <span className="flex items-center gap-2 bg-[#D4AF37]/20 backdrop-blur px-4 py-2 rounded-full text-[#D4AF37]">
-              <Sparkles className="w-4 h-4" />
-              {t.hero.appointment}
-            </span>
-          </div>
-        </div>
-
-        {/* Partículas flotantes decorativas PREMIUM */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-5">
-          {!isLoading && heroParticles.length > 0 && (
-            <>
-              {heroParticles.map((particle, i) => (
-                <div
-                  key={i}
-                  className="absolute w-2 h-2 bg-[#D4AF37]/40 rounded-full animate-float-particle neon-glow"
-                  style={{
-                    left: particle.left,
-                    top: particle.top,
-                    animationDelay: particle.delay,
-                    animationDuration: particle.duration,
-                  }}
-                />
-              ))}
-            </>
-          )}
-          {/* Sparkles animados */}
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={`sparkle-${i}`}
-              className="absolute animate-sparkle"
-              style={{
-                left: `${10 + i * 12}%`,
-                top: `${15 + (i % 4) * 25}%`,
-                animationDelay: `${i * 0.3}s`,
-              }}
-            >
-              <Sparkles className="w-4 h-4 text-[#D4AF37]/60" />
-            </div>
-          ))}
-        </div>
-
-        {/* Scroll Indicator PREMIUM */}
-        <div className="hidden md:block absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-10">
-          <div className="w-7 h-12 border-2 border-white/50 rounded-full flex justify-center pt-3 shadow-xl backdrop-blur-sm bg-white/10">
-            <div className="w-1.5 h-3 bg-white rounded-full animate-pulse" />
-          </div>
-        </div>
-      </section>
+      <HeroEditorial lang={lang} bookUrl={CONFIG.instagramDmUrl} text={t.hero} />
+      <PhotoMarquee lang={lang} />
 
       {/* ================================================================== */}
       {/* STATISTICS SECTION PREMIUM */}
