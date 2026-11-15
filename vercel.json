@@ -1,4 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "ignoreCommand": "case \"$VERCEL_PROJECT_ID\" in prj_dUeIDcjwvGe8khlZrpGSdKvVL0f6|prj_G652qPZD1NiG7BH560yjw6gmwopr|prj_jMU1iOXufG2TAnGJzgWspyl5KePp|prj_Y8j38Vmrm2l0QM2j7gEfVR0pANTb|prj_853C1UqNg02YAPh1U9ElNXn7nZ74|prj_B6SOeo0iN2fZosu7r1MmINCUfODG|prj_6FAZYYeme4emzJlHEprKgDEIkaXn) exit 0;; *) exit 1;; esac"
+  "ignoreCommand": "bash scripts/vercel-ignore.sh"
 }
