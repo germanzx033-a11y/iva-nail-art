@@ -80,12 +80,13 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
       { rootMargin: "100px" }
     );
 
-    imageRefs.current.forEach((ref) => {
+    const imageEls = Array.from(imageRefs.current.values());
+    imageEls.forEach((ref) => {
       if (ref) observer.observe(ref);
     });
 
     return () => {
-      imageRefs.current.forEach((ref) => {
+      imageEls.forEach((ref) => {
         if (ref) observer.unobserve(ref);
       });
     };
@@ -268,6 +269,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
                   {/* Imagen con efecto parallax */}
                   <div className="relative w-full h-full overflow-hidden">
                     {isLoaded ? (
+                      // eslint-disable-next-line @next/next/no-img-element -- 60+ gallery photos with an onError fallback; kept as <img> to avoid pushing the whole gallery through the image optimizer
                       <img
                         src={image.src}
                         alt={image.alt}
@@ -465,6 +467,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
             <div className="absolute inset-0 border-4 border-[#D4AF37]/30 rounded-2xl animate-pulse-glow pointer-events-none"></div>
             
             <div className="relative group">
+              {/* eslint-disable-next-line @next/next/no-img-element -- same gallery source as above; full-size modal view */}
               <img
                 src={selectedImage.src}
                 alt={selectedImage.alt}

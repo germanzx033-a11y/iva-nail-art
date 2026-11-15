@@ -47,7 +47,7 @@ export const getHandImage = (
   orientation: HandImage['orientation'] = 'palm'
 ): HandImage => {
   // Map legacy skin tone to new key
-  const newKey = Object.entries(SKIN_TONE_MAP).find(([_, v]) => v === skinTone)?.[0] as SkinToneKey | undefined;
+  const newKey = Object.entries(SKIN_TONE_MAP).find(([, v]) => v === skinTone)?.[0] as SkinToneKey | undefined;
   const url = newKey ? HAND_ASSETS[newKey] : HAND_ASSETS.medium;
 
   return {

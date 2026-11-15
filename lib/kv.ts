@@ -370,7 +370,7 @@ export async function isProcessed(sessionId: string): Promise<boolean> {
 // comparten la misma IP pública en la misma red WiFi
 // La protección contra abusos se maneja a nivel de capacidad diaria (2 reservas/día)
 
-export async function checkRateLimit(ip: string): Promise<{ allowed: boolean; remaining: number }> {
+export async function checkRateLimit(): Promise<{ allowed: boolean; remaining: number }> {
   // SIEMPRE permitir - Rate limiting desactivado
   // La protección real viene del límite de capacidad (2 reservas por día)
   return { allowed: true, remaining: 999 };

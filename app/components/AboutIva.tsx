@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Heart, Award, Star, Quote } from "lucide-react";
 import { ABOUT_COPY } from "../constants/luxuryRituals";
 
@@ -66,12 +67,11 @@ export default function AboutIva({ language }: AboutIvaProps) {
                 filter: 'drop-shadow(0 15px 40px rgba(184, 134, 77, 0.25))',
               }}>
               <div className="aspect-[4/5] overflow-hidden rounded-[3rem] md:rounded-[4rem] shadow-2xl relative bg-gradient-to-br from-[#F7F0EB] to-[#F5EDE6]">
-                <img
+                <Image
                   src="/portada.jpg"
                   alt="Iva - Founder of IVA Nail Art"
-                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
-                  loading="lazy"
-                  decoding="async"
+                  fill
+                  className="object-cover transition-transform duration-700 hover:scale-110"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
                 {/* Subtle gradient overlay */}
