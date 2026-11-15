@@ -9,7 +9,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateLockToken, getAppStatus, checkCapacity } from '@/lib/kv';
 import { createCheckoutSession, STRIPE_CONFIG } from '@/lib/stripe';
-import { isValidEmail, isValidPhone, ERROR_MESSAGES } from '@/lib/utils';
+import { isValidEmail, isValidPhone, isValidBookingDate, ERROR_MESSAGES } from '@/lib/utils';
+import { SERVICES } from '@/app/constants/data';
 
 // =============================================
 // REQUEST TYPES
@@ -19,8 +20,10 @@ interface CheckoutRequest {
   lockToken: string;
   date: string;
   slot: 'morning' | 'afternoon';
+  /** Service id (e.g. "gel-mani") or its English/Spanish name from the catalog. */
   serviceName: string;
-  servicePrice: number;
+  /** Ignored: the price always comes from the server-side catalog. */
+  servicePrice?: number;
   customerEmail: string;
   customerName: string;
   customerPhone: string;
@@ -32,6 +35,16 @@ interface CheckoutResponse {
   sessionId?: string;
   error?: string;
   errorCode?: string;
+}
+
+const MAX_NAME_LENGTH = 100;
+
+function findService(idOrName: unknown) {
+  if (typeof idOrName !== 'string') return undefined;
+  const wanted = idOrName.trim().toLowerCase();
+  return SERVICES.find(
+    (s) => s.id === wanted || s.name.toLowerCase() === wanted || s.nameEs.toLowerCase() === wanted
+  );
 }
 
 // =============================================
@@ -60,20 +73,43 @@ export async function POST(request: NextRequest): Promise<NextResponse<CheckoutR
       date,
       slot,
       serviceName,
-      servicePrice,
       customerEmail,
       customerName,
       customerPhone,
     } = body;
 
     // 3. Validate required fields
-    if (!lockToken || !date || !slot || !serviceName || !servicePrice || !customerEmail || !customerName || !customerPhone) {
+    if (!lockToken || !date || !slot || !serviceName || !customerEmail || !customerName || !customerPhone) {
       return NextResponse.json(
         {
           success: false,
           error: 'All fields are required',
           errorCode: 'INVALID_REQUEST',
         },
+        { status: 400 }
+      );
+    }
+
+    // 3b. Validate types, date, slot, service and text lengths (all client input is untrusted)
+    if (
+      typeof lockToken !== 'string' ||
+      typeof customerEmail !== 'string' ||
+      typeof customerName !== 'string' ||
+      typeof customerPhone !== 'string' ||
+      customerName.length > MAX_NAME_LENGTH ||
+      !isValidBookingDate(date) ||
+      (slot !== 'morning' && slot !== 'afternoon')
+    ) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid request', errorCode: 'INVALID_REQUEST' },
+        { status: 400 }
+      );
+    }
+
+    const service = findService(serviceName);
+    if (!service) {
+      return NextResponse.json(
+        { success: false, error: 'Unknown service', errorCode: 'INVALID_SERVICE' },
         { status: 400 }
       );
     }
@@ -132,8 +168,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<CheckoutR
       clientLockToken: lockToken,
       date,
       slot,
-      serviceName,
-      servicePrice,
+      serviceName: service.name,
+      servicePrice: service.price, // from the catalog, never from the client
       customerEmail,
       customerName,
       customerPhone,

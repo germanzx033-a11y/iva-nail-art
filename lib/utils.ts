@@ -48,7 +48,15 @@ export function getTodayDate(): string {
   return new Date().toISOString().split('T')[0];
 }
 
+/** Strict YYYY-MM-DD check (also rejects impossible dates like 2026-02-31). */
+export function isValidDateFormat(dateStr: unknown): dateStr is string {
+  if (typeof dateStr !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+  const parsed = new Date(dateStr + 'T00:00:00Z');
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().startsWith(dateStr);
+}
+
 export function isValidBookingDate(dateStr: string): boolean {
+  if (!isValidDateFormat(dateStr)) return false;
   const date = new Date(dateStr + 'T00:00:00');
   const minDate = new Date(getMinBookingDate() + 'T00:00:00');
   return date >= minDate;
