@@ -12,19 +12,20 @@ export default function PhotoMarquee({ lang }: PhotoMarqueeProps) {
   const rows = [recent.slice(0, 7), recent.slice(7, 14)];
 
   return (
-    <section className="overflow-hidden bg-[#FDF8F5] py-20 md:py-28">
+    <section className="overflow-hidden bg-[#0E0706] py-20 md:py-28">
       <div className="mx-auto mb-12 flex max-w-7xl flex-col gap-6 px-6 md:flex-row md:items-end md:justify-between md:px-10">
         <div>
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#B8864D]">
+          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#D4A574]">
             {isEn ? "Fresh from the studio" : "Recién salidos del estudio"}
           </p>
-          <h2 className="font-serif text-4xl leading-[1.05] text-[#3D1112] md:text-6xl">
-            {isEn ? "The latest sets" : "Los últimos diseños"}
+          <h2 className="text-[#F4EBE1]">
+            <span className="font-display block text-2xl font-bold md:text-4xl">{isEn ? "The latest" : "Los últimos"}</span>
+            <span className="font-serif text-4xl font-normal italic text-[#E8C9A8] md:text-6xl">{isEn ? "sets from the studio" : "diseños del estudio"}</span>
           </h2>
         </div>
         <a
           href="#gallery"
-          className="self-start rounded-full border border-[#3D1112]/30 px-6 py-3 text-sm font-medium text-[#3D1112] transition-colors hover:bg-[#3D1112] hover:text-[#FDF8F5] md:self-auto"
+          className="self-start rounded-full border border-[#F4EBE1]/30 px-6 py-3 text-sm font-medium text-[#F4EBE1] transition-colors hover:bg-[#F4EBE1] hover:text-[#0E0706] md:self-auto"
         >
           {isEn ? "Open full gallery" : "Abrir galería completa"}
         </a>

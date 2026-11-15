@@ -19,7 +19,7 @@ import {
 import { formatDate, getMinBookingDate, isValidEmail, isValidPhone } from "@/lib/utils";
 import Image from "next/image";
 import AboutIva from "@/app/components/AboutIva";
-import HeroEditorial from "@/app/components/HeroEditorial";
+import HeroScroll from "@/app/components/HeroScroll";
 import PhotoMarquee from "@/app/components/PhotoMarquee";
 import GallerySection from "@/app/components/GallerySection";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
@@ -705,7 +705,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
   };
 
   return (
-    <main className="min-h-screen bg-[#FDF8F6] relative overflow-x-hidden">
+    <main className="min-h-screen bg-[#FDF8F6] relative overflow-x-clip">
       {/* Spotlight mágico que sigue el mouse */}
       <div
         className="fixed pointer-events-none z-40 transition-opacity duration-300"
@@ -904,25 +904,25 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       {/* ================================================================== */}
       {/* HEADER */}
       {/* ================================================================== */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-[#FDF8F6]/90 backdrop-blur-md border-b border-[#4A0404]/10">
+      <header className="fixed top-0 left-0 right-0 z-40 bg-[#0E0706]/70 backdrop-blur-md border-b border-[#F4EBE1]/10">
         <nav className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <a href="#" className="font-serif text-2xl text-[#4A0404] tracking-wide">
+          <a href="#" className="font-display text-sm tracking-[0.3em] text-[#F4EBE1]">
             IVA <span className="font-light">Nail Art</span>
           </a>
 
           <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-6 text-sm text-[#4A0404]/70">
-              <a href="#services" className="hover:text-[#4A0404] transition-colors">
+            <div className="hidden md:flex items-center gap-6 font-display text-[0.65rem] tracking-[0.25em] text-[#F4EBE1]/70">
+              <a href="#services" className="hover:text-[#E8C9A8] transition-colors">
                 {t.nav.services}
               </a>
-              <a href="#gallery" className="hover:text-[#4A0404] transition-colors">
+              <a href="#gallery" className="hover:text-[#E8C9A8] transition-colors">
                 {t.nav.gallery}
               </a>
             </div>
 
             <button
               onClick={() => setLang(lang === "en" ? "es" : "en")}
-              className="text-sm font-medium text-[#4A0404] border border-[#4A0404]/30 px-3 py-1.5 rounded-full hover:bg-[#4A0404] hover:text-white transition-all"
+              className="text-xs font-medium text-[#F4EBE1] border border-[#F4EBE1]/30 px-3 py-1.5 rounded-full hover:bg-[#F4EBE1] hover:text-[#0E0706] transition-all"
             >
               {t.langSwitch}
             </button>
@@ -931,7 +931,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
               href={CONFIG.instagramDmUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#4A0404] text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-[#6B0606] transition-colors shadow-lg shadow-[#4A0404]/20"
+              className="bg-[#E8C9A8] text-[#0E0706] px-5 py-2 rounded-full text-sm font-semibold hover:bg-white transition-colors"
             >
               {t.nav.book}
             </a>
@@ -942,22 +942,22 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       {/* ================================================================== */}
       {/* HERO SECTION */}
       {/* ================================================================== */}
-      <HeroEditorial lang={lang} bookUrl={CONFIG.instagramDmUrl} text={t.hero} />
+      <HeroScroll lang={lang} bookUrl={CONFIG.instagramDmUrl} cta={t.hero.cta} />
       <PhotoMarquee lang={lang} />
 
       {/* ================================================================== */}
       {/* STATISTICS SECTION PREMIUM */}
       {/* ================================================================== */}
-      <section className="bg-[#1C0A0A] px-6 py-14 md:px-10 md:py-20">
+      <section className="bg-[#0E0706] px-6 py-14 md:px-10 md:py-20">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-y-10 md:grid-cols-4 md:divide-x md:divide-[#FDF8F5]/15">
           {[
             { end: 3, suffix: "", en: "Years of experience", es: "Años de experiencia" },
-            { end: 500, suffix: "+", en: "Happy clients", es: "Clientas felices" },
+            { end: 33, suffix: "+", en: "Happy clients", es: "Clientas felices" },
             { end: 2000, suffix: "+", en: "Designs created", es: "Diseños creados" },
             { end: 100, suffix: "%", en: "Satisfaction rate", es: "Satisfacción" },
           ].map((stat) => (
             <div key={stat.en} className="px-2 text-center md:px-8 md:text-left">
-              <div className="font-serif text-5xl text-[#E8C9A8] md:text-7xl">
+              <div className="font-display text-4xl text-[#F4EBE1] md:text-6xl">
                 <AnimatedCounter end={stat.end} suffix={stat.suffix} />
               </div>
               <p className="mt-3 text-xs font-medium uppercase tracking-[0.2em] text-[#FDF8F5]/70">
@@ -1074,125 +1074,40 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
 
 
               return (
-              <div
-                key={service.id}
-                  data-card-id={service.id}
-                  onMouseEnter={() => setHoveredCard(service.id)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                  className="bg-white/95 backdrop-blur-sm rounded-2xl border border-stone-200/80 hover:border-[#D4AF37]/50 shadow-sm hover:shadow-2xl transition-all duration-500 group relative overflow-hidden flex flex-col min-h-[380px] magic-card"
-                  style={{
-                    background: hoveredCard === service.id
-                      ? `linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(252, 248, 240, 0.98) 100%)`
-                      : `linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 248, 240, 0.95) 100%)`,
-                  }}
+                <article
+                  key={service.id}
+                  className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-[#3D1112]/10 bg-white shadow-sm transition-shadow duration-300 hover:shadow-xl"
                 >
-                  {/* Imagen de fondo decorativa con overlay */}
-                  <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                    <div
-                      className="absolute inset-0 bg-cover bg-center opacity-10 group-hover:opacity-20 transition-opacity duration-500 scale-110 group-hover:scale-100"
-                      style={{
-                        backgroundImage: `url(${serviceImage})`,
-                        filter: 'blur(20px)',
-                      }}
-                    />
-                    <div className={`absolute inset-0 bg-gradient-to-br ${getCategoryGradient()} opacity-60 group-hover:opacity-80 transition-opacity duration-500`}></div>
-                </div>
-
-                  {/* Imagen principal del servicio */}
-                  <div className="relative h-48 overflow-hidden rounded-t-2xl mb-4 group-hover:mb-6 transition-all duration-500">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- dynamic per-service src with an onError fallback; kept as <img> to avoid pushing every service photo through the image optimizer */}
-                    <img
+                  {/* Whole photo, never cropped: the frame has the same 3:4 ratio as the pictures */}
+                  <div className="relative aspect-[3/4] w-full bg-[#F5EDE6]">
+                    <Image
                       src={serviceImage}
                       alt={lang === "en" ? service.name : service.nameEs}
-                      className="w-full h-full object-cover transform scale-110 group-hover:scale-100 transition-transform duration-700"
-                      loading="lazy"
-                      decoding="async"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                  }}
-                />
-                    {/* Overlay con gradiente */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#4A0404]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                    {/* Badge de categoría */}
-                    <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                      <div className="bg-gradient-to-r from-[#D4AF37] to-[#E8C9A8] text-[#4A0404] px-3 py-1.5 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm">
-                        {service.category === "manicure" ? "💅" : service.category === "pedicure" ? "🦶" : service.category === "nailart" ? "🎨" : service.category === "acrylic" ? "✨" : "✂️"} {lang === "en" ? service.category.charAt(0).toUpperCase() + service.category.slice(1) : service.category === "manicure" ? "Manicura" : service.category === "pedicure" ? "Pedicura" : service.category === "nailart" ? "Nail Art" : service.category === "acrylic" ? "Acrílico" : "Extras"}
-              </div>
-          </div>
-
-                    {/* Icono flotante animado */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform scale-0 group-hover:scale-100">
-                      <div className="bg-white/90 backdrop-blur-md rounded-full p-4 shadow-2xl">
-                        <IconComponent className="w-10 h-10 text-[#D4AF37] animate-pulse-glow" />
-                      </div>
-                    </div>
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-contain"
+                    />
+                    <span className="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-[#B8864D] shadow-md">
+                      <IconComponent className="h-5 w-5" />
+                    </span>
                   </div>
 
-                  {/* Efecto de brillo sutil al hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/0 via-transparent to-transparent group-hover:from-[#D4AF37]/10 group-hover:via-transparent transition-all duration-500 pointer-events-none"></div>
-
-                  {/* Contenido - Estilo Spa de Lujo */}
-                  <div className="relative z-10 flex flex-col h-full px-6 pb-6">
-                    {/* Header con icono a la derecha */}
-                    <div className="flex justify-end mb-4">
-                      <div className="flex items-center justify-center w-12 h-12 rounded-xl border-2 border-[#D4AF37]/40 bg-white/80 backdrop-blur-sm group-hover:border-[#D4AF37] group-hover:bg-white transition-all duration-300 shadow-lg group-hover:shadow-xl group-hover:scale-110">
-                        <IconComponent className="w-6 h-6 text-[#D4AF37] group-hover:rotate-12 transition-transform duration-300" />
-                      </div>
-                    </div>
-
-                    {/* Título del servicio - Centrado y elegante */}
-                    <h3 className="font-serif text-2xl md:text-3xl text-[#4A0404] mb-6 font-light tracking-wide leading-tight text-center flex-grow group-hover:text-[#D4AF37] transition-colors duration-300">
+                  <div className="flex flex-1 flex-col gap-5 p-6">
+                    <h3 className="font-serif text-2xl leading-tight text-[#3D1112]">
                       {lang === "en" ? service.name : service.nameEs}
                     </h3>
-
-                    {/* Descripción decorativa */}
-                    <div className="text-center mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                      <p className="text-[#4A0404]/60 text-sm font-light italic">
-                        {lang === "en" ? "Premium Quality Service" : "Servicio de Calidad Premium"}
-                      </p>
-                    </div>
-
-                    {/* Botón de mensaje directo - Estilo Premium con gradiente */}
                     <a
                       href={CONFIG.instagramDmUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="group/btn w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-[#4A0404] via-[#7A1F1F] to-[#4A0404] text-white rounded-full font-semibold text-sm tracking-wide hover:from-[#7A1F1F] hover:via-[#4A0404] hover:to-[#7A1F1F] transition-all duration-500 hover:shadow-xl hover:scale-105 mt-auto relative overflow-hidden"
-                      style={{
-                        backgroundSize: "200% 100%",
-                      }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-auto flex w-full items-center justify-center gap-3 rounded-full bg-[#3D1112] px-6 py-4 text-sm font-semibold tracking-wide text-white transition-colors hover:bg-[#5C1A1B]"
                       aria-label={`${lang === "en" ? "Send a direct message on Instagram about" : "Enviar mensaje directo por Instagram sobre"} ${lang === "en" ? service.name : service.nameEs}`}
                     >
-                      {/* Efecto shimmer en el botón */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000"></div>
-
-                      <Instagram className="w-5 h-5 transition-transform duration-300 group-hover/btn:scale-110 group-hover/btn:rotate-12 relative z-10" />
-                      <span className="relative z-10 font-semibold">{lang === "en" ? "Ask for Price" : "Preguntar Precio"}</span>
-                      <ChevronRight className="w-4 h-4 opacity-0 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 transition-all duration-300 relative z-10" />
+                      <Instagram className="h-5 w-5" />
+                      {lang === "en" ? "Ask for Price" : "Preguntar Precio"}
                     </a>
                   </div>
-
-                  {/* Partículas doradas en hover */}
-                  {hoveredCard === service.id && (
-                    <>
-                      {[...Array(6)].map((_, i) => (
-                        <div
-                          key={i}
-                          className="absolute w-2 h-2 bg-[#D4AF37] rounded-full opacity-0 group-hover:opacity-100 animate-sparkle pointer-events-none"
-                          style={{
-                            top: `${20 + Math.random() * 60}%`,
-                            left: `${10 + Math.random() * 80}%`,
-                            animationDelay: `${i * 0.2}s`,
-                            animationDuration: `${2 + Math.random()}s`,
-                          }}
-                        />
-                      ))}
-                    </>
-                  )}
-                </div>
+                </article>
               );
             })}
           </div>
@@ -1221,9 +1136,8 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
             {lang === "en" ? "By appointment only" : "Solo con cita"}
           </p>
           <h2 className="max-w-4xl font-serif text-[clamp(2.75rem,8vw,6.5rem)] leading-[0.95] text-[#FDF8F5]">
-            {lang === "en" ? "Your next set" : "Tu próximo diseño"}
-            <br />
-            <span className="italic text-[#E8C9A8]">{lang === "en" ? "starts with a DM" : "empieza con un mensaje"}</span>
+            <span className="font-display block text-[0.72em] font-bold">{lang === "en" ? "Your next set" : "Tu próximo diseño"}</span>
+            <span className="font-normal italic text-[#E8C9A8]">{lang === "en" ? "starts with a DM" : "empieza con un mensaje"}</span>
           </h2>
           <p className="mt-8 max-w-xl text-base leading-relaxed text-[#FDF8F5]/75 md:text-lg">
             {lang === "en"
@@ -1234,10 +1148,10 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
             href={CONFIG.instagramDmUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="group mt-10 inline-flex items-center gap-3 rounded-full bg-[#E8C9A8] py-2 pl-7 pr-2 text-sm font-semibold tracking-wide text-[#1C0A0A] transition-colors hover:bg-white"
+            className="glow-pill group mt-10"
           >
             {t.hero.cta}
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1C0A0A] text-[#E8C9A8] transition-transform group-hover:rotate-45">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0E0706]/25 transition-transform group-hover:rotate-45">
               <ChevronRight className="h-4 w-4" />
             </span>
           </a>
@@ -1689,7 +1603,7 @@ className="w-16 h-auto rounded-lg"
       {/* ================================================================== */}
       {/* BACK TO TOP BUTTON */}
       {/* ================================================================== */}
-      {scrollY > 500 && (
+      {scrollY > 2600 && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className="fixed bottom-6 left-6 bg-[#4A0404]/90 text-white p-3 rounded-full shadow-2xl hover:bg-[#4A0404] hover:scale-110 transition-all z-40 backdrop-blur-sm border border-[#D4AF37]/30"
