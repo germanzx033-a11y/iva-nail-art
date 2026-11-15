@@ -196,10 +196,14 @@
    BASE STYLES
    ============================================= */
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* Reset in the base layer: outside a layer, `margin: 0; padding: 0` on `*`
+   overrides every Tailwind spacing utility (px-4, mb-6, ...) on the whole site. */
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 html {
@@ -231,7 +235,24 @@ h6 {
   font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.1;
-  color: var(--text-primary);
+}
+
+/* Default text colours live in the base layer so Tailwind utilities such as
+   text-white or text-[#D4AF37] can override them. Outside a layer these rules
+   beat every utility, which left white/gold text rendered dark on dark sections. */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--text-primary);
+  }
+
+  p {
+    color: var(--text-secondary);
+  }
 }
 
 .font-serif {
@@ -244,7 +265,6 @@ h6 {
 }
 
 p {
-  color: var(--text-secondary);
   line-height: 1.8;
   letter-spacing: 0.01em;
 }

@@ -245,15 +245,16 @@ export default function AdminPage() {
   };
 
   // =============================================
-  // WHATSAPP CONCIERGE
+  // SMS CONCIERGE (the studio does not use WhatsApp)
   // =============================================
 
-  const openWhatsAppConcierge = (entry: WaitlistEntry) => {
+  const openSmsConcierge = (entry: WaitlistEntry) => {
     triggerHaptic("light");
     const today = new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
     const message = `Hi ${entry.name}! This is IVA Nail Art. We have an exclusive opening today (${today}) and the spot is yours. Would you like to confirm?`;
     const phone = entry.phone.replace(/\D/g, "");
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank");
+    // "?&body=" is the form that both iOS and Android accept for a pre-filled text message
+    window.location.href = `sms:${phone}?&body=${encodeURIComponent(message)}`;
   };
 
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -694,9 +695,9 @@ export default function AdminPage() {
                 <Eye className="w-5 h-5 text-[#722F37]" />
                 <span className="font-medium text-[#1A1A1A]">View Website</span>
               </motion.a>
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex items-center justify-center gap-3 p-4 bg-[#25D366] text-white rounded-xl hover:shadow-lg transition-all">
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex items-center justify-center gap-3 p-4 bg-[#722F37] text-white rounded-xl hover:shadow-lg transition-all">
                 <MessageCircle className="w-5 h-5" />
-                <span className="font-medium">WhatsApp</span>
+                <span className="font-medium">Messages</span>
               </motion.button>
               <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex items-center justify-center gap-3 p-4 bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#F77737] text-white rounded-xl hover:shadow-lg transition-all">
                 <Heart className="w-5 h-5" />
@@ -763,7 +764,7 @@ export default function AdminPage() {
                           </div>
                         </div>
                       </div>
-                      <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => openWhatsAppConcierge(entry)} className="flex items-center gap-2 px-4 py-2.5 bg-[#25D366] text-white rounded-xl hover:bg-[#128C7E] transition-colors shadow-lg shadow-[#25D366]/20">
+                      <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => openSmsConcierge(entry)} className="flex items-center gap-2 px-4 py-2.5 bg-[#722F37] text-white rounded-xl hover:bg-[#5A252C] transition-colors shadow-lg shadow-[#722F37]/20">
                         <MessageCircle className="w-4 h-4" />
                         <span className="text-sm font-medium hidden sm:inline">Invite</span>
                       </motion.button>
@@ -779,7 +780,7 @@ export default function AdminPage() {
         {activeTab === "scripts" && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl border border-[#EBE8E2] overflow-hidden p-8 text-center">
             <Sparkles className="w-12 h-12 mx-auto text-[#B76E79] mb-4" />
-            <h3 className="text-xl font-semibold text-[#2D1810] mb-2">WhatsApp Templates</h3>
+            <h3 className="text-xl font-semibold text-[#2D1810] mb-2">Message Templates</h3>
             <p className="text-[#6B5C4C]">Coming soon - Quick response templates for client communication</p>
           </motion.div>
         )}
