@@ -21,70 +21,67 @@ import Image from "next/image";
 import AboutIva from "@/app/components/AboutIva";
 import HeroScroll from "@/app/components/HeroScroll";
 import PhotoMarquee from "@/app/components/PhotoMarquee";
+import { BackToTop, ScrollProgressBar } from "@/app/components/ScrollUi";
 import GallerySection from "@/app/components/GallerySection";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
 
-// Componente de contador animado PREMIUM
-function AnimatedCounter({ end, duration = 2000, suffix = "", prefix = "" }: {
+// Contador animado. Escribe directo en el DOM (sin re-render por frame) y siempre
+// termina en el valor final, aunque el navegador pause requestAnimationFrame.
+function AnimatedCounter({ end, duration = 1600, suffix = "", prefix = "" }: {
   end: number;
   duration?: number;
   suffix?: string;
   prefix?: string;
 }) {
-  const [count, setCount] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const counterRef = useRef<HTMLSpanElement>(null);
+  const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !isVisible) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    const counterEl = counterRef.current;
-    if (counterEl) {
-      observer.observe(counterEl);
+    const el = ref.current;
+    if (!el) return;
+    const show = (n: number) => {
+      el.textContent = `${prefix}${n}${suffix}`;
+    };
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion || typeof IntersectionObserver === "undefined") {
+      show(end);
+      return;
     }
 
+    let frame = 0;
+    let fallback = 0;
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      const t0 = performance.now();
+      const tick = (now: number) => {
+        const p = Math.min((now - t0) / duration, 1);
+        show(Math.round(end * (1 - Math.pow(1 - p, 3))));
+        if (p < 1) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
+      fallback = window.setTimeout(() => show(end), duration + 250);
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          observer.disconnect();
+          start();
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+
     return () => {
-      if (counterEl) {
-        observer.unobserve(counterEl);
-      }
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+      clearTimeout(fallback);
     };
-  }, [isVisible]);
+  }, [end, duration, prefix, suffix]);
 
-  useEffect(() => {
-    if (!isVisible) return;
-
-    let startTime: number;
-    const startValue = 0;
-    const endValue = end;
-
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / duration, 1);
-
-      // Easing function (ease-out cubic)
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-      const currentCount = Math.floor(startValue + (endValue - startValue) * easeOut);
-
-      setCount(currentCount);
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        setCount(endValue);
-      }
-    };
-
-    requestAnimationFrame(animate);
-  }, [end, duration, isVisible]);
-
-  return <span ref={counterRef}>{prefix}{count}{suffix}</span>;
+  return <span ref={ref}>{prefix}0{suffix}</span>;
 }
 
 // ============================================================================
@@ -323,17 +320,6 @@ const translations = {
   },
 };
 
-// ============================================================================
-// COMPONENTE PRINCIPAL
-// ============================================================================
-function makeParticles(count: number) {
-  return Array.from({ length: count }, () => ({
-    left: `${Math.random() * 100}%`,
-    top: `${Math.random() * 100}%`,
-    delay: `${Math.random() * 8}s`,
-    duration: `${6 + Math.random() * 4}s`,
-  }));
-}
 
 export default function Home() {
   const [lang, setLang] = useState<"en" | "es">("en");
@@ -356,38 +342,6 @@ export default function Home() {
   // Estado para animaciones de scroll reveal
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
-
-  // Estado para cursor personalizado
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [scrollY, setScrollY] = useState(0);
-  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [particles] = useState<Array<{ id: number; x: number; y: number }>>([]);
-  // Valores aleatorios generados una sola vez (initializer lazy). Se renderizan solo
-  // cuando !isLoading, así que no hay desajuste de hidratación con el servidor.
-  const [stars] = useState<Array<{ id: number; x: number; y: number; delay: number }>>(() =>
-    Array.from({ length: 30 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      delay: Math.random() * 2,
-    }))
-  );
-  const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([]);
-  const [heroParticles] = useState<Array<{ left: string; top: string; delay: string; duration: string }>>(() =>
-    makeParticles(15)
-  );
-  const [backgroundParticles] = useState<Array<{ left: string; top: string; delay: string; duration: string }>>(() =>
-    makeParticles(20)
-  );
-
-  // Estados para efectos mágicos interactivos
-  const [spotlightPosition, setSpotlightPosition] = useState({ x: 50, y: 50 });
-  const [cursorParticles, setCursorParticles] = useState<Array<{ id: number; x: number; y: number; vx: number; vy: number; life: number }>>([]);
-  const [goldWaves, setGoldWaves] = useState<Array<{ id: number; x: number; y: number; size: number; opacity: number }>>([]);
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   // Hook para animaciones de scroll reveal
   useEffect(() => {
@@ -413,167 +367,6 @@ export default function Home() {
       });
     };
   }, []);
-
-  // Hook para cursor personalizado
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setCursorPosition({ x: e.clientX, y: e.clientY });
-    };
-
-    const handleMouseEnter = () => setIsHovering(true);
-    const handleMouseLeave = () => setIsHovering(false);
-
-    // Detectar elementos interactivos
-    const interactiveElements = document.querySelectorAll('a, button, [role="button"], input, textarea, select');
-    interactiveElements.forEach((el) => {
-      el.addEventListener('mouseenter', handleMouseEnter);
-      el.addEventListener('mouseleave', handleMouseLeave);
-    });
-
-    window.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      interactiveElements.forEach((el) => {
-        el.removeEventListener('mouseenter', handleMouseEnter);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-      });
-    };
-  }, []);
-
-  // Hook para loading screen
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Hook para crear ripples en clicks
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName === 'BUTTON' || target.closest('button')) {
-        const newRipple = {
-          id: Date.now(),
-          x: e.clientX,
-          y: e.clientY,
-        };
-        setRipples((prev: Array<{ id: number; x: number; y: number }>) => [...prev, newRipple]);
-        setTimeout(() => {
-          setRipples((prev: Array<{ id: number; x: number; y: number }>) => prev.filter((r: { id: number; x: number; y: number }) => r.id !== newRipple.id));
-        }, 1000);
-      }
-    };
-
-    window.addEventListener('click', handleClick);
-    return () => window.removeEventListener('click', handleClick);
-  }, []);
-
-  // Hook para scroll parallax y progress
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = scrollHeight > 0 ? Math.min((window.scrollY / scrollHeight) * 100, 100) : 0;
-      setScrollProgress(progress);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Hook para spotlight mágico que sigue el mouse
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setSpotlightPosition({ x: e.clientX, y: e.clientY });
-      setMousePosition({ x: e.clientX, y: e.clientY });
-
-      // Crear partículas doradas que siguen el cursor
-      if (Math.random() > 0.7) {
-        const newParticle = {
-          id: Date.now() + Math.random(),
-          x: e.clientX,
-          y: e.clientY,
-          vx: (Math.random() - 0.5) * 2,
-          vy: (Math.random() - 0.5) * 2,
-          life: 1,
-        };
-        setCursorParticles((prev) => [...prev.slice(-15), newParticle]);
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Animación de partículas del cursor
-  useEffect(() => {
-    if (cursorParticles.length === 0) return;
-
-    const interval = setInterval(() => {
-      setCursorParticles((prev) =>
-        prev
-          .map((p) => ({
-            ...p,
-            x: p.x + p.vx,
-            y: p.y + p.vy,
-            life: p.life - 0.02,
-            vx: p.vx * 0.98,
-            vy: p.vy * 0.98,
-          }))
-          .filter((p) => p.life > 0)
-      );
-    }, 16);
-
-    return () => clearInterval(interval);
-  }, [cursorParticles.length]);
-
-  // Hook para crear ondas doradas al hacer hover en tarjetas
-  useEffect(() => {
-    if (!hoveredCard) return;
-
-    const interval = setInterval(() => {
-      const cardElement = document.querySelector(`[data-card-id="${hoveredCard}"]`);
-      if (cardElement) {
-        const rect = cardElement.getBoundingClientRect();
-        const newWave = {
-          id: Date.now(),
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
-          size: 0,
-          opacity: 1,
-        };
-        setGoldWaves((prev) => [...prev.slice(-5), newWave]);
-      }
-    }, 800);
-
-    return () => clearInterval(interval);
-  }, [hoveredCard]);
-
-  // Animación de ondas doradas
-  useEffect(() => {
-    if (goldWaves.length === 0) return;
-
-    const interval = setInterval(() => {
-      setGoldWaves((prev) =>
-        prev
-          .map((w) => ({
-            ...w,
-            size: w.size + 20,
-            opacity: w.opacity - 0.05,
-          }))
-          .filter((w) => w.opacity > 0 && w.size < 500)
-      );
-    }, 16);
-
-    return () => clearInterval(interval);
-  }, [goldWaves.length]);
 
   // Filtrar servicios por categoría
   const filteredServices = SERVICES.filter((s) => s.category === selectedCategory);
@@ -706,201 +499,6 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
 
   return (
     <main className="min-h-screen bg-[#FDF8F6] relative overflow-x-clip">
-      {/* Spotlight mágico que sigue el mouse */}
-      <div
-        className="fixed pointer-events-none z-40 transition-opacity duration-300"
-        style={{
-          left: spotlightPosition.x - 300,
-          top: spotlightPosition.y - 300,
-          width: '600px',
-          height: '600px',
-          background: 'radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 40%, transparent 70%)',
-          borderRadius: '50%',
-          mixBlendMode: 'multiply',
-          opacity: 0.6,
-          transform: 'translate(-50%, -50%)',
-        }}
-      />
-
-      {/* Partículas doradas que siguen el cursor */}
-      {cursorParticles.map((particle) => (
-        <div
-          key={particle.id}
-          className="fixed pointer-events-none z-30"
-          style={{
-            left: particle.x,
-            top: particle.y,
-            width: '4px',
-            height: '4px',
-            background: 'radial-gradient(circle, #D4AF37 0%, transparent 70%)',
-            borderRadius: '50%',
-            opacity: particle.life,
-            transform: 'translate(-50%, -50%)',
-            boxShadow: `0 0 ${particle.life * 10}px rgba(212, 175, 55, ${particle.life * 0.8})`,
-          }}
-        />
-      ))}
-
-      {/* Ondas doradas en tarjetas hover */}
-      {goldWaves.map((wave) => (
-        <div
-          key={wave.id}
-          className="fixed pointer-events-none z-20"
-          style={{
-            left: wave.x,
-            top: wave.y,
-            width: `${wave.size}px`,
-            height: `${wave.size}px`,
-            border: `2px solid rgba(212, 175, 55, ${wave.opacity})`,
-            borderRadius: '50%',
-            transform: 'translate(-50%, -50%)',
-            boxShadow: `0 0 ${wave.size * 0.5}px rgba(212, 175, 55, ${wave.opacity * 0.5})`,
-          }}
-        />
-      ))}
-
-      {/* Scroll Progress Bar Avanzado */}
-      <div
-        className="scroll-progress"
-        style={{ width: `${scrollProgress}%` }}
-      />
-
-      {/* Partículas interactivas que siguen el mouse */}
-      {particles.map((particle) => (
-        <div
-          key={particle.id}
-          className="particle-trail"
-          style={{
-            left: `${particle.x}px`,
-            top: `${particle.y}px`,
-          }}
-        />
-      ))}
-
-      {/* Spotlight que sigue el mouse */}
-      {!isLoading && (
-        <div
-          className="spotlight"
-          style={{
-            left: `${cursorPosition.x}px`,
-            top: `${cursorPosition.y}px`,
-            opacity: isHovering ? 0.8 : 0.3,
-          }}
-        />
-      )}
-
-      {/* Grid animado de fondo */}
-      {!isLoading && <div className="grid-background" />}
-
-      {/* Partículas de estrellas */}
-      {!isLoading && stars.map((star) => (
-        <div
-          key={star.id}
-          className="star-particle"
-          style={{
-            left: `${star.x}%`,
-            top: `${star.y}%`,
-            animationDelay: `${star.delay}s`,
-          }}
-        />
-      ))}
-
-      {/* Ripples en clicks de botones */}
-      {ripples.map((ripple) => (
-        <div
-          key={ripple.id}
-          className="ripple-effect"
-          style={{
-            left: `${ripple.x}px`,
-            top: `${ripple.y}px`,
-            width: '100px',
-            height: '100px',
-            transform: 'translate(-50%, -50%)',
-          }}
-        />
-      ))}
-
-      {/* Morphing shapes decorativos */}
-      {!isLoading && (
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-          <div
-            className="morph-shape absolute"
-            style={{
-              width: '300px',
-              height: '300px',
-              top: '10%',
-              right: '10%',
-              opacity: 0.1,
-            }}
-          />
-          <div
-            className="morph-shape absolute"
-            style={{
-              width: '200px',
-              height: '200px',
-              bottom: '20%',
-              left: '15%',
-              opacity: 0.1,
-              animationDelay: '4s',
-            }}
-          />
-        </div>
-      )}
-
-      {/* Ondas animadas de fondo */}
-      {!isLoading && (
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30">
-          <div className="wave-bg" style={{ left: '-50%', top: '-50%' }} />
-          <div className="wave-bg" style={{ left: '-30%', top: '-30%', animationDelay: '2s' }} />
-          <div className="wave-bg" style={{ left: '-10%', top: '-10%', animationDelay: '4s' }} />
-        </div>
-      )}
-      {/* Loading Screen Elegante */}
-      {isLoading && (
-        <div className="fixed inset-0 z-[10000] bg-gradient-to-br from-[#FDF8F6] via-white to-[#FAF5F2] flex items-center justify-center animate-fade-out">
-          <div className="text-center">
-            <div className="relative w-20 h-20 mx-auto mb-6">
-              <div className="absolute inset-0 border-4 border-[#D4AF37]/20 rounded-full"></div>
-              <div className="absolute inset-0 border-4 border-transparent border-t-[#D4AF37] rounded-full animate-spin"></div>
-              <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-[#D4AF37] animate-pulse" />
-            </div>
-            <h2 className="font-serif text-2xl text-[#4A0404] animate-gradient-text bg-gradient-to-r from-[#4A0404] via-[#D4AF37] to-[#4A0404] bg-clip-text text-transparent">
-              IVA Nail Art
-            </h2>
-          </div>
-        </div>
-      )}
-
-      {/* Cursor personalizado con efectos */}
-      {typeof window !== 'undefined' && !isLoading && (
-        <div
-          className={`fixed pointer-events-none z-[9999] transition-all duration-300 ease-out ${isHovering ? 'cursor-glow active' : 'cursor-glow'
-            }`}
-          style={{
-            left: `${cursorPosition.x}px`,
-            top: `${cursorPosition.y}px`,
-            transform: 'translate(-50%, -50%)',
-          }}
-        />
-      )}
-
-      {/* Partículas de fondo flotantes */}
-      {!isLoading && backgroundParticles.length > 0 && (
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-          {backgroundParticles.map((particle, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-[#D4AF37]/20 rounded-full animate-float-particle"
-              style={{
-                left: particle.left,
-                top: particle.top,
-                animationDelay: particle.delay,
-                animationDuration: particle.duration,
-              }}
-            />
-          ))}
-        </div>
-      )}
       {/* ================================================================== */}
       {/* HEADER */}
       {/* ================================================================== */}
@@ -1055,23 +653,6 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                 return categoryImages[imageIndex]?.src || "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg";
               };
               const serviceImage = getServiceImage();
-
-              // Gradientes únicos por categoría
-              const getCategoryGradient = () => {
-                switch (service.category) {
-                  case "manicure":
-                    return "from-[#E8A4B8]/20 via-[#F5C6D6]/10 to-[#D4AF37]/15";
-                  case "pedicure":
-                    return "from-[#D4AF37]/20 via-[#E8C9A8]/15 to-[#E8A4B8]/10";
-                  case "nailart":
-                    return "from-[#E8A4B8]/25 via-[#D4AF37]/15 to-[#F5C6D6]/20";
-                  case "acrylic":
-                    return "from-[#D4AF37]/25 via-[#E8C9A8]/20 to-[#E8A4B8]/15";
-                  default:
-                    return "from-[#D4AF37]/15 via-[#E8A4B8]/10 to-[#E8C9A8]/15";
-                }
-              };
-
 
               return (
                 <article
@@ -1608,30 +1189,8 @@ className="w-16 h-auto rounded-lg"
         </span>
       </a>
 
-      {/* ================================================================== */}
-      {/* BACK TO TOP BUTTON */}
-      {/* ================================================================== */}
-      {scrollY > 2600 && (
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-6 left-6 bg-[#4A0404]/90 text-white p-3 rounded-full shadow-2xl hover:bg-[#4A0404] hover:scale-110 transition-all z-40 backdrop-blur-sm border border-[#D4AF37]/30"
-          aria-label="Back to top"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-          </svg>
-        </button>
-      )}
-
-      {/* ================================================================== */}
-      {/* SCROLL PROGRESS BAR */}
-      {/* ================================================================== */}
-      <div
-        className="fixed top-0 left-0 h-1 bg-gradient-to-r from-[#D4AF37] via-[#E8C9A8] to-[#D4AF37] z-50 transition-all duration-150"
-        style={{
-          width: `${scrollProgress}%`,
-        }}
-      />
+      <BackToTop />
+      <ScrollProgressBar />
     </main>
   );
 }

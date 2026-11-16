@@ -82,7 +82,7 @@ export default function HeroScroll({ lang, bookUrl, cta }: HeroScrollProps) {
             className="absolute inset-0 transition-opacity duration-1000 ease-out"
             style={{ opacity: i === active ? 1 : 0 }}
           >
-            <Image src={scene.src} alt="" fill sizes="100vw" className="scale-125 object-cover blur-3xl" priority={i === 0} />
+            <Image src={scene.src} alt="" fill sizes="64px" quality={30} className="scale-110 object-cover" priority={i === 0} />
           </div>
         ))}
         <div aria-hidden className="absolute inset-0 bg-[#0E0706]/70" />
