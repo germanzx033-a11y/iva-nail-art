@@ -1253,6 +1253,14 @@ className="w-16 h-auto rounded-lg"
             <p className="text-white/70 text-base font-medium">
               © {new Date().getFullYear()} IVA Nail Art. All rights reserved.
             </p>
+            <p className="mt-4 flex justify-center gap-6 text-sm text-white/70">
+              <a href="/privacy" className="underline-offset-4 hover:text-[#D4AF37] hover:underline">
+                {lang === "en" ? "Privacy Policy" : "Privacidad"}
+              </a>
+              <a href="/terms" className="underline-offset-4 hover:text-[#D4AF37] hover:underline">
+                {lang === "en" ? "Terms & Conditions" : "Términos y Condiciones"}
+              </a>
+            </p>
             <p className="text-white/50 text-sm mt-2">
               {lang === "en" ? "Made with ❤️ in Brooklyn" : "Hecho con ❤️ en Brooklyn"}
             </p>

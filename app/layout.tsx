@@ -189,7 +189,7 @@ export default function RootLayout({
         <link rel="apple-touch-startup-image" href="/portada.jpg" />
 
         {/* Viewport for PWA */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
         <script
           type="application/ld+json"
