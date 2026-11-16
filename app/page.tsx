@@ -498,7 +498,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
   };
 
   return (
-    <main className="min-h-screen bg-[#FDF8F6] relative overflow-x-clip">
+    <main className="min-h-screen bg-[#0E0706] relative overflow-x-clip">
       {/* ================================================================== */}
       {/* HEADER */}
       {/* ================================================================== */}
@@ -577,40 +577,21 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       <section
         id="services"
         ref={(el) => { sectionRefs.current['services'] = el as HTMLElement | null; }}
-        className={`py-32 px-4 md:px-6 bg-gradient-to-b from-stone-50 via-white to-stone-50 transition-all duration-1000 relative overflow-hidden ${visibleSections.has('services')
+        className={`py-24 md:py-32 px-4 md:px-6 bg-[#0E0706] transition-all duration-1000 relative overflow-hidden ${visibleSections.has('services')
           ? 'opacity-100 translate-y-0'
           : 'opacity-0 translate-y-10'
           }`}
       >
-        {/* Fondo con textura sutil tipo mármol - Estilo Premium */}
-        <div className="absolute inset-0 opacity-[0.02] pointer-events-none overflow-hidden">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `
-              radial-gradient(ellipse 800px 400px at 20% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
-              radial-gradient(ellipse 600px 300px at 80% 70%, rgba(212, 175, 55, 0.06) 0%, transparent 60%),
-              linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.02) 50%, transparent 100%)
-            `,
-          }} />
-          {/* Efecto de venas sutiles tipo mármol */}
-          <div className="absolute inset-0" style={{
-            backgroundImage: `
-              linear-gradient(45deg, transparent 48%, rgba(212, 175, 55, 0.03) 49%, rgba(212, 175, 55, 0.03) 51%, transparent 52%),
-              linear-gradient(-45deg, transparent 48%, rgba(212, 175, 55, 0.02) 49%, rgba(212, 175, 55, 0.02) 51%, transparent 52%)
-            `,
-            backgroundSize: '200px 200px',
-          }} />
-        </div>
-
         <div className="max-w-7xl mx-auto relative z-10">
           {/* Header Section - Estilo Premium Minimalista */}
           <div className="text-center mb-20">
-            <p className="text-[#4A0404] tracking-[0.4em] text-xs md:text-sm mb-6 font-light uppercase">
+            <p className="font-display text-[#D4A574] tracking-[0.35em] text-[0.65rem] md:text-xs mb-6">
               {t.services.subtitle}
             </p>
-            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#4A0404] mb-8 font-light tracking-tight leading-tight">
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#F4EBE1] mb-8 font-light italic tracking-tight leading-tight">
               {t.services.title}
             </h2>
-            <p className="text-[#6B5050] text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed">
+            <p className="text-[#F4EBE1]/70 text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed">
               {lang === "en" ? "Prices may vary based on design complexity" : "Los precios pueden variar según la complejidad del diseño"}
             </p>
           </div>
@@ -622,8 +603,8 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-6 py-2.5 rounded-full text-sm font-light tracking-wide transition-all duration-300 ${selectedCategory === cat.id
-                  ? "bg-[#4A0404] text-white border border-[#D4AF37] shadow-md"
-                  : "bg-white/90 text-[#4A0404] border border-[#D4AF37]/40 hover:border-[#D4AF37]/60 hover:bg-white/95 shadow-sm"
+                  ? "bg-[#E8C9A8] text-[#0E0706] border border-[#E8C9A8] font-medium"
+                  : "bg-transparent text-[#F4EBE1]/80 border border-[#F4EBE1]/25 hover:border-[#E8C9A8] hover:text-[#E8C9A8]"
                   }`}
                 aria-label={`${lang === "en" ? "Filter by" : "Filtrar por"} ${lang === "en" ? cat.en : cat.es}`}
               >
@@ -657,10 +638,10 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
               return (
                 <article
                   key={service.id}
-                  className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-[#3D1112]/10 bg-white shadow-sm transition-shadow duration-300 hover:shadow-xl"
+                  className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-[#F4EBE1]/12 bg-[#1A0F0D] transition-colors duration-300 hover:border-[#E8C9A8]/50"
                 >
                   {/* Whole photo, never cropped: the frame has the same 3:4 ratio as the pictures */}
-                  <div className="relative aspect-[3/4] w-full bg-[#F5EDE6]">
+                  <div className="relative aspect-[3/4] w-full bg-[#140B0A]">
                     <Image
                       src={serviceImage}
                       alt={lang === "en" ? service.name : service.nameEs}
@@ -674,14 +655,14 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
                   </div>
 
                   <div className="flex flex-1 flex-col gap-5 p-6">
-                    <h3 className="font-serif text-2xl leading-tight text-[#3D1112]">
+                    <h3 className="font-serif text-2xl leading-tight text-[#F4EBE1]">
                       {lang === "en" ? service.name : service.nameEs}
                     </h3>
                     <a
                       href={CONFIG.instagramDmUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-auto flex w-full items-center justify-center gap-3 rounded-full bg-[#3D1112] px-6 py-4 text-sm font-semibold tracking-wide text-white transition-colors hover:bg-[#5C1A1B]"
+                      className="mt-auto flex w-full items-center justify-center gap-3 rounded-full border border-[#E8C9A8]/60 px-6 py-4 text-sm font-semibold tracking-wide text-[#E8C9A8] transition-colors hover:bg-[#E8C9A8] hover:text-[#0E0706]"
                       aria-label={`${lang === "en" ? "Send a direct message on Instagram about" : "Enviar mensaje directo por Instagram sobre"} ${lang === "en" ? service.name : service.nameEs}`}
                     >
                       <Instagram className="h-5 w-5" />

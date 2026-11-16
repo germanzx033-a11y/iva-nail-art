@@ -22,22 +22,11 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const [visibleImages, setVisibleImages] = useState<number>(12);
-  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [hoveredImageId, setHoveredImageId] = useState<string | null>(null);
   const titleOf = (img: GalleryImage) => (lang === "es" && img.altEs ? img.altEs : img.alt);
   const galleryRef = useRef<HTMLDivElement>(null);
   const imageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const mounted = useMounted();
-  // Valores aleatorios generados una sola vez; solo se renderizan tras montar (sin desajuste de hidratación)
-  const [particles] = useState(() =>
-    Array.from({ length: 20 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      delay: Math.random() * 5,
-      duration: 8 + Math.random() * 4,
-    }))
-  );
   const [sparkles] = useState(() =>
     Array.from({ length: 15 }, () => ({
       left: Math.random() * 100,
@@ -46,24 +35,6 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
       duration: 2 + Math.random() * 2,
     }))
   );
-
-  // Seguir el mouse para efectos de spotlight
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (galleryRef.current) {
-        const rect = galleryRef.current.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        setMousePosition({ x, y });
-      }
-    };
-
-    const gallery = galleryRef.current;
-    if (gallery) {
-      gallery.addEventListener("mousemove", handleMouseMove);
-      return () => gallery.removeEventListener("mousemove", handleMouseMove);
-    }
-  }, []);
 
   // Intersection Observer para lazy loading
   useEffect(() => {
@@ -145,19 +116,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
     <>
       <section
         id="gallery"
-        className="py-24 px-4 md:px-6 relative overflow-hidden"
-        style={{
-          background: `
-            linear-gradient(135deg, #FDF8F5 0%, #FAF5F2 25%, #F7F0EB 50%, #F5EDE6 75%, #FDF8F5 100%),
-            repeating-linear-gradient(
-              45deg,
-              transparent,
-              transparent 10px,
-              rgba(212, 165, 116, 0.02) 10px,
-              rgba(212, 165, 116, 0.02) 20px
-            )
-          `,
-        }}
+        className="py-24 px-4 md:px-6 relative overflow-hidden bg-[#0E0706]"
       >
         {/* Efectos decorativos de fondo */}
         <div className="absolute inset-0 opacity-20 pointer-events-none">
@@ -166,44 +125,19 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          {/* Spotlight dinámico que sigue el mouse */}
-          <div
-            className="absolute inset-0 pointer-events-none opacity-30"
-            style={{
-              background: `radial-gradient(circle 600px at ${mousePosition.x}% ${mousePosition.y}%, rgba(212, 175, 55, 0.15) 0%, transparent 70%)`,
-              transition: "background 0.3s ease-out",
-            }}
-          />
-
-          {/* Partículas doradas flotantes */}
-          {mounted && particles.map((particle) => (
-            <div
-              key={particle.id}
-              className="absolute pointer-events-none animate-float-particle"
-              style={{
-                left: `${particle.x}%`,
-                top: `${particle.y}%`,
-                animationDelay: `${particle.delay}s`,
-                animationDuration: `${particle.duration}s`,
-              }}
-            >
-              <div className="w-2 h-2 bg-[#D4AF37] rounded-full blur-sm opacity-40 animate-sparkle"></div>
-            </div>
-          ))}
-
           {/* Header con efecto de brillo */}
           <div className="text-center mb-16 relative">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#D4AF37]/10 to-transparent blur-3xl animate-shimmer"></div>
-            <p className="text-[#D4AF37] tracking-[0.3em] text-xs md:text-sm mb-4 font-light uppercase relative z-10 animate-gradient-text">
+            <p className="font-display text-[#D4A574] tracking-[0.35em] text-[0.65rem] md:text-xs mb-4 relative z-10">
               {t.gallery.subtitle}
             </p>
-            <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl text-[#4A0404] mb-6 font-light relative z-10">
+            <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl text-[#F4EBE1] italic mb-6 font-light relative z-10">
               <span className="relative inline-block">
                 {t.gallery.title}
                 <span className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-[#D4AF37] via-[#E8C9A8] to-[#D4AF37] rounded-full opacity-50"></span>
               </span>
             </h2>
-            <p className="text-[#4A0404]/70 text-lg max-w-2xl mx-auto leading-relaxed relative z-10">
+            <p className="text-[#F4EBE1]/75 text-lg max-w-2xl mx-auto leading-relaxed relative z-10">
               {t.gallery.description}
             </p>
             <div className="mt-8 flex items-center justify-center gap-3 relative z-10">
@@ -211,7 +145,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
                 <Sparkles className="w-5 h-5 text-[#D4AF37] animate-sparkle" />
                 <div className="absolute inset-0 bg-[#D4AF37] blur-lg opacity-30 animate-pulse"></div>
               </div>
-              <span className="text-[#4A0404]/60 text-sm font-medium">
+              <span className="text-[#F4EBE1]/70 text-sm font-medium">
                 {GALLERY_IMAGES.length} {lang === "en" ? "Masterpieces" : "Obras Maestras"}
               </span>
               <div className="flex gap-1">
@@ -377,9 +311,9 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
               href={CONFIG.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 text-[#4A0404] hover:text-[#D4AF37] transition-all duration-300 group"
+              className="flex items-center gap-3 text-[#F4EBE1] hover:text-[#E8C9A8] transition-all duration-300 group"
             >
-              <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center group-hover:bg-[#D4AF37]/10 transition-all duration-300">
+              <div className="w-10 h-10 rounded-full bg-[#F4EBE1]/10 flex items-center justify-center group-hover:bg-[#D4AF37]/20 transition-all duration-300">
                 <Instagram className="w-5 h-5" />
               </div>
               <span className="text-sm font-medium">@{CONFIG.instagram}</span>
@@ -388,9 +322,9 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
               href={CONFIG.tiktokUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 text-[#4A0404] hover:text-[#D4AF37] transition-all duration-300 group"
+              className="flex items-center gap-3 text-[#F4EBE1] hover:text-[#E8C9A8] transition-all duration-300 group"
             >
-              <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center group-hover:bg-[#D4AF37]/10 transition-all duration-300">
+              <div className="w-10 h-10 rounded-full bg-[#F4EBE1]/10 flex items-center justify-center group-hover:bg-[#D4AF37]/20 transition-all duration-300">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z" />
                 </svg>
