@@ -3,6 +3,7 @@ import { Inter, Playfair_Display, Syncopate } from "next/font/google";
 import "./globals.css";
 import PWAProvider from "./components/PWAProvider";
 import Analytics from "./components/Analytics";
+import { SITE_URL, BUSINESS } from "@/lib/site";
 
 /**
  * IVA Nail Art - LUXURY EDITORIAL
@@ -39,15 +40,14 @@ const syncopate = Syncopate({
 // METADATA & SEO
 // =============================================
 
-const SITE_URL = "https://iva-nail-art.vercel.app";
 const DESCRIPTION =
-  "Private nail art studio in Bay Ridge, Brooklyn. Hand-painted designs, gel and structured manicures, chrome, cat eye and 3D art. By appointment only — book by Instagram DM.";
+  "Private nail studio in Bay Ridge, Brooklyn · Estudio privado de uñas. Builder gel, acrylics, gel pedicure & custom nail art. EN/ES.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "IVA Nail Art | Private Nail Art Studio in Bay Ridge, Brooklyn",
-    template: "%s | IVA Nail Art",
+    default: "IVA Nail Art NY | Custom Nail Studio in Bay Ridge, Brooklyn",
+    template: "%s | IVA Nail Art NY",
   },
   description: DESCRIPTION,
   keywords: [
@@ -73,18 +73,19 @@ export const metadata: Metadata = {
     locale: "en_US",
     alternateLocale: ["es_US"],
     url: SITE_URL,
-    siteName: "IVA Nail Art",
-    title: "IVA Nail Art — Nails as wearable art",
+    siteName: "IVA Nail Art NY",
+    title: "IVA Nail Art NY | Boutique Nail Studio in Bay Ridge, Brooklyn",
     description: DESCRIPTION,
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "IVA Nail Art — hand-painted nail designs in Bay Ridge, Brooklyn" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "IVA Nail Art — Nails as wearable art",
+    title: "IVA Nail Art NY | Boutique Nail Studio in Bay Ridge, Brooklyn",
     description: DESCRIPTION,
     images: ["/og-image.jpg"],
   },
   robots: { index: true, follow: true },
+  other: { "geo.region": "US-NY", "geo.placename": "Bay Ridge, Brooklyn" },
   appleWebApp: { capable: true, title: "IVA Nails", statusBarStyle: "black-translucent" },
 };
 
@@ -103,13 +104,16 @@ export const viewport: Viewport = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "NailSalon",
-  name: "IVA Nail Art",
+  "@id": `${SITE_URL}/#nailsalon`,
+  name: BUSINESS.name,
+  alternateName: BUSINESS.alternateName,
   description: DESCRIPTION,
-  url: SITE_URL,
+  url: `${SITE_URL}/`,
   image: `${SITE_URL}/og-image.jpg`,
   logo: `${SITE_URL}/icon-512.png`,
   telephone: "+1-929-625-7273",
   priceRange: "$$",
+  founder: { "@type": "Person", name: BUSINESS.artist },
   address: {
     "@type": "PostalAddress",
     addressLocality: "Brooklyn",
@@ -117,19 +121,21 @@ const jsonLd = {
     postalCode: "11209",
     addressCountry: "US",
   },
-  areaServed: "Bay Ridge, Brooklyn, NY",
-  sameAs: ["https://instagram.com/iva_nailart_ny", "https://tiktok.com/@iva_nailart_ny"],
+  areaServed: [
+    { "@type": "Place", name: "Bay Ridge, Brooklyn, NY" },
+    { "@type": "City", name: "Brooklyn" },
+  ],
+  knowsLanguage: ["Spanish", "English"],
+  sameAs: [BUSINESS.instagramUrl, BUSINESS.tiktokUrl],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
-    name: "Nail services",
+    name: "Nail Services",
     itemListElement: [
-      "Gel Manicure",
-      "Structured Gel Manicure",
       "Builder Gel Manicure",
+      "Structured Gel Manicure",
+      "Acrylic Nail Set",
       "Gel Pedicure",
-      "Full Set Acrylic",
-      "Chrome / Cat Eye",
-      "Hand-painted Nail Art",
+      "Custom Nail Art",
     ].map((name) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name } })),
   },
 };

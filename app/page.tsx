@@ -18,6 +18,7 @@ import AboutIva from "@/app/components/AboutIva";
 import HeroScroll from "@/app/components/HeroScroll";
 import PhotoMarquee from "@/app/components/PhotoMarquee";
 import BookingInfo from "@/app/components/BookingInfo";
+import Reviews from "@/app/components/Reviews";
 import { BackToTop, ScrollProgressBar } from "@/app/components/ScrollUi";
 import GallerySection from "@/app/components/GallerySection";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
@@ -374,7 +375,7 @@ export default function Home() {
               {t.services.title}
             </h2>
             <p className="text-[#F4EBE1]/70 text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed">
-              {lang === "en" ? "Prices may vary based on design complexity" : "Los precios pueden variar según la complejidad del diseño"}
+              {lang === "en" ? "Guide prices. The final total is confirmed by length, removal and level of nail art." : "Precios orientativos. El total final se confirma según el largo, el retiro y el nivel de nail art."}
             </p>
           </div>
 
@@ -467,6 +468,7 @@ export default function Home() {
       </section>
 
       <BookingInfo lang={lang} bookUrl={CONFIG.instagramDmUrl} phone={CONFIG.phone} hours={CONFIG.hours} />
+      <Reviews lang={lang} />
 
       {/* ================================================================== */}
       {/* GALLERY SECTION - GALERÍA VISUAL IMPRESIONANTE */}

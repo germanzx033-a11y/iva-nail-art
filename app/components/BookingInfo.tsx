@@ -1,4 +1,5 @@
 import { Clock, MessageCircle, CalendarCheck, Sparkles, Phone } from "lucide-react";
+import { BUSINESS } from "@/lib/site";
 
 interface BookingInfoProps {
   lang: "en" | "es";
@@ -28,7 +29,9 @@ const COPY = {
     ],
     hoursLabel: "Hours",
     hoursNote: "By appointment only · Replies within 1–2 hours",
-    call: "Prefer to call?",
+    call: "Other ways to reach Iva",
+    whatsapp: "WhatsApp",
+    waText: "Hi Iva! I would like to book an appointment. Service: … Preferred date: … Do I have product to remove? …",
     cta: "Message Iva on Instagram",
   },
   es: {
@@ -51,7 +54,9 @@ const COPY = {
     ],
     hoursLabel: "Horario",
     hoursNote: "Solo con cita · Respuesta en 1 a 2 horas",
-    call: "¿Prefieres llamar?",
+    call: "Otras formas de contactar a Iva",
+    whatsapp: "WhatsApp",
+    waText: "¡Hola Iva! Me gustaría reservar una cita. Servicio: … Fecha preferida: … ¿Tengo producto para retirar? …",
     cta: "Escríbele a Iva por Instagram",
   },
 };
@@ -121,10 +126,21 @@ export default function BookingInfo({ lang, bookUrl, phone, hours }: BookingInfo
             </a>
 
             <p className="mt-6 text-sm text-[#F4EBE1]/70">{c.call}</p>
-            <a href={tel} className="mt-1 inline-flex items-center gap-2 text-lg text-[#E8C9A8] underline-offset-4 hover:underline">
-              <Phone className="h-4 w-4" aria-hidden />
-              {phone}
-            </a>
+            <div className="mt-2 flex flex-wrap gap-x-6 gap-y-2">
+              <a
+                href={`https://wa.me/${BUSINESS.whatsappNumber}?text=${encodeURIComponent(c.waText)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-lg text-[#E8C9A8] underline-offset-4 hover:underline"
+              >
+                <MessageCircle className="h-4 w-4" aria-hidden />
+                {c.whatsapp}
+              </a>
+              <a href={tel} className="inline-flex items-center gap-2 text-lg text-[#E8C9A8] underline-offset-4 hover:underline">
+                <Phone className="h-4 w-4" aria-hidden />
+                {phone}
+              </a>
+            </div>
           </aside>
         </div>
       </div>
