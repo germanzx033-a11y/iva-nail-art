@@ -82,7 +82,7 @@ export default function HeroScroll({ lang, bookUrl, cta }: HeroScrollProps) {
             className="absolute inset-0 transition-opacity duration-1000 ease-out"
             style={{ opacity: i === active ? 1 : 0 }}
           >
-            <Image src={scene.src} alt="" fill sizes="64px" quality={30} className="scale-110 object-cover" priority={i === 0} />
+            <Image src={scene.src} alt="" fill sizes="64px" quality={30} className="scale-110 object-cover" loading={i === 0 ? "eager" : "lazy"} />
           </div>
         ))}
         <div aria-hidden className="absolute inset-0 bg-[#0E0706]/70" />
@@ -109,7 +109,9 @@ export default function HeroScroll({ lang, bookUrl, cta }: HeroScrollProps) {
                     src={scene.src}
                     alt={`${isEn ? scene.en.join(" ") : scene.es.join(" ")} — IVA Nail Art`}
                     fill
-                    priority={i === 0}
+                    preload={i === 0}
+                    fetchPriority={i === 0 ? "high" : "low"}
+                    loading={i === 0 ? "eager" : "lazy"}
                     sizes="(max-width: 1024px) 72vw, 40vw"
                     className="rounded-[1.5rem] object-contain drop-shadow-[0_40px_60px_rgba(0,0,0,0.6)]"
                   />

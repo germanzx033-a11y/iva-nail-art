@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import LegalPage, { type LegalCopy } from "@/app/components/LegalPage";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | IVA Nail Art",
+  title: "Privacy Policy",
   description: "How IVA Nail Art collects, uses and protects your personal information when you book an appointment.",
   alternates: { canonical: "/privacy" },
 };
@@ -16,7 +16,7 @@ const en: LegalCopy = {
     {
       title: "Information we collect",
       body: [
-        "When you book or pay a deposit through the website we collect your name, phone number, email address and the date and time you choose.",
+        "If you book or pay a deposit through the website, we collect your name, phone number, email address and the date and time you choose.",
         "When you message us on Instagram, Instagram handles that conversation under its own privacy policy; we only see what you send us.",
         "Like most websites, our hosting provider records basic technical data such as your IP address and browser type to keep the site running and secure.",
       ],
@@ -79,7 +79,7 @@ const es: LegalCopy = {
     {
       title: "Qué información recopilamos",
       body: [
-        "Cuando reservas o pagas un depósito en el sitio recopilamos tu nombre, teléfono, correo electrónico y la fecha y hora que eliges.",
+        "Si reservas o pagas un depósito en el sitio, recopilamos tu nombre, teléfono, correo electrónico y la fecha y hora que eliges.",
         "Cuando nos escribes por Instagram, esa conversación la maneja Instagram según su propia política de privacidad; nosotras solo vemos lo que nos envías.",
         "Como casi todos los sitios web, nuestro proveedor de alojamiento registra datos técnicos básicos, como tu dirección IP y tipo de navegador, para mantener el sitio funcionando y seguro.",
       ],

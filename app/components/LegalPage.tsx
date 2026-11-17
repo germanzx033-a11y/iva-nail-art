@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface LegalSection {
   title: string;
@@ -23,6 +23,10 @@ interface LegalPageProps {
 export default function LegalPage({ en, es }: LegalPageProps) {
   const [lang, setLang] = useState<"en" | "es">("en");
   const copy = lang === "en" ? en : es;
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   return (
     <main className="min-h-screen bg-[#0E0706] px-6 py-10 text-[#F4EBE1] md:px-10">
