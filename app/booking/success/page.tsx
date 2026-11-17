@@ -181,7 +181,7 @@ function SuccessContent() {
           >
             Booking Confirmed
           </motion.h1>
-          <p className="text-[#7A7A7A] text-[14px]">
+          <p className="text-[#5F5F5F] text-[14px]">
             Your appointment is secured ✨
           </p>
 
@@ -203,7 +203,7 @@ function SuccessContent() {
                   <item.icon className="w-4 h-4 text-[#722F37]" />
                 </div>
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-[#7A7A7A]">
+                  <p className="text-[10px] uppercase tracking-[0.15em] text-[#5F5F5F]">
                     {item.label}
                   </p>
                   <p className="text-[#1A1A1A] font-serif">{item.value}</p>
@@ -249,7 +249,7 @@ function SuccessContent() {
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Link
               href="/"
-              className="flex items-center justify-center gap-3 w-full py-4 bg-white border border-[#EBE8E2] text-[#7A7A7A] text-[11px] font-medium uppercase tracking-[0.2em] hover:border-[#722F37] hover:text-[#722F37] transition-all duration-300 rounded-lg"
+              className="flex items-center justify-center gap-3 w-full py-4 bg-white border border-[#EBE8E2] text-[#5F5F5F] text-[11px] font-medium uppercase tracking-[0.2em] hover:border-[#722F37] hover:text-[#722F37] transition-all duration-300 rounded-lg"
             >
               Return Home
               <ArrowRight className="w-3 h-3" />
@@ -259,7 +259,7 @@ function SuccessContent() {
 
         {/* Footer Note */}
         <motion.p
-          className="text-center text-[#A3A3A3] text-[11px] mt-10 tracking-wide"
+          className="text-center text-[#6B6B6B] text-[11px] mt-10 tracking-wide"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}

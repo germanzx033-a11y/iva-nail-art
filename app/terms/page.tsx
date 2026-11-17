@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import LegalPage, { type LegalCopy } from "@/app/components/LegalPage";
 
 export const metadata: Metadata = {
-  title: "Terms & Conditions | IVA Nail Art",
+  title: "Terms & Conditions",
   description: "Booking, deposit, cancellation and service terms for IVA Nail Art in Bay Ridge, Brooklyn.",
   alternates: { canonical: "/terms" },
 };

@@ -7,16 +7,12 @@ import {
   Clock,
   Instagram,
   ChevronRight,
-  ChevronLeft,
-  Check,
   Sparkles,
-  X,
   Hand,
   Footprints,
   Palette,
   Scissors,
 } from "lucide-react";
-import { formatDate, getMinBookingDate, isValidEmail, isValidPhone } from "@/lib/utils";
 import Image from "next/image";
 import AboutIva from "@/app/components/AboutIva";
 import HeroScroll from "@/app/components/HeroScroll";
@@ -114,21 +110,6 @@ interface Service {
   category: string;
 }
 
-interface BookingState {
-  step: number;
-  service: Service | null;
-  date: string;
-  time: string;
-  name: string;
-  phone: string;
-  email: string;
-  acceptedPolicies: boolean;
-  errors: {
-    name?: string;
-    phone?: string;
-    email?: string;
-  };
-}
 
 // ============================================================================
 // SERVICIOS CON PRECIOS
@@ -168,11 +149,6 @@ const CATEGORIES = [
   { id: "extras", en: "Extras", es: "Extras" },
 ];
 
-const TIME_SLOTS = [
-  "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
-  "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM",
-  "5:00 PM", "6:00 PM", "7:00 PM",
-];
 
 // ============================================================================
 // TRADUCCIONES
@@ -206,37 +182,6 @@ const translations = {
       subtitle: "OUR WORK",
       title: "Nail Art Gallery",
       description: "A glimpse of our latest creations",
-    },
-    booking: {
-      title: "Book Your Appointment",
-      subtitle: "Reserve your moment of beauty",
-      steps: ["Service", "Date & Time", "Your Info", "Confirm"],
-      selectService: "Select Your Service",
-      selectDateTime: "Choose Date & Time",
-      yourDetails: "Your Details",
-      confirmation: "Confirm Booking",
-      date: "Date",
-      time: "Time",
-      selectTime: "Select a time...",
-      name: "Full Name",
-      namePlaceholder: "Your name",
-      phone: "Phone",
-      phonePlaceholder: "+1 (555) 123-4567",
-      email: "Email (optional)",
-      emailPlaceholder: "your@email.com",
-      policies: {
-        title: "Salon Policies",
-        deposit: `$${CONFIG.deposit} deposit required (non-refundable)`,
-        cancellation: `Minimum ${CONFIG.cancellationHours}h notice for cancellations`,
-        payment: "Payment: Cash, Zelle, or Card",
-      },
-      acceptPolicies: "I accept the salon policies",
-      next: "Continue",
-      back: "Back",
-      summary: "Booking Summary",
-      sendInstagram: "Send via Instagram",
-      dmHint: "We'll copy your booking details and open our Instagram chat: just paste them and send.",
-      successMessage: `Click below to send your booking request. Iva will confirm availability and send Zelle payment instructions for the $${CONFIG.deposit} deposit.`,
     },
     footer: {
       tagline: "Creating beauty, one nail at a time",
@@ -277,37 +222,6 @@ const translations = {
       title: "Galería de Arte",
       description: "Un vistazo a nuestras últimas creaciones",
     },
-    booking: {
-      title: "Reserva tu Cita",
-      subtitle: "Reserva tu momento de belleza",
-      steps: ["Servicio", "Fecha y Hora", "Tus Datos", "Confirmar"],
-      selectService: "Selecciona tu Servicio",
-      selectDateTime: "Elige Fecha y Hora",
-      yourDetails: "Tus Datos",
-      confirmation: "Confirmar Reserva",
-      date: "Fecha",
-      time: "Hora",
-      selectTime: "Selecciona una hora...",
-      name: "Nombre Completo",
-      namePlaceholder: "Tu nombre",
-      phone: "Teléfono",
-      phonePlaceholder: "+1 (555) 123-4567",
-      email: "Email (opcional)",
-      emailPlaceholder: "tu@email.com",
-      policies: {
-        title: "Políticas del Salón",
-        deposit: `Depósito de $${CONFIG.deposit} requerido (no reembolsable)`,
-        cancellation: `Mínimo ${CONFIG.cancellationHours}h de anticipación para cancelar`,
-        payment: "Pago: Efectivo, Zelle o Tarjeta",
-      },
-      acceptPolicies: "Acepto las políticas del salón",
-      next: "Continuar",
-      back: "Volver",
-      summary: "Resumen de Reserva",
-      sendInstagram: "Enviar por Instagram",
-      dmHint: "Copiaremos los datos de tu reserva y abriremos nuestro chat de Instagram: solo pégalos y envía.",
-      successMessage: `Haz clic abajo para enviar tu solicitud. Iva confirmará disponibilidad y te enviará instrucciones de pago Zelle para el depósito de $${CONFIG.deposit}.`,
-    },
     footer: {
       tagline: "Creando belleza, una uña a la vez",
       hours: "Horario",
@@ -324,20 +238,12 @@ const translations = {
 export default function Home() {
   const [lang, setLang] = useState<"en" | "es">("en");
   const [selectedCategory, setSelectedCategory] = useState("manicure");
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [bookingData, setBookingData] = useState<BookingState>({
-    step: 1,
-    service: null,
-    date: "",
-    time: "",
-    name: "",
-    phone: "",
-    email: "",
-    acceptedPolicies: false,
-    errors: {},
-  });
-
   const t = translations[lang];
+
+  // Keep the page language in sync for screen readers and translation tools
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   // Estado para animaciones de scroll reveal
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
@@ -371,131 +277,6 @@ export default function Home() {
   // Filtrar servicios por categoría
   const filteredServices = SERVICES.filter((s) => s.category === selectedCategory);
 
-  // Formatear fecha usando utilidad del proyecto
-  const formatBookingDate = (dateStr: string): string => {
-    if (!dateStr) return '';
-    try {
-    return formatDate(dateStr, lang);
-    } catch (error) {
-      console.error('Error formatting date:', error);
-      return dateStr;
-    }
-  };
-
-  // Validación por paso
-  const canProceed = (): boolean => {
-    const errors: BookingState["errors"] = {};
-    
-    switch (bookingData.step) {
-      case 1:
-        return bookingData.service !== null;
-      case 2:
-        return bookingData.date !== "" && bookingData.time !== "";
-      case 3:
-        // Validar nombre
-        if (bookingData.name.trim() === "") {
-          errors.name = lang === "en" ? "Name is required" : "El nombre es requerido";
-        }
-        
-        // Validar teléfono
-        if (bookingData.phone.trim() === "") {
-          errors.phone = lang === "en" ? "Phone is required" : "El teléfono es requerido";
-        } else if (!isValidPhone(bookingData.phone)) {
-          errors.phone = lang === "en" ? "Invalid phone number" : "Número de teléfono inválido";
-        }
-        
-        // Validar email si está presente
-        if (bookingData.email.trim() !== "" && !isValidEmail(bookingData.email)) {
-          errors.email = lang === "en" ? "Invalid email address" : "Dirección de email inválida";
-        }
-        
-        // Actualizar errores
-        if (Object.keys(errors).length > 0) {
-          setBookingData({ ...bookingData, errors });
-          return false;
-        }
-        
-        return bookingData.name.trim() !== "" && 
-               bookingData.phone.trim() !== "" && 
-               bookingData.acceptedPolicies;
-      default:
-        return true;
-    }
-  };
-
-  // Enviar por mensaje directo de Instagram
-  const sendViaInstagram = () => {
-    try {
-    const serviceName = lang === "en" ? bookingData.service?.name : bookingData.service?.nameEs;
-      const formattedDate = bookingData.date ? formatBookingDate(bookingData.date) : '';
-
-    const message =
-      lang === "en"
-        ? `✨ *New Appointment Request* ✨
-
-👤 *Name:* ${bookingData.name || ''}
-📱 *Phone:* ${bookingData.phone || ''}
-${bookingData.email ? `📧 *Email:* ${bookingData.email}` : ""}
-
-💅 *Service:* ${serviceName || 'Consult service'}
-📅 *Date:* ${formattedDate || 'To be scheduled'}
-🕐 *Time:* ${bookingData.time || 'To be scheduled'}
-
-I understand a $${CONFIG.deposit} deposit is required.
-Please confirm availability! 💕`
-        : `✨ *Nueva Solicitud de Cita* ✨
-
-👤 *Nombre:* ${bookingData.name || ''}
-📱 *Teléfono:* ${bookingData.phone || ''}
-${bookingData.email ? `📧 *Email:* ${bookingData.email}` : ""}
-
-💅 *Servicio:* ${serviceName || 'Consultar servicio'}
-📅 *Fecha:* ${formattedDate || 'Por agendar'}
-🕐 *Hora:* ${bookingData.time || 'Por agendar'}
-
-Entiendo que se requiere depósito de $${CONFIG.deposit}.
-¡Por favor confirma disponibilidad! 💕`;
-
-    // Instagram cannot pre-fill a DM from a link, so copy the details (without
-    // WhatsApp-style *bold* markers) and open the chat for the client to paste them.
-    const plainMessage = message.replace(/\*/g, '');
-    if (navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(plainMessage).catch(() => alert(plainMessage));
-    } else {
-      alert(plainMessage);
-    }
-    window.open(CONFIG.instagramDmUrl, "_blank");
-    setIsBookingOpen(false);
-    setBookingData({
-      step: 1,
-      service: null,
-      date: "",
-      time: "",
-      name: "",
-      phone: "",
-      email: "",
-      acceptedPolicies: false,
-      errors: {},
-    });
-    } catch (error) {
-      console.error('Error sending via Instagram:', error);
-      alert(lang === "en" ? "An error occurred. Please try again." : "Ocurrió un error. Por favor intenta de nuevo.");
-    }
-  };
-
-  // Obtener fecha mínima (mañana) usando utilidad del proyecto
-  const getMinDate = (): string => {
-    return getMinBookingDate();
-  };
-
-  // Limpiar errores al cambiar campos
-  const handleFieldChange = (field: "name" | "phone" | "email" | "date" | "time", value: string) => {
-    setBookingData({
-      ...bookingData,
-      [field]: value,
-      errors: { ...bookingData.errors, [field]: undefined },
-    });
-  };
 
   return (
     <main className="min-h-screen bg-[#0E0706] relative overflow-x-clip">
@@ -813,7 +594,7 @@ className="w-16 h-auto rounded-lg"
 
           <div className="border-t-2 border-white/20 pt-10 text-center">
             <p className="text-white/70 text-base font-medium">
-              © {new Date().getFullYear()} IVA Nail Art. All rights reserved.
+              © {new Date().getFullYear()} IVA Nail Art. {lang === "en" ? "All rights reserved." : "Todos los derechos reservados."}
             </p>
             <p className="mt-4 flex justify-center gap-6 text-sm text-white/70">
               <a href="/privacy" className="underline-offset-4 hover:text-[#D4AF37] hover:underline">
@@ -829,330 +610,6 @@ className="w-16 h-auto rounded-lg"
           </div>
         </div>
       </footer>
-
-      {/* ================================================================== */}
-      {/* BOOKING MODAL PREMIUM */}
-      {/* ================================================================== */}
-      {isBookingOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          {/* Backdrop con animación */}
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setIsBookingOpen(false)}
-            aria-hidden="true"
-          />
-
-          {/* Modal PREMIUM con animación */}
-          <div
-            className="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto border-2 border-[#E8A4B8]/20"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="booking-modal-title"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close Button PREMIUM */}
-            <button
-              onClick={() => setIsBookingOpen(false)}
-              className="absolute top-5 right-5 text-[#4A0404] hover:text-white transition-all z-10 bg-white/90 hover:bg-gradient-to-r hover:from-[#4A0404] hover:to-[#5C1A1B] rounded-full p-2.5 shadow-lg hover:shadow-xl hover:scale-110 border-2 border-[#E8A4B8]/30 hover:border-transparent"
-              aria-label={lang === "en" ? "Close booking modal" : "Cerrar modal de reserva"}
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            {/* Header PREMIUM */}
-            <div className="bg-gradient-to-r from-[#4A0404] via-[#5C1A1B] to-[#4A0404] text-white p-7 rounded-t-3xl relative overflow-hidden">
-              {/* Efectos decorativos de fondo */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/10 via-transparent to-[#D4AF37]/10"></div>
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/5 rounded-full -mr-16 -mt-16"></div>
-
-              <div className="relative z-10">
-                <h3 id="booking-modal-title" className="font-serif text-3xl font-bold mb-2">{t.booking.title}</h3>
-                <p className="text-white/90 text-base mt-1 font-medium">{t.booking.subtitle}</p>
-
-                {/* Progress Steps PREMIUM */}
-                <div className="flex justify-between mt-8 gap-2">
-                {t.booking.steps.map((step, index) => (
-                  <div key={index} className="flex flex-col items-center flex-1">
-                    <div
-                        className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${bookingData.step > index + 1
-                          ? "bg-gradient-to-r from-[#D4AF37] to-[#E8C9A8] text-[#4A0404] shadow-xl scale-110"
-                          : bookingData.step === index + 1
-                            ? "bg-white text-[#4A0404] shadow-xl scale-110 ring-2 ring-[#D4AF37]"
-                            : "bg-white/20 text-white/60"
-                      }`}
-                    >
-                        {bookingData.step > index + 1 ? <Check className="w-5 h-5" /> : index + 1}
-                    </div>
-                      <span className="text-xs mt-2 text-white/90 hidden sm:block font-medium">{step}</span>
-                  </div>
-                ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Content PREMIUM */}
-            <div className="p-7 bg-gradient-to-b from-white to-[#FDF8F5]">
-              {/* STEP 1: Select Service */}
-              {bookingData.step === 1 && (
-                <div>
-                  <h4 className="font-medium text-[#4A0404] mb-4">{t.booking.selectService}</h4>
-
-                  {/* Category Pills */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {CATEGORIES.map((cat) => (
-                      <button
-                        key={cat.id}
-                        onClick={() => setSelectedCategory(cat.id)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${selectedCategory === cat.id
-                            ? "bg-[#4A0404] text-white"
-                            : "bg-[#4A0404]/10 text-[#4A0404]"
-                        }`}
-                      >
-                        {lang === "en" ? cat.en : cat.es}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Services */}
-                  <div className="space-y-2 max-h-60 overflow-y-auto">
-                    {filteredServices.map((service) => (
-                      <button
-                        key={service.id}
-                        onClick={() => setBookingData({ ...bookingData, service })}
-                        className={`w-full p-4 rounded-xl text-left transition-all ${bookingData.service?.id === service.id
-                            ? "bg-[#4A0404] text-white"
-                            : "bg-[#FDF8F6] hover:bg-[#4A0404]/10 text-[#4A0404]"
-                        }`}
-                      >
-                        <div className="flex justify-between items-center">
-                          <span className="font-medium">
-                            {lang === "en" ? service.name : service.nameEs}
-                          </span>
-                          <span className="text-xs uppercase tracking-wide text-[#D4AF37]">
-                            {lang === "en" ? "Price by DM" : "Precio por mensaje"}
-                          </span>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* STEP 2: Date & Time */}
-              {bookingData.step === 2 && (
-                <div>
-                  <h4 className="font-medium text-[#4A0404] mb-4">{t.booking.selectDateTime}</h4>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm text-[#4A0404]/70 mb-2">{t.booking.date}</label>
-                      <input
-                        type="date"
-                        min={getMinDate()}
-                        value={bookingData.date}
-                        onChange={(e) => handleFieldChange("date", e.target.value)}
-                        className="w-full p-3 rounded-xl border border-[#4A0404]/20 focus:border-[#4A0404] focus:outline-none transition-colors"
-                        aria-label={t.booking.date}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm text-[#4A0404]/70 mb-2">{t.booking.time}</label>
-                      <select
-                        value={bookingData.time}
-                        onChange={(e) => handleFieldChange("time", e.target.value)}
-                        className="w-full p-3 rounded-xl border border-[#4A0404]/20 focus:border-[#4A0404] focus:outline-none transition-colors bg-white"
-                        aria-label={t.booking.time}
-                      >
-                        <option value="">{t.booking.selectTime}</option>
-                        {TIME_SLOTS.map((time) => (
-                          <option key={time} value={time}>
-                            {time}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* STEP 3: Your Details */}
-              {bookingData.step === 3 && (
-                <div>
-                  <h4 className="font-medium text-[#4A0404] mb-4">{t.booking.yourDetails}</h4>
-
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm text-[#4A0404]/70 mb-2">{t.booking.name} *</label>
-                      <input
-                        type="text"
-                        placeholder={t.booking.namePlaceholder}
-                        value={bookingData.name}
-                        onChange={(e) => handleFieldChange("name", e.target.value)}
-                        className={`w-full p-3 rounded-xl border focus:outline-none transition-colors ${bookingData.errors.name
-                            ? "border-red-500 focus:border-red-600"
-                            : "border-[#4A0404]/20 focus:border-[#4A0404]"
-                        }`}
-                        aria-label={t.booking.name}
-                        aria-invalid={!!bookingData.errors.name}
-                        aria-describedby={bookingData.errors.name ? "name-error" : undefined}
-                      />
-                      {bookingData.errors.name && (
-                        <p id="name-error" className="text-red-500 text-xs mt-1">
-                          {bookingData.errors.name}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm text-[#4A0404]/70 mb-2">{t.booking.phone} *</label>
-                      <input
-                        type="tel"
-                        placeholder={t.booking.phonePlaceholder}
-                        value={bookingData.phone}
-                        onChange={(e) => handleFieldChange("phone", e.target.value)}
-                        className={`w-full p-3 rounded-xl border focus:outline-none transition-colors ${bookingData.errors.phone
-                            ? "border-red-500 focus:border-red-600"
-                            : "border-[#4A0404]/20 focus:border-[#4A0404]"
-                        }`}
-                        aria-label={t.booking.phone}
-                        aria-invalid={!!bookingData.errors.phone}
-                        aria-describedby={bookingData.errors.phone ? "phone-error" : undefined}
-                      />
-                      {bookingData.errors.phone && (
-                        <p id="phone-error" className="text-red-500 text-xs mt-1">
-                          {bookingData.errors.phone}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm text-[#4A0404]/70 mb-2">{t.booking.email}</label>
-                      <input
-                        type="email"
-                        placeholder={t.booking.emailPlaceholder}
-                        value={bookingData.email}
-                        onChange={(e) => handleFieldChange("email", e.target.value)}
-                        className={`w-full p-3 rounded-xl border focus:outline-none transition-colors ${bookingData.errors.email
-                            ? "border-red-500 focus:border-red-600"
-                            : "border-[#4A0404]/20 focus:border-[#4A0404]"
-                        }`}
-                        aria-label={t.booking.email}
-                        aria-invalid={!!bookingData.errors.email}
-                        aria-describedby={bookingData.errors.email ? "email-error" : undefined}
-                      />
-                      {bookingData.errors.email && (
-                        <p id="email-error" className="text-red-500 text-xs mt-1">
-                          {bookingData.errors.email}
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Policies */}
-                    <div className="bg-[#FDF8F6] p-4 rounded-xl">
-                      <h5 className="font-medium text-[#4A0404] text-sm mb-3">
-                        {t.booking.policies.title}
-                      </h5>
-                      <ul className="text-sm text-[#4A0404]/70 space-y-1">
-                        <li>• {t.booking.policies.deposit}</li>
-                        <li>• {t.booking.policies.cancellation}</li>
-                        <li>• {t.booking.policies.payment}</li>
-                      </ul>
-                    </div>
-
-                    <label className="flex items-start gap-3 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={bookingData.acceptedPolicies}
-                        onChange={(e) =>
-                          setBookingData({ ...bookingData, acceptedPolicies: e.target.checked, errors: { ...bookingData.errors } })
-                        }
-                        className="mt-1 w-5 h-5 rounded border-[#4A0404]/30 text-[#4A0404] focus:ring-[#4A0404]"
-                      />
-                      <span className="text-sm text-[#4A0404]/70">{t.booking.acceptPolicies} *</span>
-                    </label>
-                  </div>
-                </div>
-              )}
-
-              {/* STEP 4: Confirmation */}
-              {bookingData.step === 4 && (
-                <div>
-                  <h4 className="font-medium text-[#4A0404] mb-4">{t.booking.confirmation}</h4>
-
-                  <p className="text-sm text-[#4A0404]/70 mb-6">{t.booking.successMessage}</p>
-
-                  {/* Summary */}
-                  <div className="bg-[#FDF8F6] p-4 rounded-xl mb-6">
-                    <h5 className="font-medium text-[#4A0404] mb-3">{t.booking.summary}</h5>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-[#4A0404]/60">💅 {lang === "en" ? "Service" : "Servicio"}</span>
-                        <span className="text-[#4A0404] font-medium">
-                          {lang === "en" ? bookingData.service?.name : bookingData.service?.nameEs}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#4A0404]/60">📅 {lang === "en" ? "Date" : "Fecha"}</span>
-                        <span className="text-[#4A0404]">{bookingData.date ? formatBookingDate(bookingData.date) : '-'}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#4A0404]/60">🕐 {lang === "en" ? "Time" : "Hora"}</span>
-                        <span className="text-[#4A0404]">{bookingData.time || '-'}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-[#4A0404]/60">👤 {lang === "en" ? "Name" : "Nombre"}</span>
-                        <span className="text-[#4A0404]">{bookingData.name || '-'}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Instagram DM Button */}
-                  <p className="text-sm text-stone-600 text-center mb-3">{t.booking.dmHint}</p>
-                  <button
-                    onClick={sendViaInstagram}
-                    className="w-full bg-[#4A0404] hover:bg-[#6B0606] text-white py-4 rounded-xl font-semibold transition-colors flex items-center justify-center gap-3"
-                  >
-                    <Instagram className="w-6 h-6" />
-                    {t.booking.sendInstagram}
-                  </button>
-                </div>
-              )}
-
-              {/* Navigation Buttons */}
-              {bookingData.step < 4 && (
-                <div className="flex gap-3 mt-6">
-                  {bookingData.step > 1 && (
-                    <button
-                      onClick={() => setBookingData({ ...bookingData, step: bookingData.step - 1 })}
-                      className="flex-1 py-3 rounded-xl border border-[#4A0404]/20 text-[#4A0404] font-medium hover:bg-[#4A0404]/5 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <ChevronLeft className="w-4 h-4" />
-                      {t.booking.back}
-                    </button>
-                  )}
-                  <button
-                    onClick={() => {
-                      if (canProceed()) {
-                        setBookingData({ ...bookingData, step: bookingData.step + 1 });
-                      }
-                    }}
-                    disabled={!canProceed()}
-                    className={`flex-1 py-3 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${canProceed()
-                        ? "bg-[#4A0404] text-white hover:bg-[#6B0606]"
-                        : "bg-[#4A0404]/30 text-white/50 cursor-not-allowed"
-                    }`}
-                    aria-label={t.booking.next}
-                  >
-                    {t.booking.next}
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ================================================================== */}
       {/* FLOATING INSTAGRAM DM BUTTON */}

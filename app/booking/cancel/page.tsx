@@ -15,7 +15,7 @@ export default function BookingCancelPage() {
         {/* Cancel Icon */}
         <div className="mb-10">
           <div className="inline-flex w-20 h-20 bg-[#F1EFE9] items-center justify-center">
-            <X className="w-10 h-10 text-[#7A7A7A]" />
+            <X className="w-10 h-10 text-[#5F5F5F]" />
           </div>
         </div>
 
@@ -24,7 +24,7 @@ export default function BookingCancelPage() {
           <h1 className="font-serif text-3xl text-[#1A1A1A] mb-4">
             Booking Not Completed
           </h1>
-          <p className="text-[#7A7A7A] text-[14px] leading-relaxed">
+          <p className="text-[#5F5F5F] text-[14px] leading-relaxed">
             No worries! Your appointment was not confirmed and no payment was
             processed. Your selected time slot has been released.
           </p>
@@ -44,7 +44,7 @@ export default function BookingCancelPage() {
             href="https://ig.me/m/iva_nailart_ny"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-3 w-full py-4 bg-white border border-[#EBE8E2] text-[#7A7A7A] text-[11px] font-medium uppercase tracking-[0.2em] hover:opacity-70 transition-all duration-500"
+            className="flex items-center justify-center gap-3 w-full py-4 bg-white border border-[#EBE8E2] text-[#5F5F5F] text-[11px] font-medium uppercase tracking-[0.2em] hover:opacity-70 transition-all duration-500"
           >
             <MessageCircle className="w-4 h-4" />
             Need Help? Message Us on Instagram
@@ -53,7 +53,7 @@ export default function BookingCancelPage() {
 
         {/* Reassurance */}
         <div className="mt-10 p-5 bg-white border border-[#EBE8E2]">
-          <p className="text-[#7A7A7A] text-[12px] leading-relaxed">
+          <p className="text-[#5F5F5F] text-[12px] leading-relaxed">
             Slots are limited to 2 clients per day.
             <br />
             Book early to secure your preferred time.

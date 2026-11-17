@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display, Syncopate } from "next/font/google";
 import "./globals.css";
 import PWAProvider from "./components/PWAProvider";
@@ -22,6 +22,7 @@ const inter = Inter({
 const playfair = Playfair_Display({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"], // the brand's italic headlines use the real italic, not a slanted fallback
   variable: "--font-playfair",
   display: "swap",
 });
@@ -38,130 +39,106 @@ const syncopate = Syncopate({
 // METADATA & SEO
 // =============================================
 
+const SITE_URL = "https://iva-nail-art.vercel.app";
+const DESCRIPTION =
+  "Private nail art studio in Bay Ridge, Brooklyn. Hand-painted designs, gel and structured manicures, chrome, cat eye and 3D art. By appointment only — book by Instagram DM.";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://iva-nail-art.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "IVA Nail Art | Luxury Nail Salon Brooklyn | Premium Nail Art Studio",
-    template: "%s | IVA Nail Art - Luxury Nails Brooklyn",
+    default: "IVA Nail Art | Private Nail Art Studio in Bay Ridge, Brooklyn",
+    template: "%s | IVA Nail Art",
   },
-  description:
-    "Premier luxury nail art studio in Bay Ridge, Brooklyn. Award-winning artistry, hospital-grade sterilization, HEPA air filtration, and premium 10-Free polishes. Private studio experience. Book your exclusive appointment today.",
+  description: DESCRIPTION,
   keywords: [
-    "luxury nail salon Brooklyn",
-    "premium nail art NYC",
-    "nail artist Brooklyn",
-    "10-free nail salon",
-    "HEPA filtered nail studio",
-    "hospital-grade nail salon",
-    "luxury private nail studio",
-    "Bay Ridge nail artist",
-    "11209 nail salon",
-    "nail art designs",
+    "nail artist Bay Ridge",
+    "nail art Brooklyn",
+    "private nail studio Brooklyn",
     "gel manicure Brooklyn",
-    "acrylic nails Brooklyn",
-    "chrome nails NYC",
+    "structured gel manicure",
+    "chrome nails Brooklyn",
+    "cat eye nails",
     "3D nail art",
+    "11209 nail salon",
   ],
   authors: [{ name: "IVA Nail Art" }],
   creator: "IVA Nail Art",
+  alternates: { canonical: "/" },
+  icons: {
+    icon: [{ url: "/favicon.ico", sizes: "any" }, { url: "/icon-192.png", type: "image/png", sizes: "192x192" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://iva-nail-art.vercel.app",
+    alternateLocale: ["es_US"],
+    url: SITE_URL,
     siteName: "IVA Nail Art",
-    title: "IVA Nail Art | Luxury Nail Art Studio Brooklyn",
-    description: "Premier luxury nail art studio in Bay Ridge, Brooklyn. Award-winning artistry, hospital-grade sterilization, and premium 10-Free polishes. Book your exclusive appointment.",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "IVA Nail Art - Luxury Nail Art Studio Brooklyn",
-      },
-    ],
+    title: "IVA Nail Art — Nails as wearable art",
+    description: DESCRIPTION,
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "IVA Nail Art — hand-painted nail designs in Bay Ridge, Brooklyn" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "IVA Nail Art | Luxury Nail Salon Brooklyn",
-    description: "Premier luxury nail art studio in Bay Ridge. Award-winning artistry. Book your exclusive appointment.",
+    title: "IVA Nail Art — Nails as wearable art",
+    description: DESCRIPTION,
     images: ["/og-image.jpg"],
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: { index: true, follow: true },
+  appleWebApp: { capable: true, title: "IVA Nails", statusBarStyle: "black-translucent" },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#0E0706",
 };
 
 // =============================================
 // JSON-LD STRUCTURED DATA
+// Only facts that appear on the site: no ratings, prices or claims that cannot be verified.
 // =============================================
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": ["NailSalon", "LocalBusiness", "HealthAndBeautyBusiness"],
+  "@type": "NailSalon",
   name: "IVA Nail Art",
-  description: "Premier luxury nail art studio in Bay Ridge, Brooklyn. Award-winning artistry, hospital-grade sterilization, HEPA air filtration, and premium 10-Free polishes. Private studio experience.",
-  url: "https://iva-nail-art.vercel.app",
+  description: DESCRIPTION,
+  url: SITE_URL,
+  image: `${SITE_URL}/og-image.jpg`,
+  logo: `${SITE_URL}/icon-512.png`,
   telephone: "+1-929-625-7273",
-  priceRange: "$$$",
-  slogan: "Luxury Nail Art. Personalized Experience.",
-  knowsAbout: ["Luxury nail art", "Premium manicure", "10-Free polishes", "HEPA air filtration", "Hospital-grade sterilization", "Gel extensions", "Chrome nails", "3D nail art"],
+  priceRange: "$$",
   address: {
     "@type": "PostalAddress",
     addressLocality: "Brooklyn",
     addressRegion: "NY",
     postalCode: "11209",
-    streetAddress: "Bay Ridge",
     addressCountry: "US",
   },
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: 40.6195,
-    longitude: -74.0304,
-  },
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "5",
-    ratingCount: "127",
-    bestRating: "5",
-    worstRating: "1",
-  },
-  offers: {
-    "@type": "AggregateOffer",
-    lowPrice: "105",
-    highPrice: "170",
-    priceCurrency: "USD",
-    offerCount: "3",
-  },
+  areaServed: "Bay Ridge, Brooklyn, NY",
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      opens: "09:00",
+      closes: "20:00",
+    },
+  ],
+  sameAs: ["https://instagram.com/iva_nailart_ny", "https://tiktok.com/@iva_nailart_ny"],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
-    name: "Luxury Nail Art Services",
+    name: "Nail services",
     itemListElement: [
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Signature Luxury Manicure",
-          description: "Premium manicure with 10-Free breathable polish and artistic designs",
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Ultimate Relaxation Ritual",
-          description: "Full pampering experience with premium products and massage",
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "3D Nail Art Design",
-          description: "Custom artistic nail designs with premium embellishments",
-        },
-      },
-    ],
+      "Gel Manicure",
+      "Structured Gel Manicure",
+      "Builder Gel Manicure",
+      "Gel Pedicure",
+      "Full Set Acrylic",
+      "Chrome / Cat Eye",
+      "Hand-painted Nail Art",
+    ].map((name) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name } })),
   },
 };
 
@@ -177,27 +154,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} ${syncopate.variable}`}>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <meta name="theme-color" content="#4A0404" />
-
-        {/* Apple PWA Meta Tags */}
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="IVA Nails" />
-        <link rel="apple-touch-icon" href="/icon-192.png" />
-
-        {/* Apple Splash Screens */}
-        <link rel="apple-touch-startup-image" href="/portada.jpg" />
-
-        {/* Viewport for PWA */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className={`antialiased bg-white text-[#111111]`}>
+      <body className="antialiased bg-[#0E0706] text-[#F4EBE1]">
         <Analytics />
         <PWAProvider>
           {children}
