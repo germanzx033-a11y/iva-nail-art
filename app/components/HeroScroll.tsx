@@ -127,8 +127,10 @@ export default function HeroScroll({ lang, bookUrl, cta }: HeroScrollProps) {
             <div className="relative h-[8.5rem] sm:h-[11rem] lg:h-[15rem]">
               {SCENES.map((scene, i) => {
                 const [top, bottom] = isEn ? scene.en : scene.es;
+                // One real <h1> for search engines; the other scenes are decorative headings
+                const Heading = i === 0 ? "h1" : "p";
                 return (
-                  <h1
+                  <Heading
                     key={scene.src}
                     aria-hidden={i !== active}
                     className="absolute inset-x-0 bottom-0 transition-all duration-700 ease-out"
@@ -143,7 +145,7 @@ export default function HeroScroll({ lang, bookUrl, cta }: HeroScrollProps) {
                     <span className="mt-1 block font-serif text-[clamp(2.1rem,6.6vw,5.25rem)] font-normal italic leading-[1.05] text-[#E8C9A8]">
                       {bottom}
                     </span>
-                  </h1>
+                  </Heading>
                 );
               })}
             </div>
