@@ -10,10 +10,7 @@ import {
   ChevronLeft,
   Check,
   Sparkles,
-  Heart,
-  Star,
   X,
-  Award,
   Hand,
   Footprints,
   Palette,
@@ -22,70 +19,69 @@ import {
 import { formatDate, getMinBookingDate, isValidEmail, isValidPhone } from "@/lib/utils";
 import Image from "next/image";
 import AboutIva from "@/app/components/AboutIva";
+import HeroScroll from "@/app/components/HeroScroll";
+import PhotoMarquee from "@/app/components/PhotoMarquee";
+import { BackToTop, ScrollProgressBar } from "@/app/components/ScrollUi";
 import GallerySection from "@/app/components/GallerySection";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
 
-// Componente de contador animado PREMIUM
-function AnimatedCounter({ end, duration = 2000, suffix = "", prefix = "" }: {
+// Contador animado. Escribe directo en el DOM (sin re-render por frame) y siempre
+// termina en el valor final, aunque el navegador pause requestAnimationFrame.
+function AnimatedCounter({ end, duration = 1600, suffix = "", prefix = "" }: {
   end: number;
   duration?: number;
   suffix?: string;
   prefix?: string;
 }) {
-  const [count, setCount] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const counterRef = useRef<HTMLSpanElement>(null);
+  const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !isVisible) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    const counterEl = counterRef.current;
-    if (counterEl) {
-      observer.observe(counterEl);
+    const el = ref.current;
+    if (!el) return;
+    const show = (n: number) => {
+      el.textContent = `${prefix}${n}${suffix}`;
+    };
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion || typeof IntersectionObserver === "undefined") {
+      show(end);
+      return;
     }
 
+    let frame = 0;
+    let fallback = 0;
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      const t0 = performance.now();
+      const tick = (now: number) => {
+        const p = Math.min((now - t0) / duration, 1);
+        show(Math.round(end * (1 - Math.pow(1 - p, 3))));
+        if (p < 1) frame = requestAnimationFrame(tick);
+      };
+      frame = requestAnimationFrame(tick);
+      fallback = window.setTimeout(() => show(end), duration + 250);
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          observer.disconnect();
+          start();
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+
     return () => {
-      if (counterEl) {
-        observer.unobserve(counterEl);
-      }
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+      clearTimeout(fallback);
     };
-  }, [isVisible]);
+  }, [end, duration, prefix, suffix]);
 
-  useEffect(() => {
-    if (!isVisible) return;
-
-    let startTime: number;
-    const startValue = 0;
-    const endValue = end;
-
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / duration, 1);
-
-      // Easing function (ease-out cubic)
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-      const currentCount = Math.floor(startValue + (endValue - startValue) * easeOut);
-
-      setCount(currentCount);
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        setCount(endValue);
-      }
-    };
-
-    requestAnimationFrame(animate);
-  }, [end, duration, isVisible]);
-
-  return <span ref={counterRef}>{prefix}{count}{suffix}</span>;
+  return <span ref={ref}>{prefix}0{suffix}</span>;
 }
 
 // ============================================================================
@@ -324,17 +320,6 @@ const translations = {
   },
 };
 
-// ============================================================================
-// COMPONENTE PRINCIPAL
-// ============================================================================
-function makeParticles(count: number) {
-  return Array.from({ length: count }, () => ({
-    left: `${Math.random() * 100}%`,
-    top: `${Math.random() * 100}%`,
-    delay: `${Math.random() * 8}s`,
-    duration: `${6 + Math.random() * 4}s`,
-  }));
-}
 
 export default function Home() {
   const [lang, setLang] = useState<"en" | "es">("en");
@@ -357,38 +342,6 @@ export default function Home() {
   // Estado para animaciones de scroll reveal
   const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
-
-  // Estado para cursor personalizado
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [scrollY, setScrollY] = useState(0);
-  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [particles] = useState<Array<{ id: number; x: number; y: number }>>([]);
-  // Valores aleatorios generados una sola vez (initializer lazy). Se renderizan solo
-  // cuando !isLoading, así que no hay desajuste de hidratación con el servidor.
-  const [stars] = useState<Array<{ id: number; x: number; y: number; delay: number }>>(() =>
-    Array.from({ length: 30 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      delay: Math.random() * 2,
-    }))
-  );
-  const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([]);
-  const [heroParticles] = useState<Array<{ left: string; top: string; delay: string; duration: string }>>(() =>
-    makeParticles(15)
-  );
-  const [backgroundParticles] = useState<Array<{ left: string; top: string; delay: string; duration: string }>>(() =>
-    makeParticles(20)
-  );
-
-  // Estados para efectos mágicos interactivos
-  const [spotlightPosition, setSpotlightPosition] = useState({ x: 50, y: 50 });
-  const [cursorParticles, setCursorParticles] = useState<Array<{ id: number; x: number; y: number; vx: number; vy: number; life: number }>>([]);
-  const [goldWaves, setGoldWaves] = useState<Array<{ id: number; x: number; y: number; size: number; opacity: number }>>([]);
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   // Hook para animaciones de scroll reveal
   useEffect(() => {
@@ -414,167 +367,6 @@ export default function Home() {
       });
     };
   }, []);
-
-  // Hook para cursor personalizado
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setCursorPosition({ x: e.clientX, y: e.clientY });
-    };
-
-    const handleMouseEnter = () => setIsHovering(true);
-    const handleMouseLeave = () => setIsHovering(false);
-
-    // Detectar elementos interactivos
-    const interactiveElements = document.querySelectorAll('a, button, [role="button"], input, textarea, select');
-    interactiveElements.forEach((el) => {
-      el.addEventListener('mouseenter', handleMouseEnter);
-      el.addEventListener('mouseleave', handleMouseLeave);
-    });
-
-    window.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      interactiveElements.forEach((el) => {
-        el.removeEventListener('mouseenter', handleMouseEnter);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-      });
-    };
-  }, []);
-
-  // Hook para loading screen
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Hook para crear ripples en clicks
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName === 'BUTTON' || target.closest('button')) {
-        const newRipple = {
-          id: Date.now(),
-          x: e.clientX,
-          y: e.clientY,
-        };
-        setRipples((prev: Array<{ id: number; x: number; y: number }>) => [...prev, newRipple]);
-        setTimeout(() => {
-          setRipples((prev: Array<{ id: number; x: number; y: number }>) => prev.filter((r: { id: number; x: number; y: number }) => r.id !== newRipple.id));
-        }, 1000);
-      }
-    };
-
-    window.addEventListener('click', handleClick);
-    return () => window.removeEventListener('click', handleClick);
-  }, []);
-
-  // Hook para scroll parallax y progress
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = scrollHeight > 0 ? Math.min((window.scrollY / scrollHeight) * 100, 100) : 0;
-      setScrollProgress(progress);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Hook para spotlight mágico que sigue el mouse
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setSpotlightPosition({ x: e.clientX, y: e.clientY });
-      setMousePosition({ x: e.clientX, y: e.clientY });
-
-      // Crear partículas doradas que siguen el cursor
-      if (Math.random() > 0.7) {
-        const newParticle = {
-          id: Date.now() + Math.random(),
-          x: e.clientX,
-          y: e.clientY,
-          vx: (Math.random() - 0.5) * 2,
-          vy: (Math.random() - 0.5) * 2,
-          life: 1,
-        };
-        setCursorParticles((prev) => [...prev.slice(-15), newParticle]);
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  // Animación de partículas del cursor
-  useEffect(() => {
-    if (cursorParticles.length === 0) return;
-
-    const interval = setInterval(() => {
-      setCursorParticles((prev) =>
-        prev
-          .map((p) => ({
-            ...p,
-            x: p.x + p.vx,
-            y: p.y + p.vy,
-            life: p.life - 0.02,
-            vx: p.vx * 0.98,
-            vy: p.vy * 0.98,
-          }))
-          .filter((p) => p.life > 0)
-      );
-    }, 16);
-
-    return () => clearInterval(interval);
-  }, [cursorParticles.length]);
-
-  // Hook para crear ondas doradas al hacer hover en tarjetas
-  useEffect(() => {
-    if (!hoveredCard) return;
-
-    const interval = setInterval(() => {
-      const cardElement = document.querySelector(`[data-card-id="${hoveredCard}"]`);
-      if (cardElement) {
-        const rect = cardElement.getBoundingClientRect();
-        const newWave = {
-          id: Date.now(),
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
-          size: 0,
-          opacity: 1,
-        };
-        setGoldWaves((prev) => [...prev.slice(-5), newWave]);
-      }
-    }, 800);
-
-    return () => clearInterval(interval);
-  }, [hoveredCard]);
-
-  // Animación de ondas doradas
-  useEffect(() => {
-    if (goldWaves.length === 0) return;
-
-    const interval = setInterval(() => {
-      setGoldWaves((prev) =>
-        prev
-          .map((w) => ({
-            ...w,
-            size: w.size + 20,
-            opacity: w.opacity - 0.05,
-          }))
-          .filter((w) => w.opacity > 0 && w.size < 500)
-      );
-    }, 16);
-
-    return () => clearInterval(interval);
-  }, [goldWaves.length]);
 
   // Filtrar servicios por categoría
   const filteredServices = SERVICES.filter((s) => s.category === selectedCategory);
@@ -706,224 +498,29 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
   };
 
   return (
-    <main className="min-h-screen bg-[#FDF8F6] relative overflow-x-hidden">
-      {/* Spotlight mágico que sigue el mouse */}
-      <div
-        className="fixed pointer-events-none z-40 transition-opacity duration-300"
-        style={{
-          left: spotlightPosition.x - 300,
-          top: spotlightPosition.y - 300,
-          width: '600px',
-          height: '600px',
-          background: 'radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 40%, transparent 70%)',
-          borderRadius: '50%',
-          mixBlendMode: 'multiply',
-          opacity: 0.6,
-          transform: 'translate(-50%, -50%)',
-        }}
-      />
-
-      {/* Partículas doradas que siguen el cursor */}
-      {cursorParticles.map((particle) => (
-        <div
-          key={particle.id}
-          className="fixed pointer-events-none z-30"
-          style={{
-            left: particle.x,
-            top: particle.y,
-            width: '4px',
-            height: '4px',
-            background: 'radial-gradient(circle, #D4AF37 0%, transparent 70%)',
-            borderRadius: '50%',
-            opacity: particle.life,
-            transform: 'translate(-50%, -50%)',
-            boxShadow: `0 0 ${particle.life * 10}px rgba(212, 175, 55, ${particle.life * 0.8})`,
-          }}
-        />
-      ))}
-
-      {/* Ondas doradas en tarjetas hover */}
-      {goldWaves.map((wave) => (
-        <div
-          key={wave.id}
-          className="fixed pointer-events-none z-20"
-          style={{
-            left: wave.x,
-            top: wave.y,
-            width: `${wave.size}px`,
-            height: `${wave.size}px`,
-            border: `2px solid rgba(212, 175, 55, ${wave.opacity})`,
-            borderRadius: '50%',
-            transform: 'translate(-50%, -50%)',
-            boxShadow: `0 0 ${wave.size * 0.5}px rgba(212, 175, 55, ${wave.opacity * 0.5})`,
-          }}
-        />
-      ))}
-
-      {/* Scroll Progress Bar Avanzado */}
-      <div
-        className="scroll-progress"
-        style={{ width: `${scrollProgress}%` }}
-      />
-
-      {/* Partículas interactivas que siguen el mouse */}
-      {particles.map((particle) => (
-        <div
-          key={particle.id}
-          className="particle-trail"
-          style={{
-            left: `${particle.x}px`,
-            top: `${particle.y}px`,
-          }}
-        />
-      ))}
-
-      {/* Spotlight que sigue el mouse */}
-      {!isLoading && (
-        <div
-          className="spotlight"
-          style={{
-            left: `${cursorPosition.x}px`,
-            top: `${cursorPosition.y}px`,
-            opacity: isHovering ? 0.8 : 0.3,
-          }}
-        />
-      )}
-
-      {/* Grid animado de fondo */}
-      {!isLoading && <div className="grid-background" />}
-
-      {/* Partículas de estrellas */}
-      {!isLoading && stars.map((star) => (
-        <div
-          key={star.id}
-          className="star-particle"
-          style={{
-            left: `${star.x}%`,
-            top: `${star.y}%`,
-            animationDelay: `${star.delay}s`,
-          }}
-        />
-      ))}
-
-      {/* Ripples en clicks de botones */}
-      {ripples.map((ripple) => (
-        <div
-          key={ripple.id}
-          className="ripple-effect"
-          style={{
-            left: `${ripple.x}px`,
-            top: `${ripple.y}px`,
-            width: '100px',
-            height: '100px',
-            transform: 'translate(-50%, -50%)',
-          }}
-        />
-      ))}
-
-      {/* Morphing shapes decorativos */}
-      {!isLoading && (
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-          <div
-            className="morph-shape absolute"
-            style={{
-              width: '300px',
-              height: '300px',
-              top: '10%',
-              right: '10%',
-              opacity: 0.1,
-            }}
-          />
-          <div
-            className="morph-shape absolute"
-            style={{
-              width: '200px',
-              height: '200px',
-              bottom: '20%',
-              left: '15%',
-              opacity: 0.1,
-              animationDelay: '4s',
-            }}
-          />
-        </div>
-      )}
-
-      {/* Ondas animadas de fondo */}
-      {!isLoading && (
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30">
-          <div className="wave-bg" style={{ left: '-50%', top: '-50%' }} />
-          <div className="wave-bg" style={{ left: '-30%', top: '-30%', animationDelay: '2s' }} />
-          <div className="wave-bg" style={{ left: '-10%', top: '-10%', animationDelay: '4s' }} />
-        </div>
-      )}
-      {/* Loading Screen Elegante */}
-      {isLoading && (
-        <div className="fixed inset-0 z-[10000] bg-gradient-to-br from-[#FDF8F6] via-white to-[#FAF5F2] flex items-center justify-center animate-fade-out">
-          <div className="text-center">
-            <div className="relative w-20 h-20 mx-auto mb-6">
-              <div className="absolute inset-0 border-4 border-[#D4AF37]/20 rounded-full"></div>
-              <div className="absolute inset-0 border-4 border-transparent border-t-[#D4AF37] rounded-full animate-spin"></div>
-              <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-[#D4AF37] animate-pulse" />
-            </div>
-            <h2 className="font-serif text-2xl text-[#4A0404] animate-gradient-text bg-gradient-to-r from-[#4A0404] via-[#D4AF37] to-[#4A0404] bg-clip-text text-transparent">
-              IVA Nail Art
-            </h2>
-          </div>
-        </div>
-      )}
-
-      {/* Cursor personalizado con efectos */}
-      {typeof window !== 'undefined' && !isLoading && (
-        <div
-          className={`fixed pointer-events-none z-[9999] transition-all duration-300 ease-out ${isHovering ? 'cursor-glow active' : 'cursor-glow'
-            }`}
-          style={{
-            left: `${cursorPosition.x}px`,
-            top: `${cursorPosition.y}px`,
-            transform: 'translate(-50%, -50%)',
-          }}
-        />
-      )}
-
-      {/* Partículas de fondo flotantes */}
-      {!isLoading && backgroundParticles.length > 0 && (
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-          {backgroundParticles.map((particle, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-[#D4AF37]/20 rounded-full animate-float-particle"
-              style={{
-                left: particle.left,
-                top: particle.top,
-                animationDelay: particle.delay,
-                animationDuration: particle.duration,
-              }}
-            />
-          ))}
-        </div>
-      )}
+    <main className="min-h-screen bg-[#0E0706] relative overflow-x-clip">
       {/* ================================================================== */}
       {/* HEADER */}
       {/* ================================================================== */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-[#FDF8F6]/90 backdrop-blur-md border-b border-[#4A0404]/10">
+      <header className="fixed top-0 left-0 right-0 z-40 bg-[#0E0706]/70 backdrop-blur-md border-b border-[#F4EBE1]/10">
         <nav className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <a href="#" className="font-serif text-2xl text-[#4A0404] tracking-wide">
+          <a href="#" className="font-display text-sm tracking-[0.3em] text-[#F4EBE1]">
             IVA <span className="font-light">Nail Art</span>
           </a>
 
           <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-6 text-sm text-[#4A0404]/70">
-              <a href="#services" className="hover:text-[#4A0404] transition-colors">
+            <div className="hidden md:flex items-center gap-6 font-display text-[0.65rem] tracking-[0.25em] text-[#F4EBE1]/70">
+              <a href="#services" className="hover:text-[#E8C9A8] transition-colors">
                 {t.nav.services}
               </a>
-              <a href="#gallery" className="hover:text-[#4A0404] transition-colors">
+              <a href="#gallery" className="hover:text-[#E8C9A8] transition-colors">
                 {t.nav.gallery}
               </a>
             </div>
 
             <button
               onClick={() => setLang(lang === "en" ? "es" : "en")}
-              className="text-sm font-medium text-[#4A0404] border border-[#4A0404]/30 px-3 py-1.5 rounded-full hover:bg-[#4A0404] hover:text-white transition-all"
+              className="text-xs font-medium text-[#F4EBE1] border border-[#F4EBE1]/30 px-3 py-1.5 rounded-full hover:bg-[#F4EBE1] hover:text-[#0E0706] transition-all"
             >
               {t.langSwitch}
             </button>
@@ -932,7 +529,7 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
               href={CONFIG.instagramDmUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#4A0404] text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-[#6B0606] transition-colors shadow-lg shadow-[#4A0404]/20"
+              className="bg-[#E8C9A8] text-[#0E0706] px-5 py-2 rounded-full text-sm font-semibold hover:bg-white transition-colors"
             >
               {t.nav.book}
             </a>
@@ -943,229 +540,29 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       {/* ================================================================== */}
       {/* HERO SECTION */}
       {/* ================================================================== */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Image con Parallax Avanzado */}
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-300 ease-out"
-          style={{
-            backgroundImage: "url('/hero.jpg')",
-            transform: `translateY(${scrollY * 0.5}px) scale(1.1)`,
-            backgroundPosition: `${50 + (mousePosition.x - 50) * 0.02}% ${50 + (mousePosition.y - 50) * 0.02}%`,
-          }}
-        />
-        {/* Overlay con gradiente dinámico */}
-        <div
-          className="absolute inset-0 transition-opacity duration-500"
-          style={{
-            background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(212, 175, 55, 0.1) 0%, transparent 50%), linear-gradient(to bottom, rgba(74, 4, 4, 0.8) 0%, rgba(74, 4, 4, 0.6) 50%, rgba(74, 4, 4, 0.85) 100%)`,
-          }}
-        />
-        {/* Efecto de luz dinámica que sigue el mouse */}
-        <div
-          className="absolute inset-0 pointer-events-none transition-opacity duration-500"
-          style={{
-            background: `radial-gradient(circle 400px at ${mousePosition.x}% ${mousePosition.y}%, rgba(212, 175, 55, 0.15) 0%, transparent 70%)`,
-            opacity: isHovering ? 1 : 0.5,
-          }}
-        />
-
-        {/* Content */}
-        <div className="relative z-10 text-center px-6 pt-28 pb-24 max-w-4xl mx-auto">
-          <p className="text-[#D4AF37] tracking-[0.3em] text-sm mb-4 font-medium">
-            {t.hero.welcome}
-          </p>
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight animate-slide-in-up">
-            IVA <span className="font-light italic bg-gradient-to-r from-[#D4AF37] via-[#E8C9A8] to-[#D4AF37] bg-clip-text text-transparent animate-gradient-text">Nail Art</span>
-          </h1>
-          <p className="text-white/90 text-lg md:text-xl max-w-2xl mx-auto mb-8 leading-relaxed font-medium">
-            <span>{t.hero.tagline}</span>
-          </p>
-
-          {/* Logo IVA - Transparente */}
-          <div className="relative mx-auto mb-10 flex justify-center">
-            <Image
-src="/logo-iva.png"
-alt="IVA Nail Art logo"
-width={631}
-height={436}
-className="w-56 sm:w-72 h-auto drop-shadow-[0_8px_32px_rgba(0,0,0,0.4)]" priority
-/>
-          </div>
-
-          <a
-            href={CONFIG.instagramDmUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group bg-gradient-to-r from-[#D4AF37] via-[#E8C9A8] to-[#D4AF37] text-[#4A0404] px-8 py-4 rounded-full font-bold text-sm tracking-wide hover:from-white hover:via-[#F5E6D3] hover:to-white transition-all shadow-2xl hover:shadow-[#D4AF37]/50 hover:scale-110 inline-flex items-center gap-2 relative overflow-hidden"
-            aria-label={t.hero.cta}
-          >
-            <span className="relative z-10 flex items-center gap-2">
-            {t.hero.cta}
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-            </span>
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-          </a>
-
-          {/* Info Pills */}
-          <div className="flex flex-wrap justify-center gap-4 mt-12 text-white/70 text-sm">
-            <span className="flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full">
-              <MapPin className="w-4 h-4" />
-              {t.hero.location}
-            </span>
-            <span className="flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full">
-              <Clock className="w-4 h-4" />
-              {t.hero.hours}
-            </span>
-            <span className="flex items-center gap-2 bg-[#D4AF37]/20 backdrop-blur px-4 py-2 rounded-full text-[#D4AF37]">
-              <Sparkles className="w-4 h-4" />
-              {t.hero.appointment}
-            </span>
-          </div>
-        </div>
-
-        {/* Partículas flotantes decorativas PREMIUM */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-5">
-          {!isLoading && heroParticles.length > 0 && (
-            <>
-              {heroParticles.map((particle, i) => (
-                <div
-                  key={i}
-                  className="absolute w-2 h-2 bg-[#D4AF37]/40 rounded-full animate-float-particle neon-glow"
-                  style={{
-                    left: particle.left,
-                    top: particle.top,
-                    animationDelay: particle.delay,
-                    animationDuration: particle.duration,
-                  }}
-                />
-              ))}
-            </>
-          )}
-          {/* Sparkles animados */}
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={`sparkle-${i}`}
-              className="absolute animate-sparkle"
-              style={{
-                left: `${10 + i * 12}%`,
-                top: `${15 + (i % 4) * 25}%`,
-                animationDelay: `${i * 0.3}s`,
-              }}
-            >
-              <Sparkles className="w-4 h-4 text-[#D4AF37]/60" />
-            </div>
-          ))}
-        </div>
-
-        {/* Scroll Indicator PREMIUM */}
-        <div className="hidden md:block absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-10">
-          <div className="w-7 h-12 border-2 border-white/50 rounded-full flex justify-center pt-3 shadow-xl backdrop-blur-sm bg-white/10">
-            <div className="w-1.5 h-3 bg-white rounded-full animate-pulse" />
-          </div>
-        </div>
-      </section>
+      <HeroScroll lang={lang} bookUrl={CONFIG.instagramDmUrl} cta={t.hero.cta} />
+      <PhotoMarquee lang={lang} />
 
       {/* ================================================================== */}
       {/* STATISTICS SECTION PREMIUM */}
       {/* ================================================================== */}
-      <section className="relative overflow-hidden py-16 md:py-20 px-6 bg-gradient-to-br from-[#FDF8F5] via-white to-[#FAF5F2]">
-        {/* Marca de agua IVA */}
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-10">
-          <Image
-src="/logo-iva.png"
-alt="IVA watermark"
-width={631}
-height={436}
-className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
-/>
-        </div>
-
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            {/* Stat 1: Years of Experience */}
-            <div className="text-center group">
-              <div className="mb-4 flex justify-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#D4A574]/20 to-[#B8864D]/20 flex items-center justify-center group-hover:from-[#D4A574]/30 group-hover:to-[#B8864D]/30 transition-all duration-300 group-hover:scale-110">
-                  <Star className="w-8 h-8 text-[#B8864D]" fill="#B8864D" />
-                </div>
+      <section className="bg-[#0E0706] px-6 py-14 md:px-10 md:py-20">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-y-10 md:grid-cols-4 md:divide-x md:divide-[#FDF8F5]/15">
+          {[
+            { end: 3, suffix: "", en: "Years of experience", es: "Años de experiencia" },
+            { end: 33, suffix: "+", en: "Happy clients", es: "Clientas felices" },
+            { end: 2000, suffix: "+", en: "Designs created", es: "Diseños creados" },
+            { end: 100, suffix: "%", en: "Satisfaction rate", es: "Satisfacción" },
+          ].map((stat) => (
+            <div key={stat.en} className="px-2 text-center md:px-8 md:text-left">
+              <div className="font-display text-4xl text-[#F4EBE1] md:text-6xl">
+                <AnimatedCounter end={stat.end} suffix={stat.suffix} />
               </div>
-              <div className="font-serif text-4xl md:text-5xl font-bold mb-2"
-                style={{
-                  background: 'linear-gradient(135deg, #D4A574 0%, #B8864D 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>
-                <AnimatedCounter end={3} suffix="" />
-              </div>
-              <p className="text-[#3D2828] text-sm md:text-base font-medium">
-                {lang === "en" ? "Years Experience" : "Años de Experiencia"}
+              <p className="mt-3 text-xs font-medium uppercase tracking-[0.2em] text-[#FDF8F5]/70">
+                {lang === "en" ? stat.en : stat.es}
               </p>
             </div>
-
-            {/* Stat 2: Happy Clients */}
-            <div className="text-center group">
-              <div className="mb-4 flex justify-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#D4A574]/20 to-[#B8864D]/20 flex items-center justify-center group-hover:from-[#D4A574]/30 group-hover:to-[#B8864D]/30 transition-all duration-300 group-hover:scale-110">
-                  <Heart className="w-8 h-8 text-[#B8864D]" fill="#B8864D" />
-                </div>
-              </div>
-              <div className="font-serif text-4xl md:text-5xl font-bold mb-2"
-                style={{
-                  background: 'linear-gradient(135deg, #D4A574 0%, #B8864D 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>
-                <AnimatedCounter end={500} suffix="+" />
-              </div>
-              <p className="text-[#3D2828] text-sm md:text-base font-medium">
-                {lang === "en" ? "Happy Clients" : "Clientas Felices"}
-              </p>
-            </div>
-
-            {/* Stat 3: Designs Created */}
-            <div className="text-center group">
-              <div className="mb-4 flex justify-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#D4A574]/20 to-[#B8864D]/20 flex items-center justify-center group-hover:from-[#D4A574]/30 group-hover:to-[#B8864D]/30 transition-all duration-300 group-hover:scale-110">
-                  <Sparkles className="w-8 h-8 text-[#B8864D]" />
-                </div>
-              </div>
-              <div className="font-serif text-4xl md:text-5xl font-bold mb-2"
-                style={{
-                  background: 'linear-gradient(135deg, #D4A574 0%, #B8864D 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>
-                <AnimatedCounter end={2000} suffix="+" />
-              </div>
-              <p className="text-[#3D2828] text-sm md:text-base font-medium">
-                {lang === "en" ? "Designs Created" : "Diseños Creados"}
-              </p>
-            </div>
-
-            {/* Stat 4: Satisfaction Rate */}
-            <div className="text-center group">
-              <div className="mb-4 flex justify-center">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#D4A574]/20 to-[#B8864D]/20 flex items-center justify-center group-hover:from-[#D4A574]/30 group-hover:to-[#B8864D]/30 transition-all duration-300 group-hover:scale-110">
-                  <Award className="w-8 h-8 text-[#B8864D]" />
-                </div>
-              </div>
-              <div className="font-serif text-4xl md:text-5xl font-bold mb-2"
-                style={{
-                  background: 'linear-gradient(135deg, #D4A574 0%, #B8864D 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}>
-                <AnimatedCounter end={100} suffix="%" />
-              </div>
-              <p className="text-[#3D2828] text-sm md:text-base font-medium">
-                {lang === "en" ? "Satisfaction Rate" : "Tasa de Satisfacción"}
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
@@ -1180,40 +577,21 @@ className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0
       <section
         id="services"
         ref={(el) => { sectionRefs.current['services'] = el as HTMLElement | null; }}
-        className={`py-32 px-4 md:px-6 bg-gradient-to-b from-stone-50 via-white to-stone-50 transition-all duration-1000 relative overflow-hidden ${visibleSections.has('services')
+        className={`py-24 md:py-32 px-4 md:px-6 bg-[#0E0706] transition-all duration-1000 relative overflow-hidden ${visibleSections.has('services')
           ? 'opacity-100 translate-y-0'
           : 'opacity-0 translate-y-10'
           }`}
       >
-        {/* Fondo con textura sutil tipo mármol - Estilo Premium */}
-        <div className="absolute inset-0 opacity-[0.02] pointer-events-none overflow-hidden">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `
-              radial-gradient(ellipse 800px 400px at 20% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 60%),
-              radial-gradient(ellipse 600px 300px at 80% 70%, rgba(212, 175, 55, 0.06) 0%, transparent 60%),
-              linear-gradient(135deg, transparent 0%, rgba(212, 175, 55, 0.02) 50%, transparent 100%)
-            `,
-          }} />
-          {/* Efecto de venas sutiles tipo mármol */}
-          <div className="absolute inset-0" style={{
-            backgroundImage: `
-              linear-gradient(45deg, transparent 48%, rgba(212, 175, 55, 0.03) 49%, rgba(212, 175, 55, 0.03) 51%, transparent 52%),
-              linear-gradient(-45deg, transparent 48%, rgba(212, 175, 55, 0.02) 49%, rgba(212, 175, 55, 0.02) 51%, transparent 52%)
-            `,
-            backgroundSize: '200px 200px',
-          }} />
-        </div>
-
         <div className="max-w-7xl mx-auto relative z-10">
           {/* Header Section - Estilo Premium Minimalista */}
           <div className="text-center mb-20">
-            <p className="text-[#4A0404] tracking-[0.4em] text-xs md:text-sm mb-6 font-light uppercase">
+            <p className="font-display text-[#D4A574] tracking-[0.35em] text-[0.65rem] md:text-xs mb-6">
               {t.services.subtitle}
             </p>
-            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#4A0404] mb-8 font-light tracking-tight leading-tight">
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#F4EBE1] mb-8 font-light italic tracking-tight leading-tight">
               {t.services.title}
             </h2>
-            <p className="text-[#6B5050] text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed">
+            <p className="text-[#F4EBE1]/70 text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed">
               {lang === "en" ? "Prices may vary based on design complexity" : "Los precios pueden variar según la complejidad del diseño"}
             </p>
           </div>
@@ -1225,8 +603,8 @@ className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-6 py-2.5 rounded-full text-sm font-light tracking-wide transition-all duration-300 ${selectedCategory === cat.id
-                  ? "bg-[#4A0404] text-white border border-[#D4AF37] shadow-md"
-                  : "bg-white/90 text-[#4A0404] border border-[#D4AF37]/40 hover:border-[#D4AF37]/60 hover:bg-white/95 shadow-sm"
+                  ? "bg-[#E8C9A8] text-[#0E0706] border border-[#E8C9A8] font-medium"
+                  : "bg-transparent text-[#F4EBE1]/80 border border-[#F4EBE1]/25 hover:border-[#E8C9A8] hover:text-[#E8C9A8]"
                   }`}
                 aria-label={`${lang === "en" ? "Filter by" : "Filtrar por"} ${lang === "en" ? cat.en : cat.es}`}
               >
@@ -1257,143 +635,41 @@ className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0
               };
               const serviceImage = getServiceImage();
 
-              // Gradientes únicos por categoría
-              const getCategoryGradient = () => {
-                switch (service.category) {
-                  case "manicure":
-                    return "from-[#E8A4B8]/20 via-[#F5C6D6]/10 to-[#D4AF37]/15";
-                  case "pedicure":
-                    return "from-[#D4AF37]/20 via-[#E8C9A8]/15 to-[#E8A4B8]/10";
-                  case "nailart":
-                    return "from-[#E8A4B8]/25 via-[#D4AF37]/15 to-[#F5C6D6]/20";
-                  case "acrylic":
-                    return "from-[#D4AF37]/25 via-[#E8C9A8]/20 to-[#E8A4B8]/15";
-                  default:
-                    return "from-[#D4AF37]/15 via-[#E8A4B8]/10 to-[#E8C9A8]/15";
-                }
-              };
-
-
               return (
-              <div
-                key={service.id}
-                  data-card-id={service.id}
-                  onMouseEnter={() => setHoveredCard(service.id)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                  className="bg-white/95 backdrop-blur-sm rounded-2xl border border-stone-200/80 hover:border-[#D4AF37]/50 shadow-sm hover:shadow-2xl transition-all duration-500 group relative overflow-hidden flex flex-col min-h-[380px] magic-card"
-                  style={{
-                    background: hoveredCard === service.id
-                      ? `linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(252, 248, 240, 0.98) 100%)`
-                      : `linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(252, 248, 240, 0.95) 100%)`,
-                  }}
+                <article
+                  key={service.id}
+                  className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-[#F4EBE1]/12 bg-[#1A0F0D] transition-colors duration-300 hover:border-[#E8C9A8]/50"
                 >
-                  {/* Imagen de fondo decorativa con overlay */}
-                  <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                    <div
-                      className="absolute inset-0 bg-cover bg-center opacity-10 group-hover:opacity-20 transition-opacity duration-500 scale-110 group-hover:scale-100"
-                      style={{
-                        backgroundImage: `url(${serviceImage})`,
-                        filter: 'blur(20px)',
-                      }}
-                    />
-                    <div className={`absolute inset-0 bg-gradient-to-br ${getCategoryGradient()} opacity-60 group-hover:opacity-80 transition-opacity duration-500`}></div>
-                </div>
-
-                  {/* Imagen principal del servicio */}
-                  <div className="relative h-48 overflow-hidden rounded-t-2xl mb-4 group-hover:mb-6 transition-all duration-500">
-                    {/* eslint-disable-next-line @next/next/no-img-element -- dynamic per-service src with an onError fallback; kept as <img> to avoid pushing every service photo through the image optimizer */}
-                    <img
+                  {/* Whole photo, never cropped: the frame has the same 3:4 ratio as the pictures */}
+                  <div className="relative aspect-[3/4] w-full bg-[#140B0A]">
+                    <Image
                       src={serviceImage}
                       alt={lang === "en" ? service.name : service.nameEs}
-                      className="w-full h-full object-cover transform scale-110 group-hover:scale-100 transition-transform duration-700"
-                      loading="lazy"
-                      decoding="async"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                  }}
-                />
-                    {/* Overlay con gradiente */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#4A0404]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
-                    {/* Badge de categoría */}
-                    <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                      <div className="bg-gradient-to-r from-[#D4AF37] to-[#E8C9A8] text-[#4A0404] px-3 py-1.5 rounded-full text-xs font-bold shadow-lg backdrop-blur-sm">
-                        {service.category === "manicure" ? "💅" : service.category === "pedicure" ? "🦶" : service.category === "nailart" ? "🎨" : service.category === "acrylic" ? "✨" : "✂️"} {lang === "en" ? service.category.charAt(0).toUpperCase() + service.category.slice(1) : service.category === "manicure" ? "Manicura" : service.category === "pedicure" ? "Pedicura" : service.category === "nailart" ? "Nail Art" : service.category === "acrylic" ? "Acrílico" : "Extras"}
-              </div>
-          </div>
-
-                    {/* Icono flotante animado */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-all duration-500 transform scale-0 group-hover:scale-100">
-                      <div className="bg-white/90 backdrop-blur-md rounded-full p-4 shadow-2xl">
-                        <IconComponent className="w-10 h-10 text-[#D4AF37] animate-pulse-glow" />
-                      </div>
-                    </div>
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-contain"
+                    />
+                    <span className="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-[#B8864D] shadow-md">
+                      <IconComponent className="h-5 w-5" />
+                    </span>
                   </div>
 
-                  {/* Efecto de brillo sutil al hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/0 via-transparent to-transparent group-hover:from-[#D4AF37]/10 group-hover:via-transparent transition-all duration-500 pointer-events-none"></div>
-
-                  {/* Contenido - Estilo Spa de Lujo */}
-                  <div className="relative z-10 flex flex-col h-full px-6 pb-6">
-                    {/* Header con icono a la derecha */}
-                    <div className="flex justify-end mb-4">
-                      <div className="flex items-center justify-center w-12 h-12 rounded-xl border-2 border-[#D4AF37]/40 bg-white/80 backdrop-blur-sm group-hover:border-[#D4AF37] group-hover:bg-white transition-all duration-300 shadow-lg group-hover:shadow-xl group-hover:scale-110">
-                        <IconComponent className="w-6 h-6 text-[#D4AF37] group-hover:rotate-12 transition-transform duration-300" />
-                      </div>
-                    </div>
-
-                    {/* Título del servicio - Centrado y elegante */}
-                    <h3 className="font-serif text-2xl md:text-3xl text-[#4A0404] mb-6 font-light tracking-wide leading-tight text-center flex-grow group-hover:text-[#D4AF37] transition-colors duration-300">
+                  <div className="flex flex-1 flex-col gap-5 p-6">
+                    <h3 className="font-serif text-2xl leading-tight text-[#F4EBE1]">
                       {lang === "en" ? service.name : service.nameEs}
                     </h3>
-
-                    {/* Descripción decorativa */}
-                    <div className="text-center mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                      <p className="text-[#4A0404]/60 text-sm font-light italic">
-                        {lang === "en" ? "Premium Quality Service" : "Servicio de Calidad Premium"}
-                      </p>
-                    </div>
-
-                    {/* Botón de mensaje directo - Estilo Premium con gradiente */}
                     <a
                       href={CONFIG.instagramDmUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="group/btn w-full flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-[#4A0404] via-[#7A1F1F] to-[#4A0404] text-white rounded-full font-semibold text-sm tracking-wide hover:from-[#7A1F1F] hover:via-[#4A0404] hover:to-[#7A1F1F] transition-all duration-500 hover:shadow-xl hover:scale-105 mt-auto relative overflow-hidden"
-                      style={{
-                        backgroundSize: "200% 100%",
-                      }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-auto flex w-full items-center justify-center gap-3 rounded-full border border-[#E8C9A8]/60 px-6 py-4 text-sm font-semibold tracking-wide text-[#E8C9A8] transition-colors hover:bg-[#E8C9A8] hover:text-[#0E0706]"
                       aria-label={`${lang === "en" ? "Send a direct message on Instagram about" : "Enviar mensaje directo por Instagram sobre"} ${lang === "en" ? service.name : service.nameEs}`}
                     >
-                      {/* Efecto shimmer en el botón */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000"></div>
-
-                      <Instagram className="w-5 h-5 transition-transform duration-300 group-hover/btn:scale-110 group-hover/btn:rotate-12 relative z-10" />
-                      <span className="relative z-10 font-semibold">{lang === "en" ? "Ask for Price" : "Preguntar Precio"}</span>
-                      <ChevronRight className="w-4 h-4 opacity-0 group-hover/btn:opacity-100 group-hover/btn:translate-x-1 transition-all duration-300 relative z-10" />
+                      <Instagram className="h-5 w-5" />
+                      {lang === "en" ? "Ask for Price" : "Preguntar Precio"}
                     </a>
                   </div>
-
-                  {/* Partículas doradas en hover */}
-                  {hoveredCard === service.id && (
-                    <>
-                      {[...Array(6)].map((_, i) => (
-                        <div
-                          key={i}
-                          className="absolute w-2 h-2 bg-[#D4AF37] rounded-full opacity-0 group-hover:opacity-100 animate-sparkle pointer-events-none"
-                          style={{
-                            top: `${20 + Math.random() * 60}%`,
-                            left: `${10 + Math.random() * 80}%`,
-                            animationDelay: `${i * 0.2}s`,
-                            animationDuration: `${2 + Math.random()}s`,
-                          }}
-                        />
-                      ))}
-                    </>
-                  )}
-                </div>
+                </article>
               );
             })}
           </div>
@@ -1408,24 +684,38 @@ className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0
       {/* ================================================================== */}
       {/* CTA SECTION */}
       {/* ================================================================== */}
-      <section className="py-24 px-6 bg-[#4A0404]">
-        <div className="max-w-4xl mx-auto text-center">
-          <Sparkles className="w-10 h-10 text-[#D4AF37] mx-auto mb-6" />
-          <h2 className="font-serif text-3xl md:text-4xl text-white mb-6">
-            {lang === "en" ? "Ready to Get Beautiful Nails?" : "¿Lista para Uñas Hermosas?"}
+      <section className="relative isolate overflow-hidden bg-[#1C0A0A] px-6 py-24 md:px-10 md:py-36">
+        <Image
+          src="/gallery/aurora-chrome-gold.jpg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="-z-10 object-cover opacity-25"
+        />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#1C0A0A] via-[#1C0A0A]/85 to-[#1C0A0A]/40" />
+        <div className="mx-auto max-w-7xl">
+          <p className="mb-6 text-xs font-semibold uppercase tracking-[0.3em] text-[#D4A574]">
+            {lang === "en" ? "By appointment only" : "Solo con cita"}
+          </p>
+          <h2 className="max-w-4xl font-serif text-[clamp(2.75rem,8vw,6.5rem)] leading-[0.95] text-[#FDF8F5]">
+            <span className="font-display block text-[0.72em] font-bold">{lang === "en" ? "Your next set" : "Tu próximo diseño"}</span>
+            <span className="font-normal italic text-[#E8C9A8]">{lang === "en" ? "starts with a DM" : "empieza con un mensaje"}</span>
           </h2>
-          <p className="text-white/70 mb-8 max-w-xl mx-auto">
+          <p className="mt-8 max-w-xl text-base leading-relaxed text-[#FDF8F5]/75 md:text-lg">
             {lang === "en"
-              ? "Book your appointment today and let's create something beautiful together."
-              : "Reserva tu cita hoy y creemos algo hermoso juntas."}
+              ? "Send a photo of the look you love, pick a time, and Iva takes care of the rest."
+              : "Envía una foto del diseño que te gusta, elige un horario e Iva se encarga del resto."}
           </p>
           <a
             href={CONFIG.instagramDmUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#D4AF37] text-[#4A0404] px-8 py-4 rounded-full font-semibold hover:bg-white transition-all shadow-2xl"
+            className="glow-pill group mt-10"
           >
-            {t.nav.book}
+            {t.hero.cta}
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0E0706]/25 transition-transform group-hover:rotate-45">
+              <ChevronRight className="h-4 w-4" />
+            </span>
           </a>
         </div>
       </section>
@@ -1524,6 +814,14 @@ className="w-16 h-auto rounded-lg"
           <div className="border-t-2 border-white/20 pt-10 text-center">
             <p className="text-white/70 text-base font-medium">
               © {new Date().getFullYear()} IVA Nail Art. All rights reserved.
+            </p>
+            <p className="mt-4 flex justify-center gap-6 text-sm text-white/70">
+              <a href="/privacy" className="underline-offset-4 hover:text-[#D4AF37] hover:underline">
+                {lang === "en" ? "Privacy Policy" : "Privacidad"}
+              </a>
+              <a href="/terms" className="underline-offset-4 hover:text-[#D4AF37] hover:underline">
+                {lang === "en" ? "Terms & Conditions" : "Términos y Condiciones"}
+              </a>
             </p>
             <p className="text-white/50 text-sm mt-2">
               {lang === "en" ? "Made with ❤️ in Brooklyn" : "Hecho con ❤️ en Brooklyn"}
@@ -1872,30 +1170,8 @@ className="w-16 h-auto rounded-lg"
         </span>
       </a>
 
-      {/* ================================================================== */}
-      {/* BACK TO TOP BUTTON */}
-      {/* ================================================================== */}
-      {scrollY > 500 && (
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-6 left-6 bg-[#4A0404]/90 text-white p-3 rounded-full shadow-2xl hover:bg-[#4A0404] hover:scale-110 transition-all z-40 backdrop-blur-sm border border-[#D4AF37]/30"
-          aria-label="Back to top"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-          </svg>
-        </button>
-      )}
-
-      {/* ================================================================== */}
-      {/* SCROLL PROGRESS BAR */}
-      {/* ================================================================== */}
-      <div
-        className="fixed top-0 left-0 h-1 bg-gradient-to-r from-[#D4AF37] via-[#E8C9A8] to-[#D4AF37] z-50 transition-all duration-150"
-        style={{
-          width: `${scrollProgress}%`,
-        }}
-      />
+      <BackToTop />
+      <ScrollProgressBar />
     </main>
   );
 }
