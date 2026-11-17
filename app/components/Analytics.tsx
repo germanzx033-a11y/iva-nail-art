@@ -35,8 +35,9 @@ export default function Analytics() {
           const link = (e.target as HTMLElement | null)?.closest?.("a");
           if (!link) return;
           const href = link.getAttribute("href") ?? "";
-          if (href.includes("ig.me/")) {
-            posthog.capture("booking_click", { label: link.textContent?.trim().slice(0, 60) });
+          const channel = href.includes("ig.me/") ? "instagram" : href.includes("wa.me/") ? "whatsapp" : href.startsWith("tel:") ? "phone" : null;
+          if (channel) {
+            posthog.capture("booking_click", { channel, label: link.textContent?.trim().slice(0, 60) });
           }
         };
         document.addEventListener("click", onClick, { capture: true });

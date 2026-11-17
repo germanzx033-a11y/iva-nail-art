@@ -4,6 +4,9 @@ import Image from "next/image";
 import { Heart, Award, Star, Quote } from "lucide-react";
 import { ABOUT_COPY } from "../constants/luxuryRituals";
 
+// Set to "/ivannia.jpg" (4:5 portrait in /public) once the photo is ready; until then the nail photo stays.
+const ARTIST_PHOTO: string | null = null;
+
 interface AboutIvaProps {
   language: "en" | "es";
 }
@@ -41,8 +44,8 @@ export default function AboutIva({ language }: AboutIvaProps) {
               }}>
               <div className="aspect-[4/5] overflow-hidden rounded-[3rem] md:rounded-[4rem] shadow-2xl relative bg-gradient-to-br from-[#F7F0EB] to-[#F5EDE6]">
                 <Image
-                  src="/portada.jpg"
-                  alt="Iva - Founder of IVA Nail Art"
+                  src={ARTIST_PHOTO ?? "/portada.jpg"}
+                  alt={ARTIST_PHOTO ? (isEn ? "Portrait of Ivannia Rodríguez, nail artist at IVA Nail Art NY" : "Retrato de Ivannia Rodríguez, artista de uñas de IVA Nail Art NY") : (isEn ? "White almond nails with gold leaf art by IVA Nail Art" : "Uñas almendradas blancas con arte de hojas doradas de IVA Nail Art")}
                   fill
                   className="object-cover transition-transform duration-700 hover:scale-110"
                   sizes="(max-width: 768px) 100vw, 50vw"

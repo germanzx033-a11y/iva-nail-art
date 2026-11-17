@@ -100,11 +100,10 @@ export default function PWAProvider({ children }: { children: ReactNode }) {
     const handleOffline = () => setIsOnline(false);
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- sincroniza con el navegador solo al montar (no disponible en SSR)
-    setIsOnline(navigator.onLine);
 
     // Check notification permission
     if ("Notification" in window) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reads a browser-only value once on mount (not available during SSR)
       setNotificationPermission(Notification.permission);
     }
 
@@ -186,23 +185,26 @@ export default function PWAProvider({ children }: { children: ReactNode }) {
     >
       {children}
 
-      {/* Offline Banner */}
-      {!isOnline && (
-        <div className="fixed top-0 left-0 right-0 z-[9999] bg-gradient-to-r from-[#722F37] to-[#8B3A44] text-white text-center py-2 text-sm">
-          You&apos;re offline. Some features may be limited.
-        </div>
-      )}
+      {/* Offline banner: hidden until the browser fires a real "offline" event */}
+      <div
+        role="status"
+        aria-live="polite"
+        hidden={isOnline}
+        className="fixed left-0 right-0 top-0 z-[9999] bg-[#5C1A1B] py-2 text-center text-sm text-white"
+      >
+        Sin conexión · You&apos;re offline. Some features may be limited.
+      </div>
 
       {/* Install Prompt */}
       {showInstallBanner && canInstall && !isInstalled && (
-        <div className="fixed bottom-20 left-4 right-4 md:left-auto md:right-6 md:w-80 z-[90] bg-white rounded-xl shadow-2xl border border-[#EBE8E2] p-5 animate-slide-up">
+        <div className="fixed bottom-20 left-4 right-4 md:left-auto md:right-6 md:w-80 z-[90] bg-[#1A0F0D] rounded-xl shadow-2xl border border-[#F4EBE1]/15 p-5 animate-slide-up">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 bg-gradient-to-br from-[#B76E79] to-[#722F37] rounded-xl flex items-center justify-center flex-shrink-0">
               <span className="text-white font-serif text-xl">IVA</span>
             </div>
             <div className="flex-1">
-              <h3 className="font-serif text-lg text-[#1A1A1A] mb-1">Install IVA App</h3>
-              <p className="text-sm text-[#7A7A7A] mb-3">
+              <h3 className="font-serif text-lg text-[#F4EBE1] mb-1">Install IVA App</h3>
+              <p className="text-sm text-[#F4EBE1]/75 mb-3">
                 Get quick access, offline support & notifications
               </p>
               <div className="flex gap-2">
@@ -214,7 +216,7 @@ export default function PWAProvider({ children }: { children: ReactNode }) {
                 </button>
                 <button
                   onClick={() => setShowInstallBanner(false)}
-                  className="px-4 py-2 text-[#7A7A7A] text-xs uppercase tracking-wider"
+                  className="px-4 py-2 text-[#F4EBE1]/75 text-xs uppercase tracking-wider"
                 >
                   Later
                 </button>
