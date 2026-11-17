@@ -37,7 +37,7 @@ const en: LegalCopy = {
     {
       title: "Who else handles your data",
       body: [
-        "We use trusted service providers to run the site: Vercel (hosting and a short-term booking database) and Stripe (payments). They may process your information only to provide those services.",
+        "We use trusted service providers to run the site: Vercel (hosting and a short-term booking database), Stripe (payments) and PostHog (anonymous visit statistics). They may process your information only to provide those services.",
       ],
     },
     {
@@ -47,9 +47,10 @@ const en: LegalCopy = {
       ],
     },
     {
-      title: "Cookies",
+      title: "Cookies and statistics",
       body: [
         "This website does not use advertising or tracking cookies. It may store small technical items on your device (for example your language choice) so the site works properly.",
+        "We use PostHog to count visits anonymously: which pages are viewed and how often the booking buttons are tapped. It runs without cookies, stores nothing on your device and does not build a profile of you. If your browser sends a “Do Not Track” signal, these statistics are switched off.",
       ],
     },
     {
@@ -99,7 +100,7 @@ const es: LegalCopy = {
     {
       title: "Quién más maneja tus datos",
       body: [
-        "Usamos proveedores de confianza para operar el sitio: Vercel (alojamiento y una base de datos temporal de reservas) y Stripe (pagos). Solo pueden procesar tu información para prestar esos servicios.",
+        "Usamos proveedores de confianza para operar el sitio: Vercel (alojamiento y una base de datos temporal de reservas), Stripe (pagos) y PostHog (estadísticas anónimas de visitas). Solo pueden procesar tu información para prestar esos servicios.",
       ],
     },
     {
@@ -109,9 +110,10 @@ const es: LegalCopy = {
       ],
     },
     {
-      title: "Cookies",
+      title: "Cookies y estadísticas",
       body: [
         "Este sitio no usa cookies de publicidad ni de seguimiento. Puede guardar en tu dispositivo pequeños datos técnicos (por ejemplo tu idioma) para que funcione correctamente.",
+        "Usamos PostHog para contar las visitas de forma anónima: qué páginas se ven y cuántas veces se pulsan los botones de reserva. Funciona sin cookies, no guarda nada en tu dispositivo y no crea un perfil tuyo. Si tu navegador envía la señal “No rastrear”, estas estadísticas se desactivan.",
       ],
     },
     {

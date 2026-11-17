@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display, Syncopate } from "next/font/google";
 import "./globals.css";
 import PWAProvider from "./components/PWAProvider";
+import Analytics from "./components/Analytics";
 
 /**
  * IVA Nail Art - LUXURY EDITORIAL
@@ -197,6 +198,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`antialiased bg-white text-[#111111]`}>
+        <Analytics />
         <PWAProvider>
           {children}
         </PWAProvider>
