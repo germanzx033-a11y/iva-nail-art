@@ -17,6 +17,7 @@ import Image from "next/image";
 import AboutIva from "@/app/components/AboutIva";
 import HeroScroll from "@/app/components/HeroScroll";
 import PhotoMarquee from "@/app/components/PhotoMarquee";
+import BookingInfo from "@/app/components/BookingInfo";
 import { BackToTop, ScrollProgressBar } from "@/app/components/ScrollUi";
 import GallerySection from "@/app/components/GallerySection";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
@@ -436,9 +437,17 @@ export default function Home() {
                   </div>
 
                   <div className="flex flex-1 flex-col gap-5 p-6">
-                    <h3 className="font-serif text-2xl leading-tight text-[#F4EBE1]">
-                      {lang === "en" ? service.name : service.nameEs}
-                    </h3>
+                    <div>
+                      <h3 className="font-serif text-2xl leading-tight text-[#F4EBE1]">
+                        {lang === "en" ? service.name : service.nameEs}
+                      </h3>
+                      <p className="mt-2 text-sm text-[#F4EBE1]/70">
+                        {lang === "en" ? "From " : "Desde "}
+                        <span className="font-display text-lg text-[#E8C9A8]">${service.price}</span>
+                        {service.priceMax ? <span className="text-[#F4EBE1]/70"> – ${service.priceMax}</span> : null}
+                        <span className="ml-2 text-xs text-[#F4EBE1]/60">{lang === "en" ? "guide price" : "precio orientativo"}</span>
+                      </p>
+                    </div>
                     <a
                       href={CONFIG.instagramDmUrl}
                       target="_blank"
@@ -447,7 +456,7 @@ export default function Home() {
                       aria-label={`${lang === "en" ? "Send a direct message on Instagram about" : "Enviar mensaje directo por Instagram sobre"} ${lang === "en" ? service.name : service.nameEs}`}
                     >
                       <Instagram className="h-5 w-5" />
-                      {lang === "en" ? "Ask for Price" : "Preguntar Precio"}
+                      {lang === "en" ? "Get my quote" : "Pedir mi cotización"}
                     </a>
                   </div>
                 </article>
@@ -456,6 +465,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <BookingInfo lang={lang} bookUrl={CONFIG.instagramDmUrl} phone={CONFIG.phone} hours={CONFIG.hours} />
 
       {/* ================================================================== */}
       {/* GALLERY SECTION - GALERÍA VISUAL IMPRESIONANTE */}
@@ -566,7 +577,7 @@ className="w-16 h-auto rounded-lg"
                 <Phone className="w-4 h-4 text-[#D4AF37]" />
                 {t.footer.contact}
               </h4>
-              <p className="text-white/60 text-sm">{CONFIG.phone}</p>
+              <a href={`tel:${CONFIG.phone.replace(/[^\d+]/g, "")}`} className="text-white/70 text-sm hover:text-[#D4AF37]">{CONFIG.phone}</a>
               <div className="flex justify-center md:justify-start gap-4 mt-4">
                 <a
                   href={CONFIG.instagramUrl}
