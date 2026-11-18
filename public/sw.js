@@ -1,7 +1,7 @@
 // IVA Nail Art service worker.
 // Pages always come from the network (so visitors never see an old design);
 // the cached copy is used only when offline. Static build assets are cached.
-const CACHE_NAME = "iva-nail-art-v2";
+const CACHE_NAME = "iva-nail-art-v3";
 const OFFLINE_URL = "/offline.html";
 
 self.addEventListener("install", (event) => {

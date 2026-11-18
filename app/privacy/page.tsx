@@ -56,7 +56,7 @@ const en: LegalCopy = {
     {
       title: "Your choices",
       body: [
-        "You can ask us to see, correct or delete the information we hold about you at any time by messaging @iva_nailart_ny on Instagram or calling +1 (929) 625-7273.",
+        "You can ask us to see, correct or delete the information we hold about you at any time by messaging @iva_nailart_nyc on Instagram or calling +1 (929) 625-7273.",
       ],
     },
     {
@@ -119,7 +119,7 @@ const es: LegalCopy = {
     {
       title: "Tus opciones",
       body: [
-        "Puedes pedirnos ver, corregir o borrar la información que tenemos sobre ti en cualquier momento escribiendo a @iva_nailart_ny en Instagram o llamando al +1 (929) 625-7273.",
+        "Puedes pedirnos ver, corregir o borrar la información que tenemos sobre ti en cualquier momento escribiendo a @iva_nailart_nyc en Instagram o llamando al +1 (929) 625-7273.",
       ],
     },
     {

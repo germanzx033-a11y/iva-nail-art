@@ -22,9 +22,9 @@ export type Language = "en" | "es";
 export const CONFIG = {
   businessName: "IVA Nail Art",
   phone: "+1 (929) 625-7273",
-  instagramDmUrl: "https://ig.me/m/iva_nailart_ny",
-  instagram: "iva_nailart_ny",
-  instagramUrl: "https://www.instagram.com/iva_nailart_ny",
+  instagramDmUrl: "https://ig.me/m/iva_nailart_nyc",
+  instagram: "iva_nailart_nyc",
+  instagramUrl: "https://www.instagram.com/iva_nailart_nyc",
   tiktok: "iva_nailart_ny",
   tiktokUrl: "https://www.tiktok.com/@iva_nailart_ny",
   location: "Brooklyn, NY 11209",
