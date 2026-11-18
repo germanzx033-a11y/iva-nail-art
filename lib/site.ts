@@ -9,7 +9,7 @@ export const BUSINESS = {
   artist: "Ivannia Rodríguez",
   phone: "+1 (929) 625-7273",
   phoneE164: "+19296257273",
-  instagramUrl: "https://instagram.com/iva_nailart_ny",
+  instagramUrl: "https://instagram.com/iva_nailart_nyc",
   tiktokUrl: "https://tiktok.com/@iva_nailart_ny",
   whatsappNumber: "19296257273",
 };

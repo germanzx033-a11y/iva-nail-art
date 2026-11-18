@@ -89,13 +89,23 @@ const CONFIG = {
   businessName: "IVA Nail Art",
   phone: "+1 (929) 625-7273",
   // Instagram direct messages (ig.me opens the chat; Instagram cannot pre-fill text)
-  instagramDmUrl: "https://ig.me/m/iva_nailart_ny",
-  instagram: "iva_nailart_ny",
-  instagramUrl: "https://instagram.com/iva_nailart_ny",
+  instagramDmUrl: "https://ig.me/m/iva_nailart_nyc",
+  instagram: "iva_nailart_nyc",
+  instagramUrl: "https://instagram.com/iva_nailart_nyc",
   tiktok: "iva_nailart_ny",
   tiktokUrl: "https://tiktok.com/@iva_nailart_ny",
   location: "Bay Ridge, Brooklyn, NY 11209",
-  hours: "9:00 AM – 8:00 PM",
+  // Shown in the booking card and the footer
+  hours: {
+    en: [
+      { days: "Mon – Fri", time: "5:30 PM – 10:00 PM" },
+      { days: "Sat – Sun", time: "All day" },
+    ],
+    es: [
+      { days: "Lun – Vie", time: "5:30 PM – 10:00 PM" },
+      { days: "Sáb – Dom", time: "Todo el día" },
+    ],
+  },
   deposit: 35,
   cancellationHours: 24,
 };
@@ -109,6 +119,8 @@ interface Service {
   nameEs: string;
   price: number;
   priceMax?: number;
+  /** No guide price: the price is given on request */
+  onRequest?: boolean;
   category: string;
 }
 
@@ -122,6 +134,7 @@ const SERVICES: Service[] = [
   { id: "m2", name: "Gel Manicure", nameEs: "Manicura Gel", price: 55, category: "manicure" },
   { id: "m3", name: "Builder Gel Manicure", nameEs: "Manicura Builder Gel", price: 65, category: "manicure" },
   { id: "m4", name: "Structured Gel Manicure", nameEs: "Manicura Gel Estructurado", price: 75, category: "manicure" },
+  { id: "m5", name: "Gel-X Extensions", nameEs: "Extensiones Gel-X", price: 0, onRequest: true, category: "manicure" },
   // Pedicure
   { id: "p1", name: "Classic Pedicure", nameEs: "Pedicura Clásica", price: 45, category: "pedicure" },
   { id: "p2", name: "Gel Pedicure", nameEs: "Pedicura Gel", price: 65, category: "pedicure" },
@@ -167,7 +180,6 @@ const translations = {
       tagline: "Where every nail tells a story of elegance and artistry. Expert in unique designs that reflect your personality and enhance your natural beauty.",
       cta: "BOOK YOUR APPOINTMENT",
       location: "Bay Ridge, Brooklyn",
-      hours: "9 AM – 8 PM",
       appointment: "By Appointment Only",
     },
     about: {
@@ -206,7 +218,6 @@ const translations = {
       tagline: "Donde cada uña cuenta una historia de elegancia y arte. Experta en diseños únicos que reflejan tu personalidad y realzan tu belleza natural.",
       cta: "RESERVA TU CITA",
       location: "Bay Ridge, Brooklyn",
-      hours: "9 AM – 8 PM",
       appointment: "Solo con Cita",
     },
     about: {
@@ -442,12 +453,18 @@ export default function Home() {
                       <h3 className="font-serif text-2xl leading-tight text-[#F4EBE1]">
                         {lang === "en" ? service.name : service.nameEs}
                       </h3>
-                      <p className="mt-2 text-sm text-[#F4EBE1]/70">
-                        {lang === "en" ? "From " : "Desde "}
-                        <span className="font-display text-lg text-[#E8C9A8]">${service.price}</span>
-                        {service.priceMax ? <span className="text-[#F4EBE1]/70"> – ${service.priceMax}</span> : null}
-                        <span className="ml-2 text-xs text-[#F4EBE1]/60">{lang === "en" ? "guide price" : "precio orientativo"}</span>
-                      </p>
+                      {service.onRequest ? (
+                        <p className="mt-2 text-sm text-[#F4EBE1]/70">
+                          <span className="font-display text-lg text-[#E8C9A8]">{lang === "en" ? "Price on request" : "Precio a consultar"}</span>
+                        </p>
+                      ) : (
+                        <p className="mt-2 text-sm text-[#F4EBE1]/70">
+                          {lang === "en" ? "From " : "Desde "}
+                          <span className="font-display text-lg text-[#E8C9A8]">${service.price}</span>
+                          {service.priceMax ? <span className="text-[#F4EBE1]/70"> – ${service.priceMax}</span> : null}
+                          <span className="ml-2 text-xs text-[#F4EBE1]/60">{lang === "en" ? "guide price" : "precio orientativo"}</span>
+                        </p>
+                      )}
                     </div>
                     <a
                       href={CONFIG.instagramDmUrl}
@@ -467,7 +484,7 @@ export default function Home() {
         </div>
       </section>
 
-      <BookingInfo lang={lang} bookUrl={CONFIG.instagramDmUrl} phone={CONFIG.phone} hours={CONFIG.hours} />
+      <BookingInfo lang={lang} bookUrl={CONFIG.instagramDmUrl} phone={CONFIG.phone} hours={CONFIG.hours[lang]} deposit={CONFIG.deposit} />
       <Reviews lang={lang} />
 
       {/* ================================================================== */}
@@ -560,7 +577,13 @@ className="w-16 h-auto rounded-lg"
                 <Clock className="w-4 h-4 text-[#D4AF37]" />
                 {t.footer.hours}
               </h4>
-              <p className="text-white/60 text-sm">{CONFIG.hours}</p>
+              <ul className="space-y-1 text-sm text-white/60">
+                {CONFIG.hours[lang].map((h) => (
+                  <li key={h.days}>
+                    <span className="text-white/80">{h.days}</span> · {h.time}
+                  </li>
+                ))}
+              </ul>
               <p className="text-[#D4AF37] text-sm mt-1">{t.hero.appointment}</p>
             </div>
 

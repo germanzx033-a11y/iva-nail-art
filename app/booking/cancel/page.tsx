@@ -41,7 +41,7 @@ export default function BookingCancelPage() {
           </Link>
 
           <a
-            href="https://ig.me/m/iva_nailart_ny"
+            href="https://ig.me/m/iva_nailart_nyc"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-3 w-full py-4 bg-white border border-[#EBE8E2] text-[#5F5F5F] text-[11px] font-medium uppercase tracking-[0.2em] hover:opacity-70 transition-all duration-500"

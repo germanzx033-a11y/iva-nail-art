@@ -16,7 +16,7 @@ const en: LegalCopy = {
     {
       title: "Appointments",
       body: [
-        "We work by appointment only. Book by sending us a direct message on Instagram (@iva_nailart_ny) or through the booking options on this site. Your appointment is confirmed only once we reply to confirm it.",
+        "We work by appointment only. Book by sending us a direct message on Instagram (@iva_nailart_nyc) or through the booking options on this site. Your appointment is confirmed only once we reply to confirm it.",
       ],
     },
     {
@@ -28,14 +28,14 @@ const en: LegalCopy = {
     {
       title: "Deposits and payments",
       body: [
-        "A deposit may be required to hold your time. Payments are processed securely by Stripe. Unless we tell you otherwise, a deposit is applied toward the cost of your service.",
+        "A $35 deposit is required to hold your time. Payments are processed securely by Stripe. Unless we tell you otherwise, a deposit is applied toward the cost of your service.",
       ],
     },
     {
       title: "Cancellations and rescheduling",
       body: [
         "Please let us know at least 24 hours before your appointment if you need to cancel or move it. Late cancellations and missed appointments may forfeit the deposit.",
-        "If you arrive late we may need to shorten or reschedule your service so the next client is not affected.",
+        "There is a 15-minute grace period for late arrivals. After that we may need to shorten or reschedule your service so the next client is not affected.",
       ],
     },
     {
@@ -64,7 +64,7 @@ const en: LegalCopy = {
     },
     {
       title: "Contact",
-      body: ["Questions about these terms: @iva_nailart_ny on Instagram or +1 (929) 625-7273."],
+      body: ["Questions about these terms: @iva_nailart_nyc on Instagram or +1 (929) 625-7273."],
     },
   ],
 };
@@ -78,7 +78,7 @@ const es: LegalCopy = {
     {
       title: "Citas",
       body: [
-        "Trabajamos solo con cita. Reserva enviándonos un mensaje directo en Instagram (@iva_nailart_ny) o con las opciones de reserva de este sitio. Tu cita queda confirmada solo cuando te respondemos para confirmarla.",
+        "Trabajamos solo con cita. Reserva enviándonos un mensaje directo en Instagram (@iva_nailart_nyc) o con las opciones de reserva de este sitio. Tu cita queda confirmada solo cuando te respondemos para confirmarla.",
       ],
     },
     {
@@ -90,14 +90,14 @@ const es: LegalCopy = {
     {
       title: "Depósitos y pagos",
       body: [
-        "Puede pedirse un depósito para apartar tu horario. Los pagos se procesan de forma segura con Stripe. Salvo que te digamos otra cosa, el depósito se descuenta del costo de tu servicio.",
+        "Se pide un depósito de $35 para apartar tu horario. Los pagos se procesan de forma segura con Stripe. Salvo que te digamos otra cosa, el depósito se descuenta del costo de tu servicio.",
       ],
     },
     {
       title: "Cancelaciones y cambios",
       body: [
         "Avísanos al menos 24 horas antes si necesitas cancelar o mover tu cita. Las cancelaciones tardías y las citas no asistidas pueden perder el depósito.",
-        "Si llegas tarde, quizá tengamos que acortar o reprogramar tu servicio para no afectar a la siguiente clienta.",
+        "Hay 15 minutos de tolerancia si llegas tarde. Después de ese tiempo, quizá tengamos que acortar o reprogramar tu servicio para no afectar a la siguiente clienta.",
       ],
     },
     {
@@ -126,7 +126,7 @@ const es: LegalCopy = {
     },
     {
       title: "Contacto",
-      body: ["Preguntas sobre estos términos: @iva_nailart_ny en Instagram o +1 (929) 625-7273."],
+      body: ["Preguntas sobre estos términos: @iva_nailart_nyc en Instagram o +1 (929) 625-7273."],
     },
   ],
 };

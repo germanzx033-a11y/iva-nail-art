@@ -235,7 +235,7 @@ function SuccessContent() {
           transition={{ delay: 1 }}
         >
           <motion.a
-            href="https://ig.me/m/iva_nailart_ny"
+            href="https://ig.me/m/iva_nailart_nyc"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-3 w-full py-4 bg-[#4A0404] text-white text-[11px] font-medium uppercase tracking-[0.2em] hover:opacity-90 transition-all duration-300 rounded-lg shadow-lg"
