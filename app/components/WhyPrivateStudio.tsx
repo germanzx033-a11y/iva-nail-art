@@ -23,7 +23,7 @@ const COPY = {
       },
       {
         title: "A clear price first",
-        body: "Every service shows a guide price, and Iva confirms your quote by message before your appointment.",
+        body: "Send your idea and Iva confirms your personal quote by message before your appointment. No surprises at the end.",
       },
     ],
   },
@@ -45,7 +45,7 @@ const COPY = {
       },
       {
         title: "Precio claro desde el inicio",
-        body: "Cada servicio muestra un precio orientativo, e Iva te confirma la cotización por mensaje antes de tu cita.",
+        body: "Envía tu idea e Iva te confirma la cotización por mensaje antes de tu cita. Sin sorpresas al final.",
       },
     ],
   },
