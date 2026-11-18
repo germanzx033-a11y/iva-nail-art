@@ -295,16 +295,16 @@ export default function Home() {
       {/* ================================================================== */}
       <header className="fixed top-0 left-0 right-0 z-40 bg-[#0E0706]/70 backdrop-blur-md border-b border-[#F4EBE1]/10">
         <nav className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <a href="#" className="font-display text-sm tracking-[0.3em] text-[#F4EBE1]">
+          <a href="#" className="font-display inline-block py-3 text-sm tracking-[0.3em] text-[#F4EBE1]">
             IVA <span className="font-light">Nail Art</span>
           </a>
 
           <div className="flex items-center gap-6">
             <div className="hidden md:flex items-center gap-6 font-display text-[0.65rem] tracking-[0.25em] text-[#F4EBE1]/70">
-              <a href="#services" className="hover:text-[#E8C9A8] transition-colors">
+              <a href="#services" className="inline-block py-3 hover:text-[#E8C9A8] transition-colors">
                 {t.nav.services}
               </a>
-              <a href="#gallery" className="hover:text-[#E8C9A8] transition-colors">
+              <a href="#gallery" className="inline-block py-3 hover:text-[#E8C9A8] transition-colors">
                 {t.nav.gallery}
               </a>
             </div>
@@ -597,7 +597,7 @@ className="w-16 h-auto rounded-lg"
                 <Phone className="w-4 h-4 text-[#D4AF37]" />
                 {t.footer.contact}
               </h4>
-              <a href={`tel:${CONFIG.phone.replace(/[^\d+]/g, "")}`} className="text-white/70 text-sm hover:text-[#D4AF37]">{CONFIG.phone}</a>
+              <a href={`tel:${CONFIG.phone.replace(/[^\d+]/g, "")}`} className="inline-block py-2 text-white/70 text-sm hover:text-[#D4AF37]">{CONFIG.phone}</a>
               <div className="flex justify-center md:justify-start gap-4 mt-4">
                 <a
                   href={CONFIG.instagramUrl}
@@ -628,10 +628,10 @@ className="w-16 h-auto rounded-lg"
               © {new Date().getFullYear()} IVA Nail Art. {lang === "en" ? "All rights reserved." : "Todos los derechos reservados."}
             </p>
             <p className="mt-4 flex justify-center gap-6 text-sm text-white/70">
-              <a href="/privacy" className="underline-offset-4 hover:text-[#D4AF37] hover:underline">
+              <a href="/privacy" className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
                 {lang === "en" ? "Privacy Policy" : "Privacidad"}
               </a>
-              <a href="/terms" className="underline-offset-4 hover:text-[#D4AF37] hover:underline">
+              <a href="/terms" className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
                 {lang === "en" ? "Terms & Conditions" : "Términos y Condiciones"}
               </a>
             </p>
