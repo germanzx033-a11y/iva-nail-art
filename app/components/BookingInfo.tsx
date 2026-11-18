@@ -23,7 +23,7 @@ const COPY = {
     faqTitle: "Before your visit",
     faq: [
       { q: "When can I come?", a: "By appointment only, between the hours below. Ask for the day and time that suits you." },
-      { q: "How much will my set cost?", a: "Each service shows a guide price. The final price depends on length, removal, repairs and how detailed the design is, and is confirmed before your appointment." },
+      { q: "How much will my set cost?", a: "Every set is quoted personally. The price depends on length, removal, repairs and how detailed the design is, and Iva confirms it by message before your appointment." },
       { q: "Do I need a deposit?", a: "Yes, a {DEPOSIT} deposit holds your time. It is applied toward the cost of your service." },
       { q: "What if I'm running late?", a: "There is a 15-minute grace period. After that, your service may need to be shortened or rescheduled so the next client is not affected." },
       { q: "What if I need to cancel?", a: "Let Iva know at least 24 hours before. Late cancellations and missed appointments may lose the deposit." },
@@ -54,7 +54,7 @@ const COPY = {
     faqTitle: "Antes de tu visita",
     faq: [
       { q: "¿Cuándo puedo ir?", a: "Solo con cita, dentro del horario de abajo. Pide el día y la hora que mejor te queden." },
-      { q: "¿Cuánto cuesta mi set?", a: "Cada servicio muestra un precio orientativo. El precio final depende del largo, el retiro, las reparaciones y el detalle del diseño, y se confirma antes de tu cita." },
+      { q: "¿Cuánto cuesta mi set?", a: "Cada diseño se cotiza de forma personalizada. El precio depende del largo, el retiro, las reparaciones y el detalle del diseño, e Iva te lo confirma por mensaje antes de tu cita." },
       { q: "¿Necesito dejar depósito?", a: "Sí, un depósito de {DEPOSIT} aparta tu horario. Se descuenta del costo de tu servicio." },
       { q: "¿Y si voy a llegar tarde?", a: "Hay 15 minutos de tolerancia. Después de ese tiempo, puede que haya que acortar o reprogramar tu servicio para no afectar a la siguiente clienta." },
       { q: "¿Y si necesito cancelar?", a: "Avísale a Iva al menos 24 horas antes. Las cancelaciones tardías y las citas no asistidas pueden perder el depósito." },

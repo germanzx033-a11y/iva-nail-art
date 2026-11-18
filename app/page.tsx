@@ -118,10 +118,6 @@ interface Service {
   id: string;
   name: string;
   nameEs: string;
-  price: number;
-  priceMax?: number;
-  /** No guide price: the price is given on request */
-  onRequest?: boolean;
   category: string;
 }
 
@@ -131,30 +127,30 @@ interface Service {
 // ============================================================================
 const SERVICES: Service[] = [
   // Manicure
-  { id: "m1", name: "Classic Manicure", nameEs: "Manicura Clásica", price: 30, category: "manicure" },
-  { id: "m2", name: "Gel Manicure", nameEs: "Manicura Gel", price: 55, category: "manicure" },
-  { id: "m3", name: "Builder Gel Manicure", nameEs: "Manicura Builder Gel", price: 65, category: "manicure" },
-  { id: "m4", name: "Structured Gel Manicure", nameEs: "Manicura Gel Estructurado", price: 75, category: "manicure" },
-  { id: "m5", name: "Gel-X Extensions", nameEs: "Extensiones Gel-X", price: 0, onRequest: true, category: "manicure" },
+  { id: "m1", name: "Classic Manicure", nameEs: "Manicura Clásica", category: "manicure" },
+  { id: "m2", name: "Gel Manicure", nameEs: "Manicura Gel", category: "manicure" },
+  { id: "m3", name: "Builder Gel Manicure", nameEs: "Manicura Builder Gel", category: "manicure" },
+  { id: "m4", name: "Structured Gel Manicure", nameEs: "Manicura Gel Estructurado", category: "manicure" },
+  { id: "m5", name: "Gel-X Extensions", nameEs: "Extensiones Gel-X", category: "manicure" },
   // Pedicure
-  { id: "p1", name: "Classic Pedicure", nameEs: "Pedicura Clásica", price: 45, category: "pedicure" },
-  { id: "p2", name: "Gel Pedicure", nameEs: "Pedicura Gel", price: 65, category: "pedicure" },
-  { id: "p3", name: "Builder Gel Pedicure", nameEs: "Pedicura Builder Gel", price: 75, category: "pedicure" },
-  { id: "p4", name: "Luxury Spa Pedicure", nameEs: "Pedicura Spa de Lujo", price: 85, category: "pedicure" },
+  { id: "p1", name: "Classic Pedicure", nameEs: "Pedicura Clásica", category: "pedicure" },
+  { id: "p2", name: "Gel Pedicure", nameEs: "Pedicura Gel", category: "pedicure" },
+  { id: "p3", name: "Builder Gel Pedicure", nameEs: "Pedicura Builder Gel", category: "pedicure" },
+  { id: "p4", name: "Luxury Spa Pedicure", nameEs: "Pedicura Spa de Lujo", category: "pedicure" },
   // Acrylic
-  { id: "a1", name: "Full Set Acrylic", nameEs: "Set Completo Acrílico", price: 75, priceMax: 95, category: "acrylic" },
-  { id: "a2", name: "Acrylic Fill", nameEs: "Relleno Acrílico", price: 55, priceMax: 70, category: "acrylic" },
-  { id: "a3", name: "Acrylic Removal", nameEs: "Remoción Acrílico", price: 20, category: "acrylic" },
+  { id: "a1", name: "Full Set Acrylic", nameEs: "Set Completo Acrílico", category: "acrylic" },
+  { id: "a2", name: "Acrylic Fill", nameEs: "Relleno Acrílico", category: "acrylic" },
+  { id: "a3", name: "Acrylic Removal", nameEs: "Remoción Acrílico", category: "acrylic" },
   // Nail Art
-  { id: "n1", name: "Simple Nail Art (per nail)", nameEs: "Arte Simple (por uña)", price: 5, priceMax: 10, category: "nailart" },
-  { id: "n2", name: "Medium Design (per nail)", nameEs: "Diseño Medio (por uña)", price: 10, priceMax: 15, category: "nailart" },
-  { id: "n3", name: "Complex Art (per nail)", nameEs: "Arte Complejo (por uña)", price: 15, priceMax: 25, category: "nailart" },
-  { id: "n4", name: "Chrome / Cat Eye", nameEs: "Chrome / Ojo de Gato", price: 15, category: "nailart" },
-  { id: "n5", name: "French Tips", nameEs: "Puntas Francesas", price: 15, category: "nailart" },
+  { id: "n1", name: "Simple Nail Art (per nail)", nameEs: "Arte Simple (por uña)", category: "nailart" },
+  { id: "n2", name: "Medium Design (per nail)", nameEs: "Diseño Medio (por uña)", category: "nailart" },
+  { id: "n3", name: "Complex Art (per nail)", nameEs: "Arte Complejo (por uña)", category: "nailart" },
+  { id: "n4", name: "Chrome / Cat Eye", nameEs: "Chrome / Ojo de Gato", category: "nailart" },
+  { id: "n5", name: "French Tips", nameEs: "Puntas Francesas", category: "nailart" },
   // Extras
-  { id: "e1", name: "Gel Removal", nameEs: "Remoción de Gel", price: 15, category: "extras" },
-  { id: "e2", name: "Nail Repair (per nail)", nameEs: "Reparación (por uña)", price: 10, category: "extras" },
-  { id: "e3", name: "Soak Off Only", nameEs: "Solo Remojo", price: 20, category: "extras" },
+  { id: "e1", name: "Gel Removal", nameEs: "Remoción de Gel", category: "extras" },
+  { id: "e2", name: "Nail Repair (per nail)", nameEs: "Reparación (por uña)", category: "extras" },
+  { id: "e3", name: "Soak Off Only", nameEs: "Solo Remojo", category: "extras" },
 ];
 
 const CATEGORIES = [
@@ -388,7 +384,7 @@ export default function Home() {
               {t.services.title}
             </h2>
             <p className="text-[#F4EBE1]/70 text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed">
-              {lang === "en" ? "Guide prices. The final total is confirmed by length, removal and level of nail art." : "Precios orientativos. El total final se confirma según el largo, el retiro y el nivel de nail art."}
+              {lang === "en" ? "Every set is quoted personally. Send Iva your idea and she confirms the price before your appointment." : "Cada diseño se cotiza de forma personalizada. Escríbele a Iva con tu idea y te confirma el precio antes de tu cita."}
             </p>
           </div>
 
@@ -398,6 +394,7 @@ export default function Home() {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
+                aria-pressed={selectedCategory === cat.id}
                 className={`px-6 py-2.5 rounded-full text-sm font-light tracking-wide transition-all duration-300 ${selectedCategory === cat.id
                   ? "bg-[#E8C9A8] text-[#0E0706] border border-[#E8C9A8] font-medium"
                   : "bg-transparent text-[#F4EBE1]/80 border border-[#F4EBE1]/25 hover:border-[#E8C9A8] hover:text-[#E8C9A8]"
@@ -411,7 +408,7 @@ export default function Home() {
 
           {/* Services Grid - Luxury Cards con imágenes y efectos premium */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {filteredServices.map((service, index) => {
+            {filteredServices.map((service) => {
               // Icon mapping for services
               const getServiceIcon = () => {
                 if (service.category === "manicure") return Hand;
@@ -425,8 +422,8 @@ export default function Home() {
               // Obtener imagen de ejemplo de la galería basada en la categoría
               const getServiceImage = () => {
                 const categoryImages = GALLERY_IMAGES.filter(img => img.category === "nails");
-                // Usar diferentes imágenes según el índice para variedad
-                const imageIndex = (index % categoryImages.length);
+                // One distinct photo per service, so every tab shows different cards
+                const imageIndex = SERVICES.findIndex((s) => s.id === service.id) % categoryImages.length;
                 return categoryImages[imageIndex]?.src || "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg";
               };
               const serviceImage = getServiceImage();
@@ -455,18 +452,9 @@ export default function Home() {
                       <h3 className="font-serif text-2xl leading-tight text-[#F4EBE1]">
                         {lang === "en" ? service.name : service.nameEs}
                       </h3>
-                      {service.onRequest ? (
-                        <p className="mt-2 text-sm text-[#F4EBE1]/70">
-                          <span className="font-display text-lg text-[#E8C9A8]">{lang === "en" ? "Price on request" : "Precio a consultar"}</span>
-                        </p>
-                      ) : (
-                        <p className="mt-2 text-sm text-[#F4EBE1]/70">
-                          {lang === "en" ? "From " : "Desde "}
-                          <span className="font-display text-lg text-[#E8C9A8]">${service.price}</span>
-                          {service.priceMax ? <span className="text-[#F4EBE1]/70"> – ${service.priceMax}</span> : null}
-                          <span className="ml-2 text-xs text-[#F4EBE1]/60">{lang === "en" ? "guide price" : "precio orientativo"}</span>
-                        </p>
-                      )}
+                      <p className="mt-2 text-sm text-[#F4EBE1]/70">
+                        {lang === "en" ? "Personal quote by message" : "Cotización personalizada por mensaje"}
+                      </p>
                     </div>
                     <a
                       href={CONFIG.instagramDmUrl}
