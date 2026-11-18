@@ -46,7 +46,7 @@ const DESCRIPTION =
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "IVA Nail Art NY | Custom Nail Studio in Bay Ridge, Brooklyn",
+    default: "IVA Nail Art NY | Builder Gel & Nail Art in Bay Ridge, Brooklyn",
     template: "%s | IVA Nail Art NY",
   },
   description: DESCRIPTION,

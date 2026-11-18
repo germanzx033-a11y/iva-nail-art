@@ -12,6 +12,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${baseUrl}/builder-gel-bay-ridge`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+      alternates: { languages: { en: `${baseUrl}/builder-gel-bay-ridge`, es: `${baseUrl}/es/builder-gel-bay-ridge` } },
+    },
+    {
+      url: `${baseUrl}/es/builder-gel-bay-ridge`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+      alternates: { languages: { en: `${baseUrl}/builder-gel-bay-ridge`, es: `${baseUrl}/es/builder-gel-bay-ridge` } },
+    },
+    {
       url: `${baseUrl}/privacy`,
       lastModified: new Date('2026-11-16'),
       changeFrequency: 'yearly',

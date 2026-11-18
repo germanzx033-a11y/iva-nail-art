@@ -14,6 +14,7 @@ import {
   Scissors,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import AboutIva from "@/app/components/AboutIva";
 import HeroScroll from "@/app/components/HeroScroll";
 import PhotoMarquee from "@/app/components/PhotoMarquee";
@@ -384,7 +385,13 @@ export default function Home() {
               {t.services.title}
             </h2>
             <p className="text-[#F4EBE1]/70 text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed">
-              {lang === "en" ? "Every set is quoted personally. Send Iva your idea and she confirms the price before your appointment." : "Cada diseño se cotiza de forma personalizada. Escríbele a Iva con tu idea y te confirma el precio antes de tu cita."}
+              {lang === "en" ? "Every set is quoted personally. Send Iva your idea and she confirms the price before your appointment." : "Cada diseño se cotiza de forma personalizada. Escríbele a Iva con tu idea y te confirma el precio antes de tu cita."}{" "}
+              <Link
+                href={lang === "en" ? "/builder-gel-bay-ridge" : "/es/builder-gel-bay-ridge"}
+                className="text-[#E8C9A8] underline underline-offset-4 hover:text-white"
+              >
+                {lang === "en" ? "Discover builder gel" : "Descubre el builder gel"}
+              </Link>
             </p>
           </div>
 
@@ -455,6 +462,14 @@ export default function Home() {
                       <p className="mt-2 text-sm text-[#F4EBE1]/70">
                         {lang === "en" ? "Personal quote by message" : "Cotización personalizada por mensaje"}
                       </p>
+                      {service.id === "m3" && (
+                        <Link
+                          href={lang === "en" ? "/builder-gel-bay-ridge" : "/es/builder-gel-bay-ridge"}
+                          className="mt-2 inline-block py-1 text-sm text-[#E8C9A8] underline underline-offset-4 hover:text-white"
+                        >
+                          {lang === "en" ? "What is builder gel? Learn more" : "¿Qué es el builder gel? Más información"}
+                        </Link>
+                      )}
                     </div>
                     <a
                       href={CONFIG.instagramDmUrl}
