@@ -1,5 +1,6 @@
-import { Clock, MessageCircle, CalendarCheck, Sparkles, Phone } from "lucide-react";
+import { Clock, MessageCircle, MessageSquareText, CalendarCheck, Sparkles, Phone } from "lucide-react";
 import { BUSINESS } from "@/lib/site";
+import CopyMessageButton from "./CopyMessageButton";
 
 interface BookingInfoProps {
   lang: "en" | "es";
@@ -35,6 +36,9 @@ const COPY = {
     hoursNote: "By appointment only · Replies within 1–2 hours",
     call: "Other ways to reach Iva",
     whatsapp: "WhatsApp",
+    sms: "Text message",
+    copy: "Copy message",
+    copied: "Copied — paste it in your DM",
     waText: "Hi Iva! I would like to book an appointment. Service: … Preferred date: … Do I have product to remove? …",
     cta: "Message Iva on Instagram",
   },
@@ -63,6 +67,9 @@ const COPY = {
     hoursNote: "Solo con cita · Respuesta en 1 a 2 horas",
     call: "Otras formas de contactar a Iva",
     whatsapp: "WhatsApp",
+    sms: "Mensaje de texto",
+    copy: "Copiar mensaje",
+    copied: "Copiado: pégalo en tu mensaje",
     waText: "¡Hola Iva! Me gustaría reservar una cita. Servicio: … Fecha preferida: … ¿Tengo producto para retirar? …",
     cta: "Escríbele a Iva por Instagram",
   },
@@ -151,10 +158,18 @@ export default function BookingInfo({ lang, bookUrl, phone, hours, deposit }: Bo
                 <MessageCircle className="h-4 w-4" aria-hidden />
                 {c.whatsapp}
               </a>
+              <a
+                href={`sms:${BUSINESS.phoneE164}?&body=${encodeURIComponent(c.waText)}`}
+                className="inline-flex items-center gap-2 text-lg text-[#E8C9A8] underline-offset-4 hover:underline"
+              >
+                <MessageSquareText className="h-4 w-4" aria-hidden />
+                {c.sms}
+              </a>
               <a href={tel} className="inline-flex items-center gap-2 text-lg text-[#E8C9A8] underline-offset-4 hover:underline">
                 <Phone className="h-4 w-4" aria-hidden />
                 {phone}
               </a>
+              <CopyMessageButton text={c.waText} label={c.copy} copiedLabel={c.copied} />
             </div>
           </aside>
         </div>
