@@ -126,6 +126,21 @@ const jsonLd = {
     { "@type": "City", name: "Brooklyn" },
   ],
   knowsLanguage: ["Spanish", "English"],
+  // By appointment only, within these hours
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "17:30",
+      closes: "22:00",
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Saturday", "Sunday"],
+      opens: "10:00",
+      closes: "22:00",
+    },
+  ],
   sameAs: [BUSINESS.instagramUrl, BUSINESS.tiktokUrl],
   hasOfferCatalog: {
     "@type": "OfferCatalog",

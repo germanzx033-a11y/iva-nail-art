@@ -17,6 +17,7 @@ import Image from "next/image";
 import AboutIva from "@/app/components/AboutIva";
 import HeroScroll from "@/app/components/HeroScroll";
 import PhotoMarquee from "@/app/components/PhotoMarquee";
+import WhyPrivateStudio from "./components/WhyPrivateStudio";
 import BookingInfo from "@/app/components/BookingInfo";
 import Reviews from "@/app/components/Reviews";
 import { BackToTop, ScrollProgressBar } from "@/app/components/ScrollUi";
@@ -99,11 +100,11 @@ const CONFIG = {
   hours: {
     en: [
       { days: "Mon – Fri", time: "5:30 PM – 10:00 PM" },
-      { days: "Sat – Sun", time: "All day" },
+      { days: "Sat – Sun", time: "10:00 AM – 10:00 PM" },
     ],
     es: [
       { days: "Lun – Vie", time: "5:30 PM – 10:00 PM" },
-      { days: "Sáb – Dom", time: "Todo el día" },
+      { days: "Sáb – Dom", time: "10:00 AM – 10:00 PM" },
     ],
   },
   deposit: 35,
@@ -178,7 +179,7 @@ const translations = {
     hero: {
       welcome: "WELCOME TO",
       tagline: "Where every nail tells a story of elegance and artistry. Expert in unique designs that reflect your personality and enhance your natural beauty.",
-      cta: "BOOK YOUR APPOINTMENT",
+      cta: "Book on Instagram",
       location: "Bay Ridge, Brooklyn",
       appointment: "By Appointment Only",
     },
@@ -189,13 +190,13 @@ const translations = {
     },
     services: {
       subtitle: "OUR SERVICES",
-      title: "Luxury Nail Services",
+      title: "Manicure, pedicure & nail art",
       note: "Prices may vary based on design complexity",
     },
     gallery: {
       subtitle: "OUR WORK",
-      title: "Nail Art Gallery",
-      description: "A glimpse of our latest creations",
+      title: "Nail art gallery",
+      description: "Real sets made by Iva in Bay Ridge. Save the one you love and send it as your inspiration.",
     },
     footer: {
       tagline: "Creating beauty, one nail at a time",
@@ -216,7 +217,7 @@ const translations = {
     hero: {
       welcome: "BIENVENIDA A",
       tagline: "Donde cada uña cuenta una historia de elegancia y arte. Experta en diseños únicos que reflejan tu personalidad y realzan tu belleza natural.",
-      cta: "RESERVA TU CITA",
+      cta: "Reserva por Instagram",
       location: "Bay Ridge, Brooklyn",
       appointment: "Solo con Cita",
     },
@@ -227,13 +228,13 @@ const translations = {
     },
     services: {
       subtitle: "NUESTROS SERVICIOS",
-      title: "Servicios de Lujo",
+      title: "Manicura, pedicura y nail art",
       note: "Los precios pueden variar según la complejidad del diseño",
     },
     gallery: {
       subtitle: "NUESTRO TRABAJO",
-      title: "Galería de Arte",
-      description: "Un vistazo a nuestras últimas creaciones",
+      title: "Galería de nail art",
+      description: "Diseños reales hechos por Iva en Bay Ridge. Guarda el que te guste y envíalo como inspiración.",
     },
     footer: {
       tagline: "Creando belleza, una uña a la vez",
@@ -363,6 +364,7 @@ export default function Home() {
       {/* ================================================================== */}
       {/* ABOUT SECTION - MEET IVA */}
       {/* ================================================================== */}
+      <WhyPrivateStudio lang={lang} />
       <AboutIva language={lang} />
 
       {/* ================================================================== */}
@@ -528,6 +530,11 @@ export default function Home() {
               <ChevronRight className="h-4 w-4" />
             </span>
           </a>
+          <p className="mt-5 text-sm text-[#FDF8F5]/70">
+            {lang === "en"
+              ? `Replies within 1–2 hours · $${CONFIG.deposit} deposit holds your time`
+              : `Respuesta en 1 a 2 horas · Depósito de $${CONFIG.deposit} para apartar tu cita`}
+          </p>
         </div>
       </section>
 

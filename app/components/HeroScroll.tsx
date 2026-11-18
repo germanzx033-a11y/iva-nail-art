@@ -13,10 +13,10 @@ interface HeroScrollProps {
 const SCENES = [
   {
     src: "/hero.jpg",
-    en: ["Nails as", "wearable art"],
-    es: ["Uñas como", "arte para llevar"],
-    noteEn: "A private nail studio in Bay Ridge, Brooklyn.",
-    noteEs: "Un estudio privado de uñas en Bay Ridge, Brooklyn.",
+    en: ["Custom nail art", "in Bay Ridge, Brooklyn"],
+    es: ["Nail art a medida", "en Bay Ridge, Brooklyn"],
+    noteEn: "Builder gel, acrylics and hand-painted designs in a private studio, with time that is only yours.",
+    noteEs: "Builder gel, acrílico y diseños pintados a mano en un estudio privado, con un tiempo solo para ti.",
   },
   {
     src: "/gallery/lilac-3d-orchid.jpg",
@@ -27,10 +27,10 @@ const SCENES = [
   },
   {
     src: "/gallery/chocolate-cat-eye.jpg",
-    en: ["Your set", "starts with a DM"],
-    es: ["Tu diseño", "empieza con un mensaje"],
-    noteEn: "Send the look you love. Iva takes care of the rest.",
-    noteEs: "Envía el diseño que te gusta. Iva se encarga del resto.",
+    en: ["Booked in", "one message"],
+    es: ["Tu cita,", "en un solo mensaje"],
+    noteEn: "Send a photo, get your quote, pick your time. Iva replies within 1–2 hours.",
+    noteEs: "Envía una foto, recibe tu cotización y elige tu horario. Iva responde en 1 a 2 horas.",
   },
 ];
 
@@ -141,10 +141,10 @@ export default function HeroScroll({ lang, bookUrl, cta }: HeroScrollProps) {
                       transform: `translateY(${i === active ? 0 : i < active ? -24 : 24}px)`,
                     }}
                   >
-                    <span className="font-display block text-[clamp(1.9rem,6.2vw,5rem)] font-bold leading-[1.05] text-[#F4EBE1]">
+                    <span className="font-display block text-[clamp(1.9rem,6.2vw,3rem)] lg:text-[clamp(2rem,2.7vw,2.9rem)] font-bold leading-[1.05] text-[#F4EBE1]">
                       {top}
                     </span>
-                    <span className="mt-1 block font-serif text-[clamp(2.1rem,6.6vw,5.25rem)] font-normal italic leading-[1.05] text-[#E8C9A8]">
+                    <span className="mt-1 block font-serif text-[clamp(2.1rem,6.6vw,3.4rem)] lg:text-[clamp(2.6rem,4.2vw,4.2rem)] font-normal italic leading-[1.05] text-[#E8C9A8]">
                       {bottom}
                     </span>
                   </Heading>
