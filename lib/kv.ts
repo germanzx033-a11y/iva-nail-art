@@ -444,3 +444,44 @@ export async function updateDailyBrief(date: string, data: Omit<DailyBrief, 'upd
     return false;
   }
 }
+
+// =============================================
+// PER-SLOT BOOKINGS (one client per slot)
+// =============================================
+
+const bookedKey = (date: string, slot: string) => `booked:${date}:${slot}`;
+
+/**
+ * Claims a slot for a paid booking. Atomic (SET NX): returns false when the
+ * slot was already booked, which the webhook treats as overbooking.
+ */
+export async function markSlotBooked(date: string, slot: string, sessionId: string): Promise<boolean> {
+  const result = await kv.set(bookedKey(date, slot), sessionId, { nx: true, ex: 120 * 24 * 60 * 60 });
+  return result !== null;
+}
+
+export async function unmarkSlotBooked(date: string, slot: string, sessionId: string): Promise<void> {
+  try {
+    const current = await kv.get<string>(bookedKey(date, slot));
+    if (current === sessionId) await kv.del(bookedKey(date, slot));
+  } catch {
+    // best effort
+  }
+}
+
+export async function isSlotBooked(date: string, slot: string): Promise<boolean> {
+  return (await kv.get(bookedKey(date, slot))) !== null;
+}
+
+/**
+ * Status of many slots in one round trip. A slot is unavailable when it is
+ * booked or temporarily held by someone who is paying.
+ */
+export async function getSlotsStatus(
+  pairs: { date: string; slot: string }[]
+): Promise<{ booked: boolean; locked: boolean }[]> {
+  if (pairs.length === 0) return [];
+  const keys = pairs.flatMap(({ date, slot }) => [bookedKey(date, slot), kvKeys.lock(date, slot)]);
+  const values = await kv.mget<unknown[]>(...keys);
+  return pairs.map((_, i) => ({ booked: values[i * 2] != null, locked: values[i * 2 + 1] != null }));
+}

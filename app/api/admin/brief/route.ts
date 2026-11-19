@@ -3,6 +3,7 @@
  * IVA-PULSE Admin Dashboard Data
  */
 
+import { getSlotsForDate } from '@/lib/schedule';
 import { NextRequest, NextResponse } from 'next/server';
 import {
   getDailyCount,
@@ -58,11 +59,12 @@ export async function GET(request: NextRequest): Promise<NextResponse<DailyBrief
     const highPriorityCount = waitlist.filter(e => e.priority === 'HIGH').length;
 
     // Calculate estimated revenue (deposit * confirmed bookings)
-    const estimatedRevenue = count * 30; // $30 deposit per booking
+    const capacity = getSlotsForDate(date).length;
+    const estimatedRevenue = count * 35; // $35 deposit per booking
 
     // Determine slot availability
-    const morningAvailable = count < 2;
-    const afternoonAvailable = count < 2;
+    const morningAvailable = count < capacity;
+    const afternoonAvailable = count < capacity;
 
     const brief: DailyBriefResponse = {
       date,
@@ -70,7 +72,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<DailyBrief
       appStatus,
       bookings: {
         count,
-        maxCapacity: 2,
+        maxCapacity: capacity,
         revenue: estimatedRevenue,
       },
       waitlist: {

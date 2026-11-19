@@ -13,17 +13,17 @@ import { RateLimiterMemory } from 'rate-limiter-flexible';
 import {
   createPreLock,
   getAppStatus,
-  checkCapacity,
   getLock,
+  isSlotBooked,
 } from '@/lib/kv';
 import {
   generateLockToken,
   generateClientId,
   getClientIP,
-  isValidBookingDate,
   isValidDateFormat,
   ERROR_MESSAGES,
 } from '@/lib/utils';
+import { getSlot, isBookableDate } from '@/lib/schedule';
 
 // Best-effort per-IP limit on lock attempts (in-memory: per serverless instance).
 // 10 attempts / 5 min is far above normal use and well below hoarding behaviour.
@@ -35,7 +35,8 @@ const lockLimiter = new RateLimiterMemory({ points: 10, duration: 300 });
 
 interface PreLockRequest {
   date: string;
-  slot: 'morning' | 'afternoon';
+  /** Slot id from lib/schedule (e.g. "1730"). */
+  slot: string;
 }
 
 interface PreLockResponse {
@@ -97,7 +98,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<PreLockRe
       );
     }
 
-    if (!isValidBookingDate(date)) {
+    if (!isBookableDate(date)) {
       return NextResponse.json(
         {
           success: false,
@@ -108,7 +109,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<PreLockRe
       );
     }
 
-    if (slot !== 'morning' && slot !== 'afternoon') {
+    if (!getSlot(date, slot)) {
       return NextResponse.json(
         {
           success: false,
@@ -119,9 +120,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<PreLockRe
       );
     }
 
-    // 6. Check capacity (Max 2 bookings per day)
-    const capacity = await checkCapacity(date);
-    if (!capacity.available) {
+    // 6. One client per slot
+    if (await isSlotBooked(date, slot)) {
       return NextResponse.json(
         {
           success: false,
@@ -202,21 +202,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         { status: 400 }
       );
     }
-    if (!isValidDateFormat(date) || (slot !== 'morning' && slot !== 'afternoon')) {
+    if (!isValidDateFormat(date) || !getSlot(date, slot)) {
       return NextResponse.json(
         { error: 'Invalid date or slot' },
         { status: 400 }
       );
     }
 
-    const lock = await getLock(date, slot as 'morning' | 'afternoon');
-    const capacity = await checkCapacity(date);
+    const [lock, booked] = await Promise.all([getLock(date, slot), isSlotBooked(date, slot)]);
 
     return NextResponse.json({
       isLocked: lock !== null,
-      isAvailable: capacity.available && lock === null,
-      dailyCount: capacity.count,
-      maxCapacity: 2,
+      isAvailable: !booked && lock === null,
     });
 
   } catch (error) {

@@ -19,6 +19,7 @@ import AboutIva from "@/app/components/AboutIva";
 import HeroScroll from "@/app/components/HeroScroll";
 import PhotoMarquee from "@/app/components/PhotoMarquee";
 import WhyPrivateStudio from "./components/WhyPrivateStudio";
+import BookingWidget, { BOOKING_ENABLED } from "./components/BookingWidget";
 import BookingInfo from "@/app/components/BookingInfo";
 import Reviews from "@/app/components/Reviews";
 import { BackToTop, ScrollProgressBar } from "@/app/components/ScrollUi";
@@ -489,6 +490,7 @@ export default function Home() {
         </div>
       </section>
 
+      {BOOKING_ENABLED && <BookingWidget lang={lang} instagramUrl={CONFIG.instagramDmUrl} />}
       <BookingInfo lang={lang} bookUrl={CONFIG.instagramDmUrl} phone={CONFIG.phone} hours={CONFIG.hours[lang]} deposit={CONFIG.deposit} />
       <Reviews lang={lang} />
 
