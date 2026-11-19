@@ -20,6 +20,7 @@ import AboutIva from "@/app/components/AboutIva";
 import HeroScroll from "@/app/components/HeroScroll";
 import PhotoMarquee from "@/app/components/PhotoMarquee";
 import WhyPrivateStudio from "./components/WhyPrivateStudio";
+import DesignTools from "./components/DesignTools";
 import BookingWidget, { BOOKING_ENABLED } from "./components/BookingWidget";
 import BookingInfo from "@/app/components/BookingInfo";
 import Reviews from "@/app/components/Reviews";
@@ -250,6 +251,14 @@ const translations = {
 
 export default function Home() {
   const [lang, setLang] = useState<"en" | "es">("en");
+
+  // Pages like the try-on link back with ?lang=es
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("lang") === "es") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reads the URL once on mount (not available during SSR)
+      setLang("es");
+    }
+  }, []);
   const [selectedCategory, setSelectedCategory] = useState("manicure");
   const t = translations[lang];
 
@@ -363,6 +372,7 @@ export default function Home() {
       {/* ================================================================== */}
       {/* ABOUT SECTION - MEET IVA */}
       {/* ================================================================== */}
+      <DesignTools lang={lang} />
       <WhyPrivateStudio lang={lang} />
       <AboutIva language={lang} />
 
@@ -649,12 +659,18 @@ className="w-16 h-auto rounded-lg"
             <p className="text-white/70 text-base font-medium">
               © {new Date().getFullYear()} IVA Nail Art. {lang === "en" ? "All rights reserved." : "Todos los derechos reservados."}
             </p>
-            <p className="mt-4 flex justify-center gap-6 text-sm text-white/70">
+            <p className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm text-white/70">
               <a href="/privacy" className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
                 {lang === "en" ? "Privacy Policy" : "Privacidad"}
               </a>
               <a href="/terms" className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
                 {lang === "en" ? "Terms & Conditions" : "Términos y Condiciones"}
+              </a>
+              <a href={lang === "en" ? "/aftercare" : "/es/aftercare"} className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
+                {lang === "en" ? "Aftercare" : "Cuidados"}
+              </a>
+              <a href={lang === "en" ? "/gift-card" : "/gift-card?lang=es"} className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
+                {lang === "en" ? "Gift card" : "Tarjeta de regalo"}
               </a>
             </p>
             <p className="text-white/50 text-sm mt-2">

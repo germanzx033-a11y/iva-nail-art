@@ -1,6 +1,7 @@
 import { Clock, MessageCircle, MessageSquareText, CalendarCheck, Sparkles, Phone } from "lucide-react";
 import { BUSINESS } from "@/lib/site";
 import CopyMessageButton from "./CopyMessageButton";
+import ReminderButton from "./ReminderButton";
 
 interface BookingInfoProps {
   lang: "en" | "es";
@@ -39,6 +40,10 @@ const COPY = {
     sms: "Text message",
     copy: "Copy message",
     copied: "Copied — paste it in your DM",
+    waitlistTitle: "No time that works for you?",
+    waitlist: "Join the waitlist",
+    waitlistText: "Hi Iva! I would like to join the waitlist. Days and times that work for me: … Service: …",
+    reminderTitle: "Already a client?",
     waText: "Hi Iva! I would like to book an appointment. Service: … Preferred date: … Do I have product to remove? …",
     cta: "Message Iva on Instagram",
   },
@@ -70,6 +75,10 @@ const COPY = {
     sms: "Mensaje de texto",
     copy: "Copiar mensaje",
     copied: "Copiado: pégalo en tu mensaje",
+    waitlistTitle: "¿No hay un horario que te funcione?",
+    waitlist: "Unirme a la lista de espera",
+    waitlistText: "¡Hola Iva! Quiero unirme a la lista de espera. Días y horas que me sirven: … Servicio: …",
+    reminderTitle: "¿Ya eres clienta?",
     waText: "¡Hola Iva! Me gustaría reservar una cita. Servicio: … Fecha preferida: … ¿Tengo producto para retirar? …",
     cta: "Escríbele a Iva por Instagram",
   },
@@ -171,6 +180,20 @@ export default function BookingInfo({ lang, bookUrl, phone, hours, deposit }: Bo
               </a>
               <CopyMessageButton text={c.waText} label={c.copy} copiedLabel={c.copied} />
             </div>
+
+            <p className="mt-6 text-sm text-[#F4EBE1]/70">{c.waitlistTitle}</p>
+            <a
+              href={`https://wa.me/${BUSINESS.whatsappNumber}?text=${encodeURIComponent(c.waitlistText)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-flex items-center gap-2 text-lg text-[#E8C9A8] underline-offset-4 hover:underline"
+            >
+              <MessageCircle className="h-4 w-4" aria-hidden />
+              {c.waitlist}
+            </a>
+
+            <p className="mt-6 text-sm text-[#F4EBE1]/70">{c.reminderTitle}</p>
+            <ReminderButton lang={lang} className="mt-2" />
           </aside>
         </div>
       </div>

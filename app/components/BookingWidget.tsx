@@ -209,7 +209,7 @@ export default function BookingWidget({ lang, instagramUrl }: { lang: "en" | "es
                 </select>
               </div>
 
-              <fieldset>
+              <fieldset className="min-w-0">
                 <legend className="mb-3 flex items-center gap-2 text-sm uppercase tracking-[0.2em] text-[#D4A574]">
                   <CalendarDays className="h-4 w-4" aria-hidden />
                   {c.date}
@@ -243,7 +243,7 @@ export default function BookingWidget({ lang, instagramUrl }: { lang: "en" | "es
               </fieldset>
 
               {selectedDay && (
-                <fieldset>
+                <fieldset className="min-w-0">
                   <legend className="mb-3 text-sm uppercase tracking-[0.2em] text-[#D4A574]">{c.time}</legend>
                   <div className="flex flex-wrap gap-3">
                     {selectedDay.slots.map((s) => (
