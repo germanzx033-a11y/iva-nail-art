@@ -23,6 +23,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     ...landingEntries,
+    ...['/try-on', '/nail-match', '/gift-card', '/aftercare', '/es/aftercare'].map((path) => ({
+      url: `${baseUrl}${path}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    })),
     {
       url: `${baseUrl}/privacy`,
       lastModified: new Date('2026-11-16'),

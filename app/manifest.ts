@@ -23,6 +23,8 @@ export default function manifest(): MetadataRoute.Manifest {
     shortcuts: [
       { name: "Services", short_name: "Services", url: "/#services" },
       { name: "Gallery", short_name: "Gallery", url: "/#gallery" },
+      { name: "Virtual try-on", short_name: "Try-on", url: "/try-on" },
+      { name: "Nail Match quiz", short_name: "Nail Match", url: "/nail-match" },
     ],
   };
 }
