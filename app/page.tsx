@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { SERVICE_LANDINGS, landingPath } from "./data/serviceLandings";
 import AboutIva from "@/app/components/AboutIva";
 import HeroScroll from "@/app/components/HeroScroll";
 import PhotoMarquee from "@/app/components/PhotoMarquee";
@@ -463,14 +464,18 @@ export default function Home() {
                       <p className="mt-2 text-sm text-[#F4EBE1]/70">
                         {lang === "en" ? "Personal quote by message" : "Cotización personalizada por mensaje"}
                       </p>
-                      {service.id === "m3" && (
-                        <Link
-                          href={lang === "en" ? "/builder-gel-bay-ridge" : "/es/builder-gel-bay-ridge"}
-                          className="mt-2 inline-block py-1 text-sm text-[#E8C9A8] underline underline-offset-4 hover:text-white"
-                        >
-                          {lang === "en" ? "What is builder gel? Learn more" : "¿Qué es el builder gel? Más información"}
-                        </Link>
-                      )}
+                      {(() => {
+                        const landing = SERVICE_LANDINGS.find((l) => l.homeCategory === service.category);
+                        if (!landing || (service.category === "manicure" && service.id !== "m3")) return null;
+                        return (
+                          <Link
+                            href={landingPath(landing.slug, lang)}
+                            className="mt-2 inline-block py-1 text-sm text-[#E8C9A8] underline underline-offset-4 hover:text-white"
+                          >
+                            {lang === "en" ? `More about ${landing.copy.en.h1Top.toLowerCase()}` : `Más sobre ${landing.copy.es.h1Top.toLowerCase()}`}
+                          </Link>
+                        );
+                      })()}
                     </div>
                     <a
                       href={CONFIG.instagramDmUrl}
