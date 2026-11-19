@@ -18,7 +18,7 @@ export const stripe = new Stripe(stripeSecretKey, {
 // =============================================
 
 export const STRIPE_CONFIG = {
-  deposit: 3000, // $30 in cents
+  deposit: 3500, // $35 in cents
   currency: 'usd',
   successUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://iva-nail-art.vercel.app'}/booking/success?session_id={CHECKOUT_SESSION_ID}`,
   cancelUrl: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://iva-nail-art.vercel.app'}/booking/cancel`,
@@ -32,6 +32,7 @@ export interface CreateCheckoutParams {
   clientLockToken: string;
   date: string;
   slot: string;
+  slotLabel: string;
   serviceName: string;
   servicePrice: number;
   customerEmail: string;
@@ -44,6 +45,7 @@ export interface CheckoutSessionMetadata {
   lockToken: string;
   date: string;
   slot: string;
+  slotLabel: string;
   serviceName: string;
   fullPrice: string;
   customerName: string;
@@ -59,6 +61,7 @@ export async function createCheckoutSession(params: CreateCheckoutParams): Promi
     clientLockToken,
     date,
     slot,
+    slotLabel,
     serviceName,
     servicePrice,
     customerEmail,
@@ -70,6 +73,7 @@ export async function createCheckoutSession(params: CreateCheckoutParams): Promi
     lockToken: clientLockToken,
     date,
     slot,
+    slotLabel,
     serviceName,
     fullPrice: servicePrice.toString(),
     customerName,
@@ -87,7 +91,7 @@ export async function createCheckoutSession(params: CreateCheckoutParams): Promi
           currency: STRIPE_CONFIG.currency,
           product_data: {
             name: `IVA Nail Art - ${serviceName}`,
-            description: `Booking deposit for ${date} (${slot}). Full service: $${servicePrice}`,
+            description: `Booking deposit for ${date} at ${slotLabel} (New York time). Applied to your service.`,
             images: ['https://iva-nail-art.vercel.app/og-image.jpg'],
           },
           unit_amount: STRIPE_CONFIG.deposit,

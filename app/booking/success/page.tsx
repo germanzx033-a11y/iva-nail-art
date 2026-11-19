@@ -1,286 +1,77 @@
-"use client";
-
-/**
- * IVA Nail Art - Booking Success Page
- * EDITORIAL LUXURY - Refined Elegance with Celebration Effect
- */
-
-import { Suspense, useEffect, useState } from "react";
-import { useMounted } from "@/app/hooks/useMounted";
-import { useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
-import {
-  CheckCircle,
-  Calendar,
-  Clock,
-  MapPin,
-  MessageCircle,
-  ArrowRight,
-  Sparkles,
-} from "lucide-react";
 import Link from "next/link";
+import { CheckCircle, CalendarDays, MessageCircle } from "lucide-react";
+import { getCheckoutSession } from "@/lib/stripe";
 
-interface BookingDetails {
-  serviceName: string;
-  date: string;
-  slot: string;
-  customerName: string;
-  amount: number;
-}
+export const dynamic = "force-dynamic";
 
-// Confetti particle component
-function ConfettiParticle({ delay, x }: { delay: number; x: number }) {
-  // Color y duración aleatorios, fijados una sola vez por partícula
-  const [{ color, duration }] = useState(() => {
-    const colors = ["#B76E79", "#722F37", "#FFD700", "#D4A5A5", "#8C6239"];
-    return {
-      color: colors[Math.floor(Math.random() * colors.length)],
-      duration: 3 + Math.random() * 2,
-    };
+const DM_URL = "https://ig.me/m/iva_nailart_nyc";
+
+function formatDay(date: string, locale: string) {
+  return new Date(`${date}T12:00:00Z`).toLocaleDateString(locale, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
   });
-
-  return (
-    <motion.div
-      className="absolute w-3 h-3 rounded-sm"
-      style={{
-        backgroundColor: color,
-        left: `${x}%`,
-        top: -20,
-      }}
-      initial={{ y: -20, rotate: 0, opacity: 1 }}
-      animate={{
-        y: "100vh",
-        rotate: 720,
-        opacity: [1, 1, 0],
-      }}
-      transition={{
-        duration,
-        delay: delay,
-        ease: "easeIn",
-      }}
-    />
-  );
 }
 
-// Celebration confetti
-function Confetti() {
-  const mounted = useMounted();
-  const [particles] = useState(() =>
-    Array.from({ length: 50 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      delay: Math.random() * 0.5,
-    }))
-  );
-
-  // Solo tras montar, para evitar desajuste de hidratación con valores aleatorios
-  if (!mounted) return null;
-
-  return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden z-50">
-      {particles.map((p) => (
-        <ConfettiParticle key={p.id} x={p.x} delay={p.delay} />
-      ))}
-    </div>
-  );
-}
-
-function SuccessContent() {
-  const searchParams = useSearchParams();
-  const sessionId = searchParams.get("session_id");
-  const [showConfetti, setShowConfetti] = useState(true);
-
-  // Initialize booking data directly
-  const booking: BookingDetails = {
-    serviceName: "Luxury Nail Service",
-    date: new Date().toLocaleDateString("en-US", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-    }),
-    slot: "Morning",
-    customerName: "Valued Client",
-    amount: 30,
-  };
-
-  // Hide confetti after animation
-  useEffect(() => {
-    const timer = setTimeout(() => setShowConfetti(false), 4000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Use sessionId for future API calls if needed
-  void sessionId;
+export default async function BookingSuccessPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ session_id?: string }>;
+}) {
+  const { session_id } = await searchParams;
+  const session =
+    typeof session_id === "string" && session_id.startsWith("cs_") && process.env.STRIPE_SECRET_KEY
+      ? await getCheckoutSession(session_id)
+      : null;
+  const paid = session?.payment_status === "paid";
+  const m = session?.metadata ?? {};
 
   return (
-    <main className="min-h-screen bg-[#F9F8F6] flex items-center justify-center p-8 relative overflow-hidden">
-      {/* Confetti celebration */}
-      {showConfetti && <Confetti />}
+    <main className="flex min-h-screen items-center justify-center bg-[#0E0706] px-6 py-16 text-[#F4EBE1]">
+      <div className="w-full max-w-lg text-center">
+        <CheckCircle className="mx-auto mb-6 h-14 w-14 text-[#E8C9A8]" aria-hidden />
+        <h1 className="font-serif text-4xl text-[#F4EBE1]">¡Tu cita está apartada!</h1>
+        <p className="mt-2 text-lg text-[#F4EBE1]/75">Your appointment is booked.</p>
 
-      {/* Background sparkles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(6)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute"
-            style={{
-              left: `${15 + i * 15}%`,
-              top: `${20 + (i % 3) * 25}%`,
-            }}
-            animate={{
-              y: [0, -10, 0],
-              opacity: [0.3, 0.6, 0.3],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 2 + i * 0.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            <Sparkles className="w-4 h-4 text-[#B76E79]/30" />
-          </motion.div>
-        ))}
-      </div>
+        {paid && m.date ? (
+          <div className="mt-8 rounded-[1.5rem] border border-[#D4A574]/30 bg-[#1A0F0D] p-6 text-left">
+            <p className="mb-3 flex items-center gap-2 text-sm uppercase tracking-[0.2em] text-[#D4A574]">
+              <CalendarDays className="h-4 w-4" aria-hidden />
+              {m.serviceName}
+            </p>
+            <p className="text-lg text-[#F4EBE1]">
+              {formatDay(m.date, "es-US")} · {m.slotLabel}
+            </p>
+            <p className="text-[#F4EBE1]/70">
+              {formatDay(m.date, "en-US")} · {m.slotLabel}
+            </p>
+            <p className="mt-4 text-sm text-[#F4EBE1]/70">
+              Depósito de $35 recibido · $35 deposit received
+            </p>
+          </div>
+        ) : (
+          <p className="mt-8 text-[#F4EBE1]/75">
+            Recibirás la confirmación de Stripe por correo. · You will receive Stripe&apos;s receipt by email.
+          </p>
+        )}
 
-      <motion.div
-        className="w-full max-w-md relative z-10"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        {/* Success Icon with pulse animation */}
-        <div className="text-center mb-10">
-          <motion.div
-            className="inline-flex w-20 h-20 bg-gradient-to-br from-[#B76E79]/20 to-[#722F37]/20 items-center justify-center rounded-full"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", delay: 0.2 }}
-          >
-            <motion.div
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              <CheckCircle className="w-10 h-10 text-[#722F37]" />
-            </motion.div>
-          </motion.div>
+        <div className="mt-8 space-y-2 text-[#F4EBE1]/80">
+          <p>Iva te escribirá para confirmar el diseño y enviarte la dirección del estudio.</p>
+          <p className="text-[#F4EBE1]/60">Iva will message you to confirm your design and share the studio address.</p>
         </div>
 
-        {/* Confirmation Card */}
-        <motion.div
-          className="bg-white p-10 border border-[#EBE8E2] text-center mb-8 shadow-lg"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <motion.h1
-            className="font-serif text-3xl text-[#1A1A1A] mb-3"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            Booking Confirmed
-          </motion.h1>
-          <p className="text-[#5F5F5F] text-[14px]">
-            Your appointment is secured ✨
-          </p>
-
-          {/* Booking Details */}
-          <div className="mt-10 space-y-5 text-left bg-[#F9F8F6] p-6 rounded-lg">
-            {[
-              { icon: Calendar, label: "Date", value: booking?.date },
-              { icon: Clock, label: "Time", value: booking?.slot },
-              { icon: MapPin, label: "Location", value: "Bay Ridge, Brooklyn" },
-            ].map((item, i) => (
-              <motion.div
-                key={item.label}
-                className="flex items-center gap-4"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 + i * 0.1 }}
-              >
-                <div className="w-10 h-10 bg-gradient-to-br from-[#B76E79]/10 to-[#722F37]/10 flex items-center justify-center rounded-lg">
-                  <item.icon className="w-4 h-4 text-[#722F37]" />
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-[#5F5F5F]">
-                    {item.label}
-                  </p>
-                  <p className="text-[#1A1A1A] font-serif">{item.value}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Deposit Paid - with celebration style */}
-          <motion.div
-            className="mt-6 p-4 bg-gradient-to-r from-[#B76E79]/10 to-[#722F37]/10 border border-[#B76E79]/20 rounded-lg"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.9 }}
-          >
-            <p className="text-[#722F37] text-[13px] font-medium flex items-center justify-center gap-2">
-              <Sparkles className="w-4 h-4" />
-              Deposit of ${booking?.amount} paid successfully
-              <Sparkles className="w-4 h-4" />
-            </p>
-          </motion.div>
-        </motion.div>
-
-        {/* Actions */}
-        <motion.div
-          className="space-y-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
-        >
-          <motion.a
-            href="https://ig.me/m/iva_nailart_nyc"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-3 w-full py-4 bg-[#4A0404] text-white text-[11px] font-medium uppercase tracking-[0.2em] hover:opacity-90 transition-all duration-300 rounded-lg shadow-lg"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <MessageCircle className="w-4 h-4" />
-            Message us on Instagram
-          </motion.a>
-
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Link
-              href="/"
-              className="flex items-center justify-center gap-3 w-full py-4 bg-white border border-[#EBE8E2] text-[#5F5F5F] text-[11px] font-medium uppercase tracking-[0.2em] hover:border-[#722F37] hover:text-[#722F37] transition-all duration-300 rounded-lg"
-            >
-              Return Home
-              <ArrowRight className="w-3 h-3" />
-            </Link>
-          </motion.div>
-        </motion.div>
-
-        {/* Footer Note */}
-        <motion.p
-          className="text-center text-[#6B6B6B] text-[11px] mt-10 tracking-wide"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-        >
-          A confirmation email has been sent. Please arrive 5 minutes early.
-        </motion.p>
-      </motion.div>
+        <div className="mt-10 flex flex-col items-center gap-4">
+          <a href={DM_URL} target="_blank" rel="noopener noreferrer" className="glow-pill">
+            <MessageCircle className="h-5 w-5" aria-hidden />
+            Enviar mi diseño a Iva · Send my design
+          </a>
+          <Link href="/" className="inline-block py-2 text-sm text-[#E8C9A8] underline underline-offset-4 hover:text-white">
+            Volver al inicio · Back to home
+          </Link>
+        </div>
+      </div>
     </main>
-  );
-}
-
-export default function BookingSuccessPage() {
-  return (
-    <Suspense
-      fallback={
-        <main className="min-h-screen bg-[#F9F8F6] flex items-center justify-center">
-          <div className="w-10 h-10 border border-[#EBE8E2] border-t-[#722F37] rounded-full animate-spin" />
-        </main>
-      }
-    >
-      <SuccessContent />
-    </Suspense>
   );
 }

@@ -7,9 +7,10 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { validateLockToken, getAppStatus, checkCapacity } from '@/lib/kv';
+import { validateLockToken, getAppStatus, isSlotBooked, releaseLock } from '@/lib/kv';
 import { createCheckoutSession, STRIPE_CONFIG } from '@/lib/stripe';
-import { isValidEmail, isValidPhone, isValidBookingDate, ERROR_MESSAGES } from '@/lib/utils';
+import { isValidEmail, isValidPhone, ERROR_MESSAGES } from '@/lib/utils';
+import { getSlot, isBookableDate } from '@/lib/schedule';
 import { SERVICES } from '@/app/constants/data';
 
 // =============================================
@@ -19,7 +20,8 @@ import { SERVICES } from '@/app/constants/data';
 interface CheckoutRequest {
   lockToken: string;
   date: string;
-  slot: 'morning' | 'afternoon';
+  /** Slot id from lib/schedule (e.g. "1730"). */
+  slot: string;
   /** Service id (e.g. "gel-mani") or its English/Spanish name from the catalog. */
   serviceName: string;
   /** Ignored: the price always comes from the server-side catalog. */
@@ -97,8 +99,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<CheckoutR
       typeof customerName !== 'string' ||
       typeof customerPhone !== 'string' ||
       customerName.length > MAX_NAME_LENGTH ||
-      !isValidBookingDate(date) ||
-      (slot !== 'morning' && slot !== 'afternoon')
+      !isBookableDate(date) ||
+      !getSlot(date, slot)
     ) {
       return NextResponse.json(
         { success: false, error: 'Invalid request', errorCode: 'INVALID_REQUEST' },
@@ -150,9 +152,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<CheckoutR
       );
     }
 
-    // 6. Double-check capacity
-    const capacity = await checkCapacity(date);
-    if (!capacity.available) {
+    // 6. Double-check the slot is still free
+    if (await isSlotBooked(date, slot)) {
       return NextResponse.json(
         {
           success: false,
@@ -163,16 +164,20 @@ export async function POST(request: NextRequest): Promise<NextResponse<CheckoutR
       );
     }
 
-    // 7. Create Stripe Checkout Session
+    // 7. Create Stripe Checkout Session (free the slot again if Stripe fails)
     const session = await createCheckoutSession({
       clientLockToken: lockToken,
       date,
       slot,
+      slotLabel: getSlot(date, slot)!.label,
       serviceName: service.name,
       servicePrice: service.price, // from the catalog, never from the client
       customerEmail,
       customerName,
       customerPhone,
+    }).catch(async (err) => {
+      await releaseLock(date, slot);
+      throw err;
     });
 
     // 8. Success response

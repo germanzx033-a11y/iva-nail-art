@@ -15,7 +15,8 @@ import {
   markProcessed,
   unmarkProcessed,
   isProcessed,
-  checkCapacity,
+  markSlotBooked,
+  unmarkSlotBooked,
   incrementDailyCount,
   decrementDailyCount,
   createBooking,
@@ -113,32 +114,23 @@ async function handleSuccessfulPayment(
   // From here on, any failure must release the marker (and undo the counter)
   // so Stripe's retry can process this paid session again.
   let incremented = false;
+  let claimed = false;
   try {
-    // 3. Check capacity before confirming
-    const capacity = await checkCapacity(date);
-
-    // 4. Get payment intent for potential refund
+    // 3. Payment intent (needed for a refund if the slot is gone)
     const paymentIntent = session.payment_intent as Stripe.PaymentIntent;
 
-    // 5. Handle overbooking if capacity exceeded
-    if (!capacity.available) {
+    // 4. Claim the slot atomically: one client per slot
+    claimed = await markSlotBooked(date, slot, sessionId);
+    if (!claimed) {
       await handleOverbooking(session, paymentIntent);
       return { success: true };
     }
 
-    // 6. Increment daily count (atomic)
-    const newCount = await incrementDailyCount(date);
+    // 5. Daily counter (used by the admin brief)
+    await incrementDailyCount(date);
     incremented = true;
 
-    // 7. Double-check: if count > 2 after increment, we have overbooking
-    if (newCount > 2) {
-      await decrementDailyCount(date);
-      incremented = false;
-      await handleOverbooking(session, paymentIntent);
-      return { success: true };
-    }
-
-    // 8. Create booking record
+    // 6. Create booking record
     await createBooking(date, sessionId, {
       email,
       name: customerName,
@@ -150,10 +142,10 @@ async function handleSuccessfulPayment(
       sessionId,
     });
 
-    // 9. Confirm booking
+    // 7. Confirm booking
     await confirmBooking(date, sessionId);
 
-    // 10. Release the pre-lock (optional, as it expires anyway)
+    // 8. Release the pre-lock (optional, as it expires anyway)
     await releaseLock(date, slot);
 
     console.log(`✅ Booking confirmed for session ${sessionId} on ${formatDate(date)} (${slot})`);
@@ -162,6 +154,9 @@ async function handleSuccessfulPayment(
   } catch (error) {
     if (incremented) {
       await decrementDailyCount(date).catch(() => undefined);
+    }
+    if (claimed) {
+      await unmarkSlotBooked(date, slot, sessionId);
     }
     await unmarkProcessed(sessionId);
     throw error;
