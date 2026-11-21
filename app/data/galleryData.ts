@@ -7,6 +7,7 @@ export interface GalleryImage {
   id: string;
   src: string;
   alt: string;
+  altEs?: string;
   category: GalleryCategory;
   styleTag?: string;
   featured?: boolean;

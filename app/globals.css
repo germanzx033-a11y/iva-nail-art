@@ -1994,3 +1994,45 @@ button {
     transform: translateX(100%) translateY(100%);
   }
 }
+
+
+/* Editorial hero + photo marquee */
+@keyframes marquee-left { from { transform: translateX(0); } to { transform: translateX(-33.333%); } }
+@keyframes marquee-half { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes hero-rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+.marquee-track { animation: marquee-half 45s linear infinite; }
+.marquee-track-reverse { animation: marquee-half 45s linear infinite reverse; }
+.marquee-group:hover > div { animation-play-state: paused; }
+.hero-rise { animation: hero-rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track, .marquee-track-reverse, .hero-rise { animation: none; }
+}
+
+/* Immersive scroll hero & glow pill */
+.font-display {
+  font-family: var(--font-syncopate), var(--font-inter), sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.glow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.5rem 0.5rem 1.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #0e0706;
+  background: linear-gradient(100deg, #f1d9bd 0%, #d4a574 55%, #c77b94 130%);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25) inset, 0 12px 40px -6px rgba(212, 165, 116, 0.65);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.glow-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4) inset, 0 18px 55px -6px rgba(212, 165, 116, 0.9);
+}
+@media (max-width: 480px) {
+  .glow-pill { font-size: 0.7rem; letter-spacing: 0.08em; padding-left: 1.25rem; gap: 0.5rem; }
+}
