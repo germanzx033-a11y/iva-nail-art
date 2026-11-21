@@ -1,0 +1,151 @@
+{
+  "name": "IVA Nail Art NY - Luxury Booking & Retention Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "iva-booking-pipeline",
+        "options": {
+          "responseMode": "onReceived",
+          "responseData": "{\"received\": true, \"status\": \"processing\"}"
+        }
+      },
+      "name": "Webhook: Booking Created",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [100, 300],
+      "id": "node-webhook-booking"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validate booking payload and format currency & times\nconst body = $input.item.json.body || $input.item.json;\nconst booking = body.data || body;\n\nif (!booking.clientName || !booking.clientPhone || !booking.appointmentDate) {\n  throw new Error('Malformed booking payload: missing required contact or date fields.');\n}\n\nreturn {\n  json: {\n    bookingId: booking.id || 'N/A',\n    clientName: booking.clientName,\n    clientEmail: booking.clientEmail,\n    clientPhone: booking.clientPhone,\n    instagramHandle: booking.instagramHandle || 'Not provided',\n    serviceName: booking.serviceName || 'The Signature Russian Dry Mani',\n    addons: (booking.addons || []).join(', ') || 'None',\n    appointmentDate: booking.appointmentDate,\n    startTime: booking.startTime,\n    totalPrice: booking.totalPrice || 110,\n    depositAmount: booking.depositAmount || 35,\n    depositStatus: booking.depositStatus || 'pending',\n    studioAddress: 'Bay Ridge, Brooklyn, NY 11209 (Private Atelier)',\n    studioPhone: '+1 (929) 625-7273'\n  }\n};"
+      },
+      "name": "Validate & Sanitize Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [320, 300],
+      "id": "node-code-sanitize"
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $env.STUDIO_OWNER_TELEGRAM_OR_PHONE }}",
+        "text": "=💅 *NEW APPOINTMENT RESERVED*\n\n• *Client:* {{ $json.clientName }} ({{ $json.instagramHandle }})\n• *Phone:* {{ $json.clientPhone }}\n• *Service:* {{ $json.serviceName }}\n• *Add-ons:* {{ $json.addons }}\n• *Date & Time:* {{ $json.appointmentDate }} @ {{ $json.startTime }}\n• *Est. Total:* ${{ $json.totalPrice }} (Deposit: ${{ $json.depositAmount }})\n\n[Approve Booking in Studio Dashboard](https://ivanailartny.com/admin-iva)"
+      },
+      "name": "Owner Instant Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [540, 200],
+      "id": "node-alert-owner"
+    },
+    {
+      "parameters": {
+        "amount": 24,
+        "unit": "hours"
+      },
+      "name": "Wait until 24h Before Service",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [540, 420],
+      "id": "node-wait-pre-service"
+    },
+    {
+      "parameters": {
+        "message": "=Hello {{ $json.clientName }} ✨ This is IVA Nail Art Atelier Brooklyn confirming your private appointment tomorrow at {{ $json.startTime }}.\n\n📍 Address: {{ $json.studioAddress }}\n🧴 Hygiene Protocol: Hospital-grade sterilisation & pregnancy-safe formulas.\n\nLooking forward to creating your bespoke nail art! Reply YES to confirm.",
+        "phoneNumber": "={{ $json.clientPhone }}"
+      },
+      "name": "Send 24h WhatsApp Reminder",
+      "type": "n8n-nodes-base.whatsapp",
+      "typeVersion": 1,
+      "position": [760, 420],
+      "id": "node-send-reminder"
+    },
+    {
+      "parameters": {
+        "amount": 48,
+        "unit": "hours"
+      },
+      "name": "Wait 24h Post Service",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [960, 420],
+      "id": "node-wait-post-service"
+    },
+    {
+      "parameters": {
+        "message": "=Dear {{ $json.clientName }}, thank you for visiting IVA Nail Art Atelier yesterday! We hope you love your new nails. ✨\n\nIf you enjoyed your exclusive session, we would be deeply honored if you could leave a short 5-star review on Google:\nhttps://g.page/r/ivanailartny/review\n\nTo preserve your natural nail plate health, your next maintenance appointment is recommended in 3 weeks. Book your slot anytime at ivanailartny.com.",
+        "phoneNumber": "={{ $json.clientPhone }}"
+      },
+      "name": "Send Google Review Request & Rebooking",
+      "type": "n8n-nodes-base.whatsapp",
+      "typeVersion": 1,
+      "position": [1180, 420],
+      "id": "node-post-review"
+    }
+  ],
+  "connections": {
+    "Webhook: Booking Created": {
+      "main": [
+        [
+          {
+            "node": "Validate & Sanitize Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate & Sanitize Data": {
+      "main": [
+        [
+          {
+            "node": "Owner Instant Alert",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait until 24h Before Service",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait until 24h Before Service": {
+      "main": [
+        [
+          {
+            "node": "Send 24h WhatsApp Reminder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send 24h WhatsApp Reminder": {
+      "main": [
+        [
+          {
+            "node": "Wait 24h Post Service",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 24h Post Service": {
+      "main": [
+        [
+          {
+            "node": "Send Google Review Request & Rebooking",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

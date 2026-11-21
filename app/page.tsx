@@ -22,6 +22,10 @@ import {
 import { formatDate, getMinBookingDate, isValidEmail, isValidPhone } from "@/lib/utils";
 import AboutIva from "@/app/components/AboutIva";
 import GallerySection from "@/app/components/GallerySection";
+import LookbookFilterable from "@/app/components/LookbookFilterable";
+import ServiceSelectorLuxury from "@/app/components/ServiceSelectorLuxury";
+import MobileBookingBar from "@/app/components/MobileBookingBar";
+import NailConcierge from "@/app/components/NailConcierge";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
 
 // Componente de contador animado PREMIUM
@@ -991,16 +995,6 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
             <span className="typing-effect inline-block">{t.hero.tagline}</span>
           </p>
 
-          {/* Logo IVA - Transparente */}
-          <div className="relative mx-auto mb-10 flex justify-center">
-            <img
-              src="/logo-iva.png"
-              alt="IVA Nail Art logo"
-              className="w-56 sm:w-72 h-auto drop-shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
-              loading="eager"
-              decoding="async"
-            />
-          </div>
 
           <a
             href={`https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(
@@ -1083,16 +1077,6 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       {/* STATISTICS SECTION PREMIUM */}
       {/* ================================================================== */}
       <section className="relative overflow-hidden py-16 md:py-20 px-6 bg-gradient-to-br from-[#FDF8F5] via-white to-[#FAF5F2]">
-        {/* Marca de agua IVA */}
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-10">
-          <img
-            src="/logo-iva.png"
-            alt="IVA watermark"
-            className="w-[360px] sm:w-[440px] max-w-[80vw] drop-shadow-[0_20px_40px_rgba(0,0,0,0.15)]"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
@@ -1420,7 +1404,22 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
       </section>
 
       {/* ================================================================== */}
-      {/* GALLERY SECTION - GALERÍA VISUAL IMPRESIONANTE */}
+      {/* EDITORIAL LOOKBOOK - FILTRABLE POR ESTILO */}
+      {/* ================================================================== */}
+      <LookbookFilterable lang={lang} />
+
+      {/* ================================================================== */}
+      {/* AI NAIL CONCIERGE - CONSULTA DE ESTILO */}
+      {/* ================================================================== */}
+      <NailConcierge lang={lang} />
+
+      {/* ================================================================== */}
+      {/* LUXURY SERVICE SELECTOR & REAL-TIME PRICING CALCULATOR */}
+      {/* ================================================================== */}
+      <ServiceSelectorLuxury lang={lang} />
+
+      {/* ================================================================== */}
+      {/* GALLERY SECTION - GALERÍA VISUAL */}
       {/* ================================================================== */}
       <GallerySection lang={lang} t={t} CONFIG={CONFIG} />
 
@@ -1460,16 +1459,6 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
         {/* Decorative gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#D4AF37]/5 via-transparent to-transparent"></div>
 
-        {/* Marca de agua del logo en footer */}
-        <div className="pointer-events-none absolute -right-16 -bottom-10 w-80 sm:w-96 opacity-10 rotate-6">
-          <img
-            src="/logo-iva.png"
-            alt="IVA watermark footer"
-            className="w-full h-auto drop-shadow-[0_25px_45px_rgba(0,0,0,0.25)]"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="grid md:grid-cols-4 gap-10 mb-12">
@@ -1926,6 +1915,10 @@ Entiendo que se requiere depósito de $${CONFIG.deposit}.
           width: `${scrollProgress}%`,
         }}
       />
+      {/* ================================================================== */}
+      {/* MOBILE STICKY BOOKING ACTION BAR (iPhone / Instagram Bio View) */}
+      {/* ================================================================== */}
+      <MobileBookingBar lang={lang} />
     </main>
   );
 }

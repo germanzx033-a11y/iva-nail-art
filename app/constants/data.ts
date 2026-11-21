@@ -20,13 +20,14 @@ export type Language = "en" | "es";
 // BUSINESS CONFIGURATION
 // =============================================
 export const CONFIG = {
-  businessName: "IVA Nail Art",
+  businessName: "IVA Nail Art NY",
+  domain: "ivanailartny.com",
   phone: "+1 (929) 625-7273",
   whatsappNumber: "19296257273",
-  instagram: "iva_nailart_ny",
-  instagramUrl: "https://www.instagram.com/iva_nailart_ny",
-  tiktok: "iva_nailart_ny",
-  tiktokUrl: "https://www.tiktok.com/@iva_nailart_ny",
+  instagram: "aureate_sole",
+  instagramUrl: "https://www.instagram.com/aureate_sole",
+  tiktok: "aureate_sole",
+  tiktokUrl: "https://www.tiktok.com/@aureate_sole",
   location: "Brooklyn, NY 11209",
   hours: "8:00 AM – 8:00 PM",
   deposit: 35,

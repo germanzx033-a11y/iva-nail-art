@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import PWAProvider from "./components/PWAProvider";
+import LocalSeoSchema from "./components/LocalSeoSchema";
 
 /**
  * IVA Nail Art - LUXURY EDITORIAL
@@ -187,6 +188,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <LocalSeoSchema />
       </head>
       <body className={`${inter.variable} ${playfair.variable} antialiased bg-white text-[#111111]`}>
         <PWAProvider>
