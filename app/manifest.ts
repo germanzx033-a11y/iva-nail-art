@@ -1,71 +1,30 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'IVA Nail Art - Luxury Nails Brooklyn',
-    short_name: 'IVA Nails',
-    description: 'Premier luxury nail art studio in Bay Ridge, Brooklyn. Hospital-grade sterilization, premium 10-Free polishes, award-winning artistry. Book your exclusive appointment today!',
-    start_url: '/',
-    display: 'standalone',
-    background_color: '#FDF8F6',
-    theme_color: '#4A0404',
-    orientation: 'portrait',
-    scope: '/',
-    lang: 'en',
-    dir: 'ltr',
-    categories: ['beauty', 'lifestyle'],
+    name: "IVA Nail Art — Bay Ridge, Brooklyn",
+    short_name: "IVA Nails",
+    description: "Private nail art studio in Bay Ridge, Brooklyn. Hand-painted designs by appointment.",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#0E0706",
+    theme_color: "#0E0706",
+    orientation: "portrait",
+    scope: "/",
+    lang: "en",
+    dir: "ltr",
+    categories: ["beauty", "lifestyle"],
     icons: [
-      {
-        src: '/icon-192.png',
-        sizes: '192x192',
-        type: 'image/png',
-        purpose: 'any',
-      },
-      {
-        src: '/icon-512.png',
-        sizes: '512x512',
-        type: 'image/png',
-        purpose: 'any',
-      },
-      {
-        src: '/icon-maskable-192.png',
-        sizes: '192x192',
-        type: 'image/png',
-        purpose: 'maskable',
-      },
-      {
-        src: '/icon-maskable-512.png',
-        sizes: '512x512',
-        type: 'image/png',
-        purpose: 'maskable',
-      },
-      {
-        src: '/portada.jpg',
-        sizes: '512x512',
-        type: 'image/jpeg',
-        purpose: 'any',
-      },
-    ],
-    screenshots: [
-      {
-        src: '/portada.jpg',
-        sizes: '1280x720',
-        type: 'image/jpeg',
-      },
+      { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/icon-maskable-192.png", sizes: "192x192", type: "image/png", purpose: "maskable" },
+      { src: "/icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
     shortcuts: [
-      {
-        name: 'Book Appointment',
-        short_name: 'Book',
-        description: 'Schedule your luxury nail session',
-        url: '/#booking',
-      },
-      {
-        name: 'Virtual Studio',
-        short_name: 'Try Colors',
-        description: 'Try nail colors virtually',
-        url: '/#virtual-studio',
-      },
+      { name: "Services", short_name: "Services", url: "/#services" },
+      { name: "Gallery", short_name: "Gallery", url: "/#gallery" },
+      { name: "Virtual try-on", short_name: "Try-on", url: "/try-on" },
+      { name: "Nail Match quiz", short_name: "Nail Match", url: "/nail-match" },
     ],
-  }
+  };
 }

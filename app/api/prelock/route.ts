@@ -3,23 +3,31 @@
  * Golden Gate Protocol - Phase A
  *
  * Blocks a slot for 5 minutes using SET NX
- * RATE LIMITING DESACTIVADO: Permite múltiples dispositivos en la misma red
+ * Rate limit per IP is deliberately generous so several devices on the same
+ * network (PC + phone) keep working, but it stops a client from re-locking
+ * every slot in a loop.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { RateLimiterMemory } from 'rate-limiter-flexible';
 import {
   createPreLock,
   getAppStatus,
-  checkCapacity,
   getLock,
+  isSlotBooked,
 } from '@/lib/kv';
 import {
   generateLockToken,
   generateClientId,
   getClientIP,
-  isValidBookingDate,
+  isValidDateFormat,
   ERROR_MESSAGES,
 } from '@/lib/utils';
+import { getSlot, isBookableDate } from '@/lib/schedule';
+
+// Best-effort per-IP limit on lock attempts (in-memory: per serverless instance).
+// 10 attempts / 5 min is far above normal use and well below hoarding behaviour.
+const lockLimiter = new RateLimiterMemory({ points: 10, duration: 300 });
 
 // =============================================
 // REQUEST TYPES
@@ -27,7 +35,8 @@ import {
 
 interface PreLockRequest {
   date: string;
-  slot: 'morning' | 'afternoon';
+  /** Slot id from lib/schedule (e.g. "1730"). */
+  slot: string;
 }
 
 interface PreLockResponse {
@@ -58,17 +67,23 @@ export async function POST(request: NextRequest): Promise<NextResponse<PreLockRe
       );
     }
 
-    // 2. Get client IP (solo para logging, NO para rate limiting)
-    // RATE LIMITING DESACTIVADO: No bloqueamos por IP para evitar problemas
-    // cuando múltiples dispositivos comparten la misma red (PC + iPhone)
+    // 2. Rate limit per IP (generous, see lockLimiter)
     const clientIP = getClientIP(request);
-    console.log(`[PreLock] Request from IP: ${clientIP.substring(0, 15)}...`);
-
-    // RATE LIMITING DESACTIVADO - Ya no bloqueamos por IP
-    // Esto permite que múltiples dispositivos en la misma red funcionen correctamente
+    try {
+      await lockLimiter.consume(clientIP);
+    } catch {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Too many attempts. Please wait a few minutes and try again.',
+          errorCode: 'RATE_LIMITED',
+        },
+        { status: 429 }
+      );
+    }
 
     // 4. Parse request body
-    const body: PreLockRequest = await request.json();
+    const body: PreLockRequest = await request.json().catch(() => ({} as PreLockRequest));
     const { date, slot } = body;
 
     // 5. Validate date
@@ -83,7 +98,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<PreLockRe
       );
     }
 
-    if (!isValidBookingDate(date)) {
+    if (!isBookableDate(date)) {
       return NextResponse.json(
         {
           success: false,
@@ -94,7 +109,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<PreLockRe
       );
     }
 
-    if (slot !== 'morning' && slot !== 'afternoon') {
+    if (!getSlot(date, slot)) {
       return NextResponse.json(
         {
           success: false,
@@ -105,9 +120,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<PreLockRe
       );
     }
 
-    // 6. Check capacity (Max 2 bookings per day)
-    const capacity = await checkCapacity(date);
-    if (!capacity.available) {
+    // 6. One client per slot
+    if (await isSlotBooked(date, slot)) {
       return NextResponse.json(
         {
           success: false,
@@ -188,15 +202,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         { status: 400 }
       );
     }
+    if (!isValidDateFormat(date) || !getSlot(date, slot)) {
+      return NextResponse.json(
+        { error: 'Invalid date or slot' },
+        { status: 400 }
+      );
+    }
 
-    const lock = await getLock(date, slot as 'morning' | 'afternoon');
-    const capacity = await checkCapacity(date);
+    const [lock, booked] = await Promise.all([getLock(date, slot), isSlotBooked(date, slot)]);
 
     return NextResponse.json({
       isLocked: lock !== null,
-      isAvailable: capacity.available && lock === null,
-      dailyCount: capacity.count,
-      maxCapacity: 2,
+      isAvailable: !booked && lock === null,
     });
 
   } catch (error) {

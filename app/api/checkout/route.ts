@@ -7,9 +7,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { validateLockToken, getAppStatus, checkCapacity } from '@/lib/kv';
+import { validateLockToken, getAppStatus, isSlotBooked, releaseLock } from '@/lib/kv';
 import { createCheckoutSession, STRIPE_CONFIG } from '@/lib/stripe';
 import { isValidEmail, isValidPhone, ERROR_MESSAGES } from '@/lib/utils';
+import { getSlot, isBookableDate } from '@/lib/schedule';
+import { SERVICES } from '@/app/constants/data';
 
 // =============================================
 // REQUEST TYPES
@@ -18,9 +20,12 @@ import { isValidEmail, isValidPhone, ERROR_MESSAGES } from '@/lib/utils';
 interface CheckoutRequest {
   lockToken: string;
   date: string;
-  slot: 'morning' | 'afternoon';
+  /** Slot id from lib/schedule (e.g. "1730"). */
+  slot: string;
+  /** Service id (e.g. "gel-mani") or its English/Spanish name from the catalog. */
   serviceName: string;
-  servicePrice: number;
+  /** Ignored: the price always comes from the server-side catalog. */
+  servicePrice?: number;
   customerEmail: string;
   customerName: string;
   customerPhone: string;
@@ -32,6 +37,16 @@ interface CheckoutResponse {
   sessionId?: string;
   error?: string;
   errorCode?: string;
+}
+
+const MAX_NAME_LENGTH = 100;
+
+function findService(idOrName: unknown) {
+  if (typeof idOrName !== 'string') return undefined;
+  const wanted = idOrName.trim().toLowerCase();
+  return SERVICES.find(
+    (s) => s.id === wanted || s.name.toLowerCase() === wanted || s.nameEs.toLowerCase() === wanted
+  );
 }
 
 // =============================================
@@ -60,20 +75,43 @@ export async function POST(request: NextRequest): Promise<NextResponse<CheckoutR
       date,
       slot,
       serviceName,
-      servicePrice,
       customerEmail,
       customerName,
       customerPhone,
     } = body;
 
     // 3. Validate required fields
-    if (!lockToken || !date || !slot || !serviceName || !servicePrice || !customerEmail || !customerName || !customerPhone) {
+    if (!lockToken || !date || !slot || !serviceName || !customerEmail || !customerName || !customerPhone) {
       return NextResponse.json(
         {
           success: false,
           error: 'All fields are required',
           errorCode: 'INVALID_REQUEST',
         },
+        { status: 400 }
+      );
+    }
+
+    // 3b. Validate types, date, slot, service and text lengths (all client input is untrusted)
+    if (
+      typeof lockToken !== 'string' ||
+      typeof customerEmail !== 'string' ||
+      typeof customerName !== 'string' ||
+      typeof customerPhone !== 'string' ||
+      customerName.length > MAX_NAME_LENGTH ||
+      !isBookableDate(date) ||
+      !getSlot(date, slot)
+    ) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid request', errorCode: 'INVALID_REQUEST' },
+        { status: 400 }
+      );
+    }
+
+    const service = findService(serviceName);
+    if (!service) {
+      return NextResponse.json(
+        { success: false, error: 'Unknown service', errorCode: 'INVALID_SERVICE' },
         { status: 400 }
       );
     }
@@ -114,9 +152,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<CheckoutR
       );
     }
 
-    // 6. Double-check capacity
-    const capacity = await checkCapacity(date);
-    if (!capacity.available) {
+    // 6. Double-check the slot is still free
+    if (await isSlotBooked(date, slot)) {
       return NextResponse.json(
         {
           success: false,
@@ -127,16 +164,20 @@ export async function POST(request: NextRequest): Promise<NextResponse<CheckoutR
       );
     }
 
-    // 7. Create Stripe Checkout Session
+    // 7. Create Stripe Checkout Session (free the slot again if Stripe fails)
     const session = await createCheckoutSession({
       clientLockToken: lockToken,
       date,
       slot,
-      serviceName,
-      servicePrice,
+      slotLabel: getSlot(date, slot)!.label,
+      serviceName: service.name,
+      servicePrice: service.price, // from the catalog, never from the client
       customerEmail,
       customerName,
       customerPhone,
+    }).catch(async (err) => {
+      await releaseLock(date, slot);
+      throw err;
     });
 
     // 8. Success response

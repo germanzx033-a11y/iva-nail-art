@@ -1,59 +1,40 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Instagram, X, ChevronLeft, ChevronRight, Sparkles, ZoomIn, Heart, Star } from "lucide-react";
 import { GALLERY_IMAGES, type GalleryImage } from "@/app/data/galleryData";
+import { useMounted } from "@/app/hooks/useMounted";
 
 interface GallerySectionProps {
   lang: "en" | "es";
-  t: any;
-  CONFIG: any;
+  t: {
+    gallery: { subtitle: string; title: string; description: string };
+  };
+  CONFIG: {
+    instagram: string;
+    instagramUrl: string;
+    tiktok: string;
+    tiktokUrl: string;
+  };
 }
 
 export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps) {
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const [visibleImages, setVisibleImages] = useState<number>(12);
-  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
   const [hoveredImageId, setHoveredImageId] = useState<string | null>(null);
+  const titleOf = (img: GalleryImage) => (lang === "es" && img.altEs ? img.altEs : img.alt);
   const galleryRef = useRef<HTMLDivElement>(null);
   const imageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-  const particlesRef = useRef<Array<{ id: number; x: number; y: number; delay: number }>>([]);
-
-  // Efecto de partículas doradas
-  useEffect(() => {
-    const generateParticles = () => {
-      const particles: Array<{ id: number; x: number; y: number; delay: number }> = [];
-      for (let i = 0; i < 20; i++) {
-        particles.push({
-          id: i,
-          x: Math.random() * 100,
-          y: Math.random() * 100,
-          delay: Math.random() * 5,
-        });
-      }
-      particlesRef.current = particles;
-    };
-    generateParticles();
-  }, []);
-
-  // Seguir el mouse para efectos de spotlight
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (galleryRef.current) {
-        const rect = galleryRef.current.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-        setMousePosition({ x, y });
-      }
-    };
-
-    const gallery = galleryRef.current;
-    if (gallery) {
-      gallery.addEventListener("mousemove", handleMouseMove);
-      return () => gallery.removeEventListener("mousemove", handleMouseMove);
-    }
-  }, []);
+  const mounted = useMounted();
+  const [sparkles] = useState(() =>
+    Array.from({ length: 15 }, () => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      delay: Math.random() * 3,
+      duration: 2 + Math.random() * 2,
+    }))
+  );
 
   // Intersection Observer para lazy loading
   useEffect(() => {
@@ -71,16 +52,26 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
       { rootMargin: "100px" }
     );
 
-    imageRefs.current.forEach((ref) => {
+    const imageEls = Array.from(imageRefs.current.values());
+    imageEls.forEach((ref) => {
       if (ref) observer.observe(ref);
     });
 
     return () => {
-      imageRefs.current.forEach((ref) => {
+      imageEls.forEach((ref) => {
         if (ref) observer.unobserve(ref);
       });
     };
   }, [visibleImages]);
+
+  const navigateImage = useCallback((direction: number) => {
+    setSelectedImage((current) => {
+      if (!current) return current;
+      const currentIndex = GALLERY_IMAGES.findIndex((img) => img.id === current.id);
+      const newIndex = (currentIndex + direction + GALLERY_IMAGES.length) % GALLERY_IMAGES.length;
+      return GALLERY_IMAGES[newIndex];
+    });
+  }, []);
 
   // Navegación con teclado en el modal
   useEffect(() => {
@@ -98,14 +89,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedImage]);
-
-  const navigateImage = (direction: number) => {
-    if (!selectedImage) return;
-    const currentIndex = GALLERY_IMAGES.findIndex((img) => img.id === selectedImage.id);
-    const newIndex = (currentIndex + direction + GALLERY_IMAGES.length) % GALLERY_IMAGES.length;
-    setSelectedImage(GALLERY_IMAGES[newIndex]);
-  };
+  }, [selectedImage, navigateImage]);
 
   const loadMoreImages = () => {
     setVisibleImages((prev) => Math.min(prev + 12, GALLERY_IMAGES.length));
@@ -113,31 +97,26 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
 
   const handleImageClick = (image: GalleryImage) => {
     setSelectedImage(image);
-    document.body.style.overflow = "hidden";
   };
 
   const closeModal = () => {
     setSelectedImage(null);
-    document.body.style.overflow = "";
   };
+
+  // Bloquear el scroll del body mientras el modal está abierto
+  useEffect(() => {
+    if (!selectedImage) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedImage]);
 
   return (
     <>
       <section
         id="gallery"
-        className="py-24 px-4 md:px-6 relative overflow-hidden"
-        style={{
-          background: `
-            linear-gradient(135deg, #FDF8F5 0%, #FAF5F2 25%, #F7F0EB 50%, #F5EDE6 75%, #FDF8F5 100%),
-            repeating-linear-gradient(
-              45deg,
-              transparent,
-              transparent 10px,
-              rgba(212, 165, 116, 0.02) 10px,
-              rgba(212, 165, 116, 0.02) 20px
-            )
-          `,
-        }}
+        className="py-24 px-4 md:px-6 relative overflow-hidden bg-[#0E0706]"
       >
         {/* Efectos decorativos de fondo */}
         <div className="absolute inset-0 opacity-20 pointer-events-none">
@@ -146,44 +125,19 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          {/* Spotlight dinámico que sigue el mouse */}
-          <div
-            className="absolute inset-0 pointer-events-none opacity-30"
-            style={{
-              background: `radial-gradient(circle 600px at ${mousePosition.x}% ${mousePosition.y}%, rgba(212, 175, 55, 0.15) 0%, transparent 70%)`,
-              transition: "background 0.3s ease-out",
-            }}
-          />
-
-          {/* Partículas doradas flotantes */}
-          {particlesRef.current.map((particle) => (
-            <div
-              key={particle.id}
-              className="absolute pointer-events-none animate-float-particle"
-              style={{
-                left: `${particle.x}%`,
-                top: `${particle.y}%`,
-                animationDelay: `${particle.delay}s`,
-                animationDuration: `${8 + Math.random() * 4}s`,
-              }}
-            >
-              <div className="w-2 h-2 bg-[#D4AF37] rounded-full blur-sm opacity-40 animate-sparkle"></div>
-            </div>
-          ))}
-
           {/* Header con efecto de brillo */}
           <div className="text-center mb-16 relative">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#D4AF37]/10 to-transparent blur-3xl animate-shimmer"></div>
-            <p className="text-[#D4AF37] tracking-[0.3em] text-xs md:text-sm mb-4 font-light uppercase relative z-10 animate-gradient-text">
+            <p className="font-display text-[#D4A574] tracking-[0.35em] text-[0.65rem] md:text-xs mb-4 relative z-10">
               {t.gallery.subtitle}
             </p>
-            <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl text-[#4A0404] mb-6 font-light relative z-10">
+            <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl text-[#F4EBE1] italic mb-6 font-light relative z-10">
               <span className="relative inline-block">
                 {t.gallery.title}
                 <span className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-[#D4AF37] via-[#E8C9A8] to-[#D4AF37] rounded-full opacity-50"></span>
               </span>
             </h2>
-            <p className="text-[#4A0404]/70 text-lg max-w-2xl mx-auto leading-relaxed relative z-10">
+            <p className="text-[#F4EBE1]/75 text-lg max-w-2xl mx-auto leading-relaxed relative z-10">
               {t.gallery.description}
             </p>
             <div className="mt-8 flex items-center justify-center gap-3 relative z-10">
@@ -191,7 +145,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
                 <Sparkles className="w-5 h-5 text-[#D4AF37] animate-sparkle" />
                 <div className="absolute inset-0 bg-[#D4AF37] blur-lg opacity-30 animate-pulse"></div>
               </div>
-              <span className="text-[#4A0404]/60 text-sm font-medium">
+              <span className="text-[#F4EBE1]/70 text-sm font-medium">
                 {GALLERY_IMAGES.length} {lang === "en" ? "Masterpieces" : "Obras Maestras"}
               </span>
               <div className="flex gap-1">
@@ -239,7 +193,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
                   }}
                   role="button"
                   tabIndex={0}
-                  aria-label={image.alt}
+                  aria-label={titleOf(image)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
                       e.preventDefault();
@@ -250,9 +204,10 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
                   {/* Imagen con efecto parallax */}
                   <div className="relative w-full h-full overflow-hidden">
                     {isLoaded ? (
+                      // eslint-disable-next-line @next/next/no-img-element -- 60+ gallery photos with an onError fallback; kept as <img> to avoid pushing the whole gallery through the image optimizer
                       <img
                         src={image.src}
-                        alt={image.alt}
+                        alt={titleOf(image)}
                         className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-125 group-hover:rotate-2"
                         loading="lazy"
                         decoding="async"
@@ -356,9 +311,9 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
               href={CONFIG.instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 text-[#4A0404] hover:text-[#D4AF37] transition-all duration-300 group"
+              className="flex items-center gap-3 text-[#F4EBE1] hover:text-[#E8C9A8] transition-all duration-300 group"
             >
-              <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center group-hover:bg-[#D4AF37]/10 transition-all duration-300">
+              <div className="w-10 h-10 rounded-full bg-[#F4EBE1]/10 flex items-center justify-center group-hover:bg-[#D4AF37]/20 transition-all duration-300">
                 <Instagram className="w-5 h-5" />
               </div>
               <span className="text-sm font-medium">@{CONFIG.instagram}</span>
@@ -367,9 +322,9 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
               href={CONFIG.tiktokUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 text-[#4A0404] hover:text-[#D4AF37] transition-all duration-300 group"
+              className="flex items-center gap-3 text-[#F4EBE1] hover:text-[#E8C9A8] transition-all duration-300 group"
             >
-              <div className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center group-hover:bg-[#D4AF37]/10 transition-all duration-300">
+              <div className="w-10 h-10 rounded-full bg-[#F4EBE1]/10 flex items-center justify-center group-hover:bg-[#D4AF37]/20 transition-all duration-300">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z" />
                 </svg>
@@ -391,15 +346,15 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
         >
           {/* Efectos de fondo animados */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {[...Array(15)].map((_, i) => (
+            {mounted && sparkles.map((sp, i) => (
               <div
                 key={i}
                 className="absolute w-1 h-1 bg-[#D4AF37] rounded-full animate-sparkle"
                 style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                  animationDelay: `${Math.random() * 3}s`,
-                  animationDuration: `${2 + Math.random() * 2}s`,
+                  left: `${sp.left}%`,
+                  top: `${sp.top}%`,
+                  animationDelay: `${sp.delay}s`,
+                  animationDuration: `${sp.duration}s`,
                   opacity: 0.3,
                 }}
               />
@@ -447,9 +402,10 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
             <div className="absolute inset-0 border-4 border-[#D4AF37]/30 rounded-2xl animate-pulse-glow pointer-events-none"></div>
             
             <div className="relative group">
+              {/* eslint-disable-next-line @next/next/no-img-element -- same gallery source as above; full-size modal view */}
               <img
                 src={selectedImage.src}
-                alt={selectedImage.alt}
+                alt={titleOf(selectedImage)}
                 className="max-w-full max-h-full object-contain rounded-lg shadow-2xl transform transition-transform duration-500 hover:scale-105"
                 id="modal-image"
               />
@@ -460,7 +416,7 @@ export default function GallerySection({ lang, t, CONFIG }: GallerySectionProps)
 
             {/* Información de la imagen */}
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-6 md:p-8">
-              <p className="text-white text-lg md:text-xl font-semibold mb-2">{selectedImage.alt}</p>
+              <p className="text-white text-lg md:text-xl font-semibold mb-2">{titleOf(selectedImage)}</p>
               <p className="text-white/70 text-sm md:text-base">
                 {GALLERY_IMAGES.findIndex((img) => img.id === selectedImage.id) + 1} / {GALLERY_IMAGES.length}
               </p>

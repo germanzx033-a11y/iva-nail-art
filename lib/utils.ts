@@ -48,7 +48,15 @@ export function getTodayDate(): string {
   return new Date().toISOString().split('T')[0];
 }
 
+/** Strict YYYY-MM-DD check (also rejects impossible dates like 2026-02-31). */
+export function isValidDateFormat(dateStr: unknown): dateStr is string {
+  if (typeof dateStr !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+  const parsed = new Date(dateStr + 'T00:00:00Z');
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().startsWith(dateStr);
+}
+
 export function isValidBookingDate(dateStr: string): boolean {
+  if (!isValidDateFormat(dateStr)) return false;
   const date = new Date(dateStr + 'T00:00:00');
   const minDate = new Date(getMinBookingDate() + 'T00:00:00');
   return date >= minDate;
@@ -95,20 +103,6 @@ export function getClientIP(request: Request): string {
 
   // Fallback para desarrollo local
   return '127.0.0.1';
-}
-
-// =============================================
-// WHATSAPP INTEGRATION
-// =============================================
-
-export const WHATSAPP_CONFIG = {
-  number: '13474735036', // IVA's WhatsApp number
-  businessName: 'IVA Nail Art',
-};
-
-export function generateWhatsAppURL(phone: string, message: string): string {
-  const cleanPhone = phone.replace(/\D/g, '');
-  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
 }
 
 export function generateVIPConciergeMessage(name: string, date: string, slot: string): string {

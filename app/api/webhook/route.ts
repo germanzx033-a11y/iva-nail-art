@@ -13,8 +13,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import {
   markProcessed,
+  unmarkProcessed,
   isProcessed,
-  checkCapacity,
+  markSlotBooked,
+  unmarkSlotBooked,
   incrementDailyCount,
   decrementDailyCount,
   createBooking,
@@ -23,7 +25,7 @@ import {
   createVIPToken,
   addToWaitlist,
 } from '@/lib/kv';
-import { stripe, verifyWebhookSignature, createRefund } from '@/lib/stripe';
+import { stripe, verifyWebhookSignature, createRefund, STRIPE_CONFIG } from '@/lib/stripe';
 import { generateVIPToken, formatDate } from '@/lib/utils';
 
 // =============================================
@@ -47,12 +49,18 @@ async function handleOverbooking(
 
   console.log(`🚨 Overbooking detected for session ${session.id}`);
 
-  // 1. Auto-refund
+  // 1. Auto-refund. If this fails we let the error propagate: the webhook
+  // returns 500 so Stripe retries, instead of silently keeping the customer's money.
   try {
     await createRefund(paymentIntent.id, 'Overbooking - automatic refund');
     console.log(`💸 Refund initiated for payment ${paymentIntent.id}`);
   } catch (error) {
-    console.error('Refund failed:', error);
+    // A retry after a later step failed will hit an already-refunded charge: that is fine.
+    if ((error as { code?: string })?.code === 'charge_already_refunded') {
+      console.log(`💸 Payment ${paymentIntent.id} was already refunded`);
+    } else {
+      throw error;
+    }
   }
 
   // 2. Generate VIP Token with HIGH priority
@@ -74,7 +82,7 @@ async function handleOverbooking(
     priority: 'HIGH',
   });
 
-  console.log(`✨ VIP Token ${vipToken} created for ${email}`);
+  console.log(`✨ VIP recovery token created for session ${session.id}`);
 }
 
 // =============================================
@@ -86,7 +94,7 @@ async function handleSuccessfulPayment(
 ): Promise<{ success: boolean; error?: string }> {
   const sessionId = session.id;
   const metadata = session.metadata!;
-  const { date, slot, lockToken, serviceName, fullPrice, customerName, customerPhone } = metadata;
+  const { date, slot, serviceName, fullPrice, customerName, customerPhone } = metadata;
   const email = session.customer_email!;
 
   // 1. Idempotency check
@@ -103,49 +111,56 @@ async function handleSuccessfulPayment(
     return { success: true };
   }
 
-  // 3. Check capacity before confirming
-  const capacity = await checkCapacity(date);
+  // From here on, any failure must release the marker (and undo the counter)
+  // so Stripe's retry can process this paid session again.
+  let incremented = false;
+  let claimed = false;
+  try {
+    // 3. Payment intent (needed for a refund if the slot is gone)
+    const paymentIntent = session.payment_intent as Stripe.PaymentIntent;
 
-  // 4. Get payment intent for potential refund
-  const paymentIntent = session.payment_intent as Stripe.PaymentIntent;
+    // 4. Claim the slot atomically: one client per slot
+    claimed = await markSlotBooked(date, slot, sessionId);
+    if (!claimed) {
+      await handleOverbooking(session, paymentIntent);
+      return { success: true };
+    }
 
-  // 5. Handle overbooking if capacity exceeded
-  if (!capacity.available) {
-    await handleOverbooking(session, paymentIntent);
+    // 5. Daily counter (used by the admin brief)
+    await incrementDailyCount(date);
+    incremented = true;
+
+    // 6. Create booking record
+    await createBooking(date, sessionId, {
+      email,
+      name: customerName,
+      phone: customerPhone,
+      service: serviceName,
+      vibe: 'Luxury Client',
+      amount: parseInt(fullPrice),
+      deposit: STRIPE_CONFIG.deposit / 100,
+      sessionId,
+    });
+
+    // 7. Confirm booking
+    await confirmBooking(date, sessionId);
+
+    // 8. Release the pre-lock (optional, as it expires anyway)
+    await releaseLock(date, slot);
+
+    console.log(`✅ Booking confirmed for session ${sessionId} on ${formatDate(date)} (${slot})`);
+
     return { success: true };
+  } catch (error) {
+    if (incremented) {
+      await decrementDailyCount(date).catch(() => undefined);
+    }
+    if (claimed) {
+      await unmarkSlotBooked(date, slot, sessionId);
+    }
+    await unmarkProcessed(sessionId);
+    throw error;
   }
-
-  // 6. Increment daily count (atomic)
-  const newCount = await incrementDailyCount(date);
-
-  // 7. Double-check: if count > 2 after increment, we have overbooking
-  if (newCount > 2) {
-    await decrementDailyCount(date);
-    await handleOverbooking(session, paymentIntent);
-    return { success: true };
-  }
-
-  // 8. Create booking record
-  await createBooking(date, sessionId, {
-    email,
-    name: customerName,
-    phone: customerPhone,
-    service: serviceName,
-    vibe: 'Luxury Client',
-    amount: parseInt(fullPrice),
-    deposit: 30,
-    sessionId,
-  });
-
-  // 9. Confirm booking
-  await confirmBooking(date, sessionId);
-
-  // 10. Release the pre-lock (optional, as it expires anyway)
-  await releaseLock(date, slot);
-
-  console.log(`✅ Booking confirmed for ${email} on ${formatDate(date)} (${slot})`);
-
-  return { success: true };
 }
 
 // =============================================
