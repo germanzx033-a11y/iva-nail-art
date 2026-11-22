@@ -408,15 +408,15 @@ export default function Home() {
           </div>
 
           {/* Category Tabs - Estilo Premium con bordes dorados sutiles */}
-          <div className="flex flex-wrap justify-center gap-3 mb-16">
+          <div className="flex flex-wrap justify-center gap-2.5 md:gap-3.5 mb-16">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 aria-pressed={selectedCategory === cat.id}
-                className={`px-6 py-2.5 rounded-full text-sm font-light tracking-wide transition-all duration-300 ${selectedCategory === cat.id
-                  ? "bg-[#E8C9A8] text-[#0E0706] border border-[#E8C9A8] font-medium"
-                  : "bg-transparent text-[#F4EBE1]/80 border border-[#F4EBE1]/25 hover:border-[#E8C9A8] hover:text-[#E8C9A8]"
+                className={`px-5 md:px-7 py-2.5 rounded-full text-xs md:text-sm tracking-wider transition-all duration-300 cursor-pointer ${selectedCategory === cat.id
+                  ? "bg-[#E8C9A8] text-[#0E0706] border border-[#E8C9A8] font-semibold shadow-[0_4px_25px_rgba(232,201,168,0.35)] scale-105"
+                  : "bg-[#1A0F0D]/60 text-[#F4EBE1]/80 border border-[#F4EBE1]/20 hover:border-[#E8C9A8]/60 hover:text-[#E8C9A8] hover:bg-[#1A0F0D]"
                   }`}
                 aria-label={`${lang === "en" ? "Filter by" : "Filtrar por"} ${lang === "en" ? cat.en : cat.es}`}
               >
@@ -438,45 +438,56 @@ export default function Home() {
               };
               const IconComponent = getServiceIcon();
 
-              // Deterministic mapping: each service category pulls from
-              // specific gallery aesthetic categories so every card shows a
-              // distinct, relevant photo.
-              const SERVICE_IMAGE_MAP: Record<string, string[]> = {
-                manicure: ["minimalist", "bridal"],   // clean, elegant gel finishes
-                pedicure: ["bridal", "minimalist"],    // soft, clean looks
-                acrylic:  ["french", "3dart"],          // sculpted, dramatic
-                nailart:  ["chrome", "3dart", "french"],// artistic, editorial
-                extras:   ["minimalist"],               // simple, clean looks
+              // Curation per individual service: each service gets an exact,
+              // tailored editorial photograph matching its technique and style.
+              const SERVICE_EXACT_IMAGE_MAP: Record<string, string> = {
+                // Manicure
+                m1: "/gallery/241c7f28-5927-40de-8e0c-0a9c468846f0.jpg", // Clean Cuticle Russian Mani Natural
+                m2: "/gallery/afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg", // High-Gloss Nude Minimalist Nails
+                m3: "/gallery/0ee48e92-e11b-42dc-8a05-93c1aac67179.jpg", // Fine Cuticle Perfection Russian Builder Set
+                m4: "/gallery/f6a27073-5f54-4bdb-8fe1-736ed181a126.jpg", // Clean Rose Quartz Structured Set
+                m5: "/gallery/810c6eb7-e2e7-49eb-87e4-c6867d09f390.jpg", // Pure Ivory Bridal Almond Extensions
+                // Pedicure
+                p1: "/gallery/427a7f8e-1a34-4441-b9ca-fc60cb512ee7.jpg", // Sheer Silk Milky
+                p2: "/gallery/03d9f11c-1dfb-494d-9195-eb0db1acfb1e.jpg", // Soft Blush Porcelain
+                p3: "/gallery/3923d364-f716-4ba2-961d-83f75dedb613.jpg", // Bridal Opal Crystal
+                p4: "/gallery/5ab8ff73-fcb2-421d-b6bf-8169824f1a52.jpg", // French Ombre Baby Boomer
+                // Acrylic
+                a1: "/gallery/2e0b31b1-9878-4a33-a0a9-6b505f577892.jpg", // Gold Studded Haute French Tips
+                a2: "/gallery/f0d71275-94d3-4325-9592-55cbe28a5bdd.jpg", // Leopard Micro-French Tips
+                a3: "/gallery/2b1d20c5-dd9d-45d5-85eb-da7821a34743.jpg", // Delicate Negative Space Linear Art
+                // Nail Art
+                n1: "/gallery/7f90a13c-e5fa-4911-9798-a038d8e5753e.jpg", // Geometric Minimal Gold Thread
+                n2: "/gallery/0252121b-f561-4b19-bf43-11cdd5a1f36a.jpg", // Liquid Gold French Smile Line
+                n3: "/gallery/14e8d740-b174-48d9-8c87-bddcb007ec72.jpg", // Sculpted 3D Metallic Pearl Drops
+                n4: "/gallery/bff1062d-a2d4-4432-af01-0853a1a8cc82.jpg", // Cat Eye Magnetized Shimmer (Chrome / Cat Eye)
+                n5: "/gallery/d9206f5a-c79f-4487-870d-a7bb5d75cef7.jpg", // Fine Line French with Pearls
+                // Extras
+                e1: "/gallery/5a9cfad8-1d83-41a9-adbc-5e4b6b5895e1.jpg", // Minimalist Black Onyx Micro Dots
+                e2: "/gallery/c2bba6fb-d001-4658-bda3-2c78d8d59011.jpg", // Bespoke Abstract Line Play
+                e3: "/gallery/fbec4b74-7503-47de-9cd8-d78bc318cc18.jpg", // Minimalist Nude with Solitary Crystal
               };
 
-              const getServiceImage = () => {
-                const galleryCategories = SERVICE_IMAGE_MAP[service.category] || ["minimalist"];
-                const pool = GALLERY_IMAGES.filter(img =>
-                  galleryCategories.includes(img.category as string)
-                );
-                if (pool.length === 0) return "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg";
-                // Index within this service's category tab so each card gets a unique photo
-                const siblings = SERVICES.filter(s => s.category === service.category);
-                const indexInCategory = siblings.findIndex(s => s.id === service.id);
-                return pool[indexInCategory % pool.length].src;
-              };
-              const serviceImage = getServiceImage();
+              const serviceImage =
+                SERVICE_EXACT_IMAGE_MAP[service.id] ||
+                "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg";
 
               return (
                 <article
                   key={service.id}
-                  className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-[#F4EBE1]/12 bg-[#1A0F0D] transition-colors duration-300 hover:border-[#E8C9A8]/50"
+                  className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-[#F4EBE1]/12 bg-[#1A0F0D] transition-all duration-500 hover:border-[#E8C9A8]/60 hover:shadow-[0_20px_50px_rgba(232,201,168,0.12)] hover:-translate-y-1"
                 >
-                  {/* Whole photo, never cropped: the frame has the same 3:4 ratio as the pictures */}
-                  <div className="relative aspect-[3/4] w-full bg-[#140B0A]">
+                  {/* Photo container with smooth zoom on hover and subtle bottom vignette */}
+                  <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#140B0A]">
                     <Image
                       src={serviceImage}
                       alt={lang === "en" ? service.name : service.nameEs}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
-                    <span className="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-[#B8864D] shadow-md">
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#1A0F0D] via-transparent to-black/20 pointer-events-none" />
+                    <span className="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-[#B8864D] shadow-lg backdrop-blur-sm border border-[#E8C9A8]/30 transition-transform duration-300 group-hover:scale-110">
                       <IconComponent className="h-5 w-5" />
                     </span>
                   </div>
