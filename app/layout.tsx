@@ -12,19 +12,16 @@ import { SITE_URL } from "@/lib/site";
  * Bay Ridge, Brooklyn - Premium Nail Art Studio
  */
 
-// Inter - Clean Sans-Serif for body
+// Inter - Clean Sans-Serif for body (variable font)
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
   variable: "--font-inter",
   display: "swap",
 });
 
-// Playfair Display - Elegant Serif for headings
+// Playfair Display - Elegant Serif for headings (variable font)
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"], // the brand's italic headlines use the real italic, not a slanted fallback
   variable: "--font-playfair",
   display: "swap",
 });
