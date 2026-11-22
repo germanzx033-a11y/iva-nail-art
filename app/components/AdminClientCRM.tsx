@@ -10,6 +10,9 @@ import {
   Trash2,
   X,
   Droplets,
+  Crown,
+  Sparkles,
+  Check,
 } from "lucide-react";
 
 export interface ClientProfile {
@@ -231,6 +234,30 @@ export default function AdminClientCRM() {
     }
   };
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const handleAddVisit = (c: ClientProfile) => {
+    const today = new Date().toISOString().split("T")[0];
+    const newCount = (c.totalVisits || 1) + 1;
+    const updated = clients.map((item) =>
+      item.id === c.id
+        ? { ...item, totalVisits: newCount, lastApptDate: today }
+        : item
+    );
+    saveClients(updated);
+    setToastMessage(`¡Visita #${newCount} y sello VIP registrado para ${c.name}!`);
+    setTimeout(() => setToastMessage(null), 4000);
+  };
+
+  const sendWhatsAppStampNotification = (c: ClientProfile) => {
+    const cleanPhone = c.phone.replace(/\D/g, "");
+    const normalized = cleanPhone.length === 10 ? `1${cleanPhone}` : cleanPhone;
+    const stampsMod = ((c.totalVisits - 1) % 6) + 1;
+    const vipUrlWithParams = `https://www.ivanailartny.com/es/vip-club?stamps=${stampsMod}&name=${encodeURIComponent(c.name)}`;
+    const msg = `¡Hola ${c.name}! ✨ Muchas gracias por tu visita hoy a IVA Nail Art. Tu cita quedó registrada y sumaste tu sello #${stampsMod} en tu Pase Digital VIP. Puedes ver tu tarjeta y recompensas aquí: ${vipUrlWithParams} 💅🤍`;
+    window.open(`https://wa.me/${normalized}?text=${encodeURIComponent(msg)}`, "_blank");
+  };
+
   // WhatsApp Follow-Up Generator
   const sendWhatsAppRefill = (c: ClientProfile, days: number) => {
     const cleanPhone = c.phone.replace(/\D/g, "");
@@ -298,6 +325,19 @@ export default function AdminClientCRM() {
           <span>Nueva Clienta</span>
         </button>
       </div>
+
+      {/* Toast Notification Banner */}
+      {toastMessage && (
+        <div className="p-3.5 bg-emerald-50 border border-emerald-300 rounded-xl text-xs text-emerald-900 font-medium flex items-center justify-between shadow-sm animate-in fade-in">
+          <div className="flex items-center gap-2">
+            <Check className="w-4 h-4 text-emerald-600" />
+            <span>{toastMessage}</span>
+          </div>
+          <span className="text-[10px] text-emerald-700 bg-emerald-200/60 px-2 py-0.5 rounded-full uppercase font-bold">
+            Actualizado
+          </span>
+        </div>
+      )}
 
       {/* Summary KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
@@ -406,6 +446,25 @@ export default function AdminClientCRM() {
 
                 {/* Action Buttons */}
                 <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#EBE8E2]">
+                  {/* +1 Visit & Stamp */}
+                  <button
+                    onClick={() => handleAddVisit(client)}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-semibold active:scale-95 transition-all shadow-sm"
+                    title="Anotar visita hoy y sumar +1 sello VIP"
+                  >
+                    <Crown className="w-3.5 h-3.5 text-amber-700" />
+                    <span>+1 Sello VIP</span>
+                  </button>
+
+                  <button
+                    onClick={() => sendWhatsAppStampNotification(client)}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 text-xs font-medium transition-all"
+                    title="Enviar enlace del pase digital VIP por WhatsApp"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                    <span className="hidden xl:inline">Pase VIP</span>
+                  </button>
+
                   {days >= 15 ? (
                     <button
                       onClick={() => sendWhatsAppRefill(client, days)}

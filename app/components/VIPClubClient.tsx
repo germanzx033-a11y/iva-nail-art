@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -26,9 +26,52 @@ interface VIPClubClientProps {
 export default function VIPClubClient({ lang }: VIPClubClientProps) {
   const isEs = lang === "es";
   const [activeStamps, setActiveStamps] = useState<number>(3);
+  const [clientName, setClientName] = useState<string>("");
   const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
   const [clientSearchPhone, setClientSearchPhone] = useState("");
   const [searchFeedback, setSearchFeedback] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const stampsParam = params.get("stamps");
+    const nameParam = params.get("name");
+
+    if (stampsParam) {
+      const parsed = parseInt(stampsParam, 10);
+      if (!isNaN(parsed) && parsed >= 1 && parsed <= 6) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- browser sync from url query
+        setActiveStamps(parsed);
+        try {
+          localStorage.setItem("iva_vip_pass_stamps", parsed.toString());
+        } catch {}
+      }
+    } else {
+      try {
+        const savedStamps = localStorage.getItem("iva_vip_pass_stamps");
+        if (savedStamps) {
+          const parsed = parseInt(savedStamps, 10);
+          if (!isNaN(parsed) && parsed >= 1 && parsed <= 6) {
+            setActiveStamps(parsed);
+          }
+        }
+      } catch {}
+    }
+
+    if (nameParam) {
+      setClientName(nameParam);
+      try {
+        localStorage.setItem("iva_vip_pass_name", nameParam);
+      } catch {}
+    } else {
+      try {
+        const savedName = localStorage.getItem("iva_vip_pass_name");
+        if (savedName) {
+          setClientName(savedName);
+        }
+      } catch {}
+    }
+  }, []);
 
   const openBooking = () => {
     setIsCalendlyOpen(true);
@@ -43,7 +86,30 @@ export default function VIPClubClient({ lang }: VIPClubClientProps) {
       return;
     }
 
-    // Simulate lookup: assign a realistic stamp tier
+    // Try finding client in local storage CRM if on same device
+    try {
+      const crmData = localStorage.getItem("iva_admin_clients_v1");
+      if (crmData) {
+        const list = JSON.parse(crmData);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const found = list.find((c: any) => c.phone && (c.phone.replace(/\D/g, "").includes(clean) || clean.includes(c.phone.replace(/\D/g, ""))));
+        if (found) {
+          const stamps = ((found.totalVisits - 1) % 6) + 1;
+          setActiveStamps(stamps);
+          setClientName(found.name);
+          setSearchFeedback(
+            isEs
+              ? `¡Bienvenida ${found.name}! Tienes ${stamps} sellos acumulados (${found.totalVisits} visitas en total).`
+              : `Welcome back, ${found.name}! You have ${stamps} stamps (${found.totalVisits} total visits).`
+          );
+          localStorage.setItem("iva_vip_pass_stamps", stamps.toString());
+          localStorage.setItem("iva_vip_pass_name", found.name);
+          return;
+        }
+      }
+    } catch {}
+
+    // Fallback: assign realistic stamp based on phone
     const lastDigit = parseInt(clean.slice(-1), 10) || 3;
     const stamps = (lastDigit % 6) + 1;
     setActiveStamps(stamps);
@@ -52,6 +118,9 @@ export default function VIPClubClient({ lang }: VIPClubClientProps) {
         ? `¡Tarjeta encontrada! Tienes ${stamps} sellos acumulados.`
         : `Card found! You currently have ${stamps} stamps.`
     );
+    try {
+      localStorage.setItem("iva_vip_pass_stamps", stamps.toString());
+    } catch {}
   };
 
   const vipSchema = {
@@ -157,7 +226,9 @@ export default function VIPClubClient({ lang }: VIPClubClientProps) {
                   <p className="font-display text-xs tracking-[0.2em] uppercase font-semibold text-[#D4A574]">
                     THE SANCTUARY PASS
                   </p>
-                  <p className="text-[10px] text-[#F4EBE1]/60">IVA Nail Art NY · Bay Ridge</p>
+                  <p className="text-[10px] text-[#F4EBE1]/60">
+                    {clientName ? `VIP: ${clientName}` : "IVA Nail Art NY · Bay Ridge"}
+                  </p>
                 </div>
               </div>
 
@@ -188,7 +259,12 @@ export default function VIPClubClient({ lang }: VIPClubClientProps) {
                     <button
                       key={num}
                       type="button"
-                      onClick={() => setActiveStamps(num)}
+                      onClick={() => {
+                        setActiveStamps(num);
+                        try {
+                          localStorage.setItem("iva_vip_pass_stamps", num.toString());
+                        } catch {}
+                      }}
                       title={`Toca para probar ${num} sellos`}
                       className={`h-20 rounded-2xl border flex flex-col items-center justify-center gap-1 transition-all ${
                         isEarned
