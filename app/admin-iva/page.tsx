@@ -9,6 +9,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import AdminWhatsAppScripts from "@/app/components/AdminWhatsAppScripts";
+import AdminClientCRM from "@/app/components/AdminClientCRM";
 import {
   Moon,
   Sun,
@@ -133,7 +134,7 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"dashboard" | "waitlist" | "scripts" | "analytics" | "ezra">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "clients" | "waitlist" | "scripts" | "analytics" | "ezra">("dashboard");
   const [showNotifications, setShowNotifications] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -450,7 +451,8 @@ export default function AdminPage() {
           <div className="flex gap-1 overflow-x-auto pb-2">
             {[
               { id: "dashboard", label: "Command Center", icon: Zap },
-              { id: "waitlist", label: "VIP Waitlist", icon: Users },
+              { id: "clients", label: "Client CRM & Refills", icon: Users },
+              { id: "waitlist", label: "VIP Waitlist", icon: Crown },
               { id: "scripts", label: "WhatsApp Concierge", icon: MessageCircle },
               { id: "analytics", label: "Growth", icon: TrendingUp },
               { id: "ezra", label: "Ezra Time", icon: Baby },
@@ -724,6 +726,13 @@ export default function AdminPage() {
               </motion.button>
             </div>
           </div>
+        )}
+
+        {/* ==================== CLIENT CRM TAB ==================== */}
+        {activeTab === "clients" && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <AdminClientCRM />
+          </motion.div>
         )}
 
         {/* ==================== WAITLIST TAB ==================== */}

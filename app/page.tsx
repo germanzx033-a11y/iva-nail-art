@@ -971,6 +971,27 @@ className="w-16 h-auto rounded-lg"
               >
                 {lang === "en" ? "Spa Gel Pedicure" : "Pedicura en Seco"}
               </a>
+              <span className="text-white/30 hidden sm:inline">·</span>
+              <a
+                href={lang === "en" ? "/bridal-nails-brooklyn" : "/es/bridal-nails-brooklyn"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "Bridal & Wedding" : "Uñas de Novia"}
+              </a>
+              <span className="text-white/30 hidden sm:inline">·</span>
+              <a
+                href={lang === "en" ? "/winter-collection" : "/es/winter-collection"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "Winter Lookbook" : "Colección Invierno"}
+              </a>
+              <span className="text-white/30 hidden sm:inline">·</span>
+              <a
+                href={lang === "en" ? "/vip-club" : "/es/vip-club"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "VIP Loyalty Pass" : "Club VIP Digital"}
+              </a>
             </div>
 
             <p className="text-white/70 text-sm font-medium">

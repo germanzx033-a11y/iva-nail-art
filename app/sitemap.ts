@@ -36,11 +36,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...landingEntries,
     ...hyperlocalEntries,
-    ...['/try-on', '/nail-match', '/gift-card', '/aftercare', '/es/aftercare', '/qr-review', '/es/qr-review'].map((path) => ({
+    ...[
+      '/try-on',
+      '/nail-match',
+      '/gift-card',
+      '/aftercare',
+      '/es/aftercare',
+      '/qr-review',
+      '/es/qr-review',
+      '/bridal-nails-brooklyn',
+      '/es/bridal-nails-brooklyn',
+      '/winter-collection',
+      '/es/winter-collection',
+      '/vip-club',
+      '/es/vip-club',
+    ].map((path) => ({
       url: `${baseUrl}${path}`,
       lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
+      changeFrequency: 'weekly' as const,
+      priority: path.includes('bridal') || path.includes('winter') ? 0.9 : 0.75,
     })),
     {
       url: `${baseUrl}/privacy`,

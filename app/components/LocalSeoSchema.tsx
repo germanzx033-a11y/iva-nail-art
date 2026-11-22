@@ -108,6 +108,14 @@ export default function LocalSeoSchema() {
                 "name": "Luxury Spa Pedicure",
                 "description": "Deep medical-grade foot care, precision cuticle grooming, gentle exfoliation, and long-lasting gel polish."
               }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Bespoke Bridal & Wedding Nail Ritual",
+                "description": "Private bridal Russian dry manicure and structured builder gel reinforcement with custom glazed pearl or micro-French art, guaranteed to last through your honeymoon."
+              }
             }
           ]
         }
