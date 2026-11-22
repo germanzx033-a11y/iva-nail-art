@@ -36,7 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...landingEntries,
     ...hyperlocalEntries,
-    ...['/try-on', '/nail-match', '/gift-card', '/aftercare', '/es/aftercare'].map((path) => ({
+    ...['/try-on', '/nail-match', '/gift-card', '/aftercare', '/es/aftercare', '/qr-review', '/es/qr-review'].map((path) => ({
       url: `${baseUrl}${path}`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,

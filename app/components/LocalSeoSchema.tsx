@@ -37,6 +37,11 @@ export default function LocalSeoSchema() {
           { "@type": "Place", "name": "Bay Ridge, Brooklyn, NY" },
           { "@type": "Place", "name": "Dyker Heights, Brooklyn, NY" },
           { "@type": "Place", "name": "Bensonhurst, Brooklyn, NY" },
+          { "@type": "Place", "name": "Sunset Park, Brooklyn, NY" },
+          { "@type": "Place", "name": "Park Slope, Brooklyn, NY" },
+          { "@type": "Place", "name": "Fort Hamilton, Brooklyn, NY" },
+          { "@type": "Place", "name": "Bath Beach, Brooklyn, NY" },
+          { "@type": "Place", "name": "Gravesend, Brooklyn, NY" },
           { "@type": "City", "name": "Brooklyn" },
           { "@type": "City", "name": "New York" }
         ],

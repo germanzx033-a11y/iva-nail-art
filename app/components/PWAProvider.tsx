@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, createContext, useContext, ReactNode } from "react";
+import PWAInstallPrompt from "./PWAInstallPrompt";
 
 interface PWAContextType {
   isInstalled: boolean;
@@ -41,7 +42,6 @@ export default function PWAProvider({ children }: { children: ReactNode }) {
   const [canInstall, setCanInstall] = useState(false);
   const [notificationPermission, setNotificationPermission] = useState<NotificationPermission | null>(null);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [showInstallBanner, setShowInstallBanner] = useState(false);
 
   useEffect(() => {
     // Register Service Worker
@@ -81,8 +81,6 @@ export default function PWAProvider({ children }: { children: ReactNode }) {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       setCanInstall(true);
-      // Show install banner after 3 seconds
-      setTimeout(() => setShowInstallBanner(true), 3000);
     };
     window.addEventListener("beforeinstallprompt", handleBeforeInstall);
 
@@ -91,7 +89,6 @@ export default function PWAProvider({ children }: { children: ReactNode }) {
       setIsInstalled(true);
       setCanInstall(false);
       setDeferredPrompt(null);
-      setShowInstallBanner(false);
     };
     window.addEventListener("appinstalled", handleAppInstalled);
 
@@ -127,7 +124,6 @@ export default function PWAProvider({ children }: { children: ReactNode }) {
 
     setDeferredPrompt(null);
     setCanInstall(false);
-    setShowInstallBanner(false);
   };
 
   const requestNotifications = async (): Promise<boolean> => {
@@ -195,36 +191,8 @@ export default function PWAProvider({ children }: { children: ReactNode }) {
         Sin conexión · You&apos;re offline. Some features may be limited.
       </div>
 
-      {/* Install Prompt */}
-      {showInstallBanner && canInstall && !isInstalled && (
-        <div className="fixed bottom-20 left-4 right-4 md:left-auto md:right-6 md:w-80 z-[90] bg-[#1A0F0D] rounded-xl shadow-2xl border border-[#F4EBE1]/15 p-5 animate-slide-up">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#B76E79] to-[#722F37] rounded-xl flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-serif text-xl">IVA</span>
-            </div>
-            <div className="flex-1">
-              <h3 className="font-serif text-lg text-[#F4EBE1] mb-1">Install IVA App</h3>
-              <p className="text-sm text-[#F4EBE1]/75 mb-3">
-                Get quick access, offline support & notifications
-              </p>
-              <div className="flex gap-2">
-                <button
-                  onClick={installApp}
-                  className="flex-1 py-2 bg-gradient-to-r from-[#722F37] to-[#8B3A44] text-white text-xs uppercase tracking-wider rounded-lg"
-                >
-                  Install
-                </button>
-                <button
-                  onClick={() => setShowInstallBanner(false)}
-                  className="px-4 py-2 text-[#F4EBE1]/75 text-xs uppercase tracking-wider"
-                >
-                  Later
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Luxury Bilingual PWA Install Prompt (iOS Safari + Android/Chrome) */}
+      <PWAInstallPrompt />
     </PWAContext.Provider>
   );
 }

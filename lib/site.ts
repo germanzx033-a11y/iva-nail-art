@@ -18,4 +18,8 @@ export const BUSINESS = {
   whatsappUrl: "https://wa.me/19296257273",
   calendlyUrl: process.env.NEXT_PUBLIC_CALENDLY_URL || "https://calendly.com/iva_nailart_nyc",
   deposit: 35,
+  googleReviewUrl:
+    process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL ||
+    "https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4",
+  googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=IVA+Nail+Art+NY+Bay+Ridge+Brooklyn",
 };

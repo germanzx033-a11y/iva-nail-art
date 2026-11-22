@@ -677,7 +677,7 @@ export default function Home() {
             </div>
 
             {/* Sunset Park */}
-            <div className="rounded-2xl border border-[#D4A574]/20 bg-[#170c0a] p-7 flex flex-col justify-between hover:border-[#D4A574]/50 transition-all group sm:col-span-2 lg:col-span-1">
+            <div className="rounded-2xl border border-[#D4A574]/20 bg-[#170c0a] p-7 flex flex-col justify-between hover:border-[#D4A574]/50 transition-all group">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <span className="rounded-full bg-[#D4A574]/15 px-3 py-1 text-xs font-semibold text-[#D4A574] border border-[#D4A574]/30">
@@ -699,6 +699,87 @@ export default function Home() {
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D4A574] hover:text-white transition-colors"
               >
                 <span>{lang === "en" ? "Explore Sunset Park Guide" : "Ver Guía Sunset Park"}</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            {/* Park Slope */}
+            <div className="rounded-2xl border border-[#D4A574]/20 bg-[#170c0a] p-7 flex flex-col justify-between hover:border-[#D4A574]/50 transition-all group">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="rounded-full bg-[#D4A574]/15 px-3 py-1 text-xs font-semibold text-[#D4A574] border border-[#D4A574]/30">
+                    ⏱ 12–15 min
+                  </span>
+                  <span className="text-xs text-white/50">ZIP 11215 / 11217</span>
+                </div>
+                <h3 className="font-display text-xl font-medium text-[#F4EBE1] mb-2 group-hover:text-[#D4A574] transition-colors">
+                  Park Slope
+                </h3>
+                <p className="text-xs text-[#F4EBE1]/70 leading-relaxed mb-6">
+                  {lang === "en"
+                    ? "Direct R train down 4th Ave with zero transfers. Unhurried 1-on-1 sanctuary away from crowded 5th/7th Ave salons."
+                    : "Tren R directo por 4th Ave sin transbordos. Atelier privado 1 a 1 lejos del ruido comercial de 5th/7th Ave."}
+                </p>
+              </div>
+              <a
+                href={lang === "en" ? "/park-slope-nail-salon" : "/es/park-slope-nail-salon"}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D4A574] hover:text-white transition-colors"
+              >
+                <span>{lang === "en" ? "Explore Park Slope Guide" : "Ver Guía Park Slope"}</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            {/* Fort Hamilton */}
+            <div className="rounded-2xl border border-[#D4A574]/20 bg-[#170c0a] p-7 flex flex-col justify-between hover:border-[#D4A574]/50 transition-all group">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="rounded-full bg-[#D4A574]/15 px-3 py-1 text-xs font-semibold text-[#D4A574] border border-[#D4A574]/30">
+                    ⏱ 3–5 min
+                  </span>
+                  <span className="text-xs text-white/50">ZIP 11209 / 11252</span>
+                </div>
+                <h3 className="font-display text-xl font-medium text-[#F4EBE1] mb-2 group-hover:text-[#D4A574] transition-colors">
+                  Fort Hamilton
+                </h3>
+                <p className="text-xs text-[#F4EBE1]/70 leading-relaxed mb-6">
+                  {lang === "en"
+                    ? "Immediate neighborhood neighbor via Fort Hamilton Pkwy or B16/B63. 4-week builder gel & pristine Russian manicures."
+                    : "Vecinas inmediatas por Fort Hamilton Pkwy o buses B16/B63. Builder gel con 4 semanas de duración y manicura rusa."}
+                </p>
+              </div>
+              <a
+                href={lang === "en" ? "/fort-hamilton-nail-salon" : "/es/fort-hamilton-nail-salon"}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D4A574] hover:text-white transition-colors"
+              >
+                <span>{lang === "en" ? "Explore Fort Hamilton Guide" : "Ver Guía Fort Hamilton"}</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            {/* Bath Beach & Gravesend */}
+            <div className="rounded-2xl border border-[#D4A574]/20 bg-[#170c0a] p-7 flex flex-col justify-between hover:border-[#D4A574]/50 transition-all group">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="rounded-full bg-[#D4A574]/15 px-3 py-1 text-xs font-semibold text-[#D4A574] border border-[#D4A574]/30">
+                    ⏱ 8–10 min
+                  </span>
+                  <span className="text-xs text-white/50">ZIP 11214 / 11223</span>
+                </div>
+                <h3 className="font-display text-xl font-medium text-[#F4EBE1] mb-2 group-hover:text-[#D4A574] transition-colors">
+                  Bath Beach & Gravesend
+                </h3>
+                <p className="text-xs text-[#F4EBE1]/70 leading-relaxed mb-6">
+                  {lang === "en"
+                    ? "Direct B1 bus down 86th St or fast drive via Cropsey Ave. Bespoke editorial nail art and strengthening overlays."
+                    : "Bus B1 directo por 86th St o viaje rápido por Cropsey Ave. Nail art editorial a mano y refuerzo estructural."}
+                </p>
+              </div>
+              <a
+                href={lang === "en" ? "/bath-beach-nail-salon" : "/es/bath-beach-nail-salon"}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D4A574] hover:text-white transition-colors"
+              >
+                <span>{lang === "en" ? "Explore Bath Beach Guide" : "Ver Guía Bath Beach"}</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </a>
             </div>
@@ -831,6 +912,27 @@ className="w-16 h-auto rounded-lg"
               </a>
               <span className="text-white/30 hidden sm:inline">·</span>
               <a
+                href={lang === "en" ? "/park-slope-nail-salon" : "/es/park-slope-nail-salon"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "Park Slope (11215/11217)" : "Park Slope (11215/11217)"}
+              </a>
+              <span className="text-white/30 hidden sm:inline">·</span>
+              <a
+                href={lang === "en" ? "/fort-hamilton-nail-salon" : "/es/fort-hamilton-nail-salon"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "Fort Hamilton (11209/11252)" : "Fort Hamilton (11209/11252)"}
+              </a>
+              <span className="text-white/30 hidden sm:inline">·</span>
+              <a
+                href={lang === "en" ? "/bath-beach-nail-salon" : "/es/bath-beach-nail-salon"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "Bath Beach (11214/11223)" : "Bath Beach (11214/11223)"}
+              </a>
+              <span className="text-white/30 hidden sm:inline">·</span>
+              <a
                 href={lang === "en" ? "/builder-gel-bay-ridge" : "/es/builder-gel-bay-ridge"}
                 className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
               >
@@ -883,6 +985,9 @@ className="w-16 h-auto rounded-lg"
               </a>
               <a href={lang === "en" ? "/aftercare" : "/es/aftercare"} className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
                 {lang === "en" ? "Aftercare" : "Cuidados"}
+              </a>
+              <a href={lang === "en" ? "/qr-review" : "/es/qr-review"} className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
+                {lang === "en" ? "Reviews" : "Reseñas"}
               </a>
               <a href={lang === "en" ? "/gift-card" : "/gift-card?lang=es"} className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
                 {lang === "en" ? "Gift card" : "Tarjeta de regalo"}

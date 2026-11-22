@@ -600,6 +600,549 @@ export const HYPERLOCAL_LANDINGS: HyperlocalNeighborhood[] = [
       },
     },
   },
+  {
+    slug: "park-slope-nail-salon",
+    neighborhoodEn: "Park Slope",
+    neighborhoodEs: "Park Slope",
+    zipCodes: ["11215", "11217"],
+    photoOffset: 3,
+    copy: {
+      en: {
+        metaTitle: "Luxury Nail Salon near Park Slope, Brooklyn | Builder Gel & Nail Art | IVA Nail Art",
+        metaDescription: "Searching for a luxury nail salon near Park Slope, Brooklyn (11215, 11217)? Private atelier in nearby Bay Ridge (12 min on R train). Custom nail art, European builder gel & Russian manicure. Book on Calendly.",
+        eyebrow: "PRIVATE NAIL ATELIER · 12 MIN ON THE R TRAIN FROM PARK SLOPE",
+        h1Top: "BESPOKE NAIL ART & BUILDER GEL",
+        h1Bottom: "near Park Slope, Brooklyn",
+        badge: "Direct R Train Down 4th Ave · Private 1:1 Sanctuary",
+        intro: "Tired of the hurried, noisy walk-in salons along 5th and 7th Avenues in Park Slope? Just a quick 12-minute direct ride down 4th Avenue brings you to IVA Nail Art in Bay Ridge. Step into an unhurried, serene private studio where your nails receive uninterrupted master craftsmanship—from strengthening European builder gel (BIAB) overlays to delicate hand-painted fine art and Russian dry cuticle care.",
+        transitHeading: "Getting Here from Park Slope",
+        transitBody: "Our private studio is easily accessible from Park Slope via direct transit or a quick drive:",
+        transit: {
+          carMinutes: "12 to 15 minutes",
+          transitMinutes: "12 to 18 minutes",
+          mtaLines: ["R Train (Direct down 4th Ave from Union St, 9th St & Prospect Ave)", "B63 Bus (5th Ave straight to Bay Ridge)", "B37 Bus (3rd Ave)"],
+          directionsSummary: "Hop on the R train at Union Street, 9th Street, or Prospect Avenue and ride directly south along 4th Avenue straight into Bay Ridge (86th St or Bay Ridge Ave)—no transfers needed. Driving from Park Slope is a smooth 12 to 15-minute trip down 4th Avenue or via the Gowanus Expressway.",
+          parkingNote: "Street parking is significantly more relaxed and available around our quiet Bay Ridge residential block than the busy avenues of Park Slope.",
+        },
+        whyTitle: "Why Park Slope Clients Choose IVA Nail Art",
+        whyCards: [
+          {
+            title: "Private 1-on-1 Studio",
+            desc: "Escape chaotic multi-chair salons. Enjoy a quiet, private sanctuary dedicated solely to you and your nails with zero toxic acrylic fumes.",
+          },
+          {
+            title: "Zero-Lifting Builder Gel (BIAB)",
+            desc: "Reinforce brittle natural nails with premium European structured gel that promotes natural growth and lasts 3–4 weeks without chipping.",
+          },
+          {
+            title: "Editorial Fine Nail Art",
+            desc: "Hand-painted micro-French, glazed donut chrome, 3D textures, cat-eye velvets, and custom artwork tailored precisely to your style.",
+          },
+          {
+            title: "Hospital-Grade Hygiene",
+            desc: "Sterilized medical-grade implements, Russian dry e-file protocol, and single-use buffers for immaculate nail health.",
+          },
+        ],
+        servicesTitle: "Signature Studio Services",
+        servicesSubtitle: "Every service is delivered with medical-grade disinfection and unhurried artisan care.",
+        services: [
+          {
+            title: "Structured Builder Gel (BIAB)",
+            tagline: "Natural nail reinforcement & lasting apex",
+            description: "A flexible yet durable European gel overlay that shields natural nails, encourages healthy growth, and stays chip-free for up to a month.",
+            calendlyPrefill: "Builder Gel Manicure",
+          },
+          {
+            title: "Bespoke Fine Nail Art",
+            tagline: "Editorial precision tailored to your aesthetic",
+            description: "Custom chrome, tortoise shell, textured 3D gel, glazed finishes, or delicate fine lines painted entirely by hand.",
+            calendlyPrefill: "Custom Nail Art",
+          },
+          {
+            title: "Sculpted Extensions & Acrílico",
+            tagline: "Lightweight, slender & ultra-durable length",
+            description: "Modern extensions sculpted with balanced arches and tapered sidewalls for an elegant, natural silhouette.",
+            calendlyPrefill: "Acrylic Full Set",
+          },
+          {
+            title: "Luxury Waterless Gel Pedicure",
+            tagline: "Podiatry-level hygienic foot care",
+            description: "Deep dry cuticle cleansing, calloused skin smoothing, and high-shine gel polish in a sterile, spa-grade environment.",
+            calendlyPrefill: "Gel Pedicure",
+          },
+        ],
+        faqTitle: "Frequently Asked Questions — Park Slope Clients",
+        faq: [
+          {
+            q: "How easy is it to reach the studio from Park Slope?",
+            a: "It is one of the easiest trips in Brooklyn! The R train runs directly south along 4th Avenue. From Union St, 4th Ave/9th St, or Prospect Ave, it is a direct 12 to 15-minute ride with no transfers. By car, 4th Avenue takes about 12 minutes.",
+          },
+          {
+            q: "Why do Park Slope clients travel to Bay Ridge for nail art?",
+            a: "Commercial salons on 5th and 7th Avenues in Park Slope often rush appointments to meet high volume. At IVA Nail Art, you receive dedicated 1-on-1 private attention, Russian dry cuticle perfection, and 3 to 4-week builder gel retention without feeling rushed.",
+          },
+          {
+            q: "How do I book an appointment and pay the deposit?",
+            a: "Select your desired service on our Calendly booking calendar to reserve your time slot. A $35 deposit (handled via Zelle, Apple Pay, or Venmo) locks in your dedicated slot and is applied toward your service total.",
+          },
+          {
+            q: "Can I bring my own design ideas or inspiration photos?",
+            a: "Yes! Hand-painted custom nail art is our signature. Bring reference photos from Pinterest or Instagram, or message @iva_nailart_nyc in advance for a personalized quote.",
+          },
+        ],
+        ctaPrimary: "Book on Calendly",
+        ctaSecondary: "Message @iva_nailart_nyc on Instagram",
+      },
+      es: {
+        metaTitle: "Salón de Uñas cerca de Park Slope, Brooklyn | Builder Gel y Nail Art | IVA Nail Art",
+        metaDescription: "¿Buscas un salón de uñas exclusivo cerca de Park Slope, Brooklyn (11215, 11217)? Estudio privado en Bay Ridge (a 12 min en tren R). Manicura rusa, builder gel y nail art a mano.",
+        eyebrow: "ATELIER PRIVADO DE UÑAS · A 12 MIN EN TREN R DESDE PARK SLOPE",
+        h1Top: "NAIL ART EDITORIAL Y BUILDER GEL",
+        h1Bottom: "cerca de Park Slope, Brooklyn",
+        badge: "Tren R Directo por 4th Ave · Experiencia Privada 1 a 1",
+        intro: "¿Cansada del ruido y las prisas de los salones comerciales en 5th y 7th Avenue en Park Slope? A solo 12 minutos en el tren R por 4th Avenue te espera IVA Nail Art en Bay Ridge: un espacio íntimo, privado y relajante donde cada uña se trabaja con precisión artesanal, nivelación con builder gel europeo y diseño personalizado a mano.",
+        transitHeading: "Cómo llegar desde Park Slope",
+        transitBody: "Nuestro estudio privado en Bay Ridge cuenta con conexión directa y rápida desde Park Slope:",
+        transit: {
+          carMinutes: "12 a 15 minutos",
+          transitMinutes: "12 a 18 minutos",
+          mtaLines: ["Tren R (Directo por 4th Ave desde Union St, 9th St y Prospect Ave)", "Bus B63 (5th Ave directo a Bay Ridge)", "Bus B37 (3rd Ave)"],
+          directionsSummary: "Toma el tren R en Union St, 9th St o Prospect Ave y viaja en línea recta hacia el sur por 4th Avenue hasta Bay Ridge (86th St o Bay Ridge Ave) sin transbordos. En auto, baja por 4th Avenue o toma la autopista Gowanus en 12 a 15 minutos.",
+          parkingNote: "Estacionamiento en la calle mucho más cómodo y accesible que en las congestionadas avenidas de Park Slope.",
+        },
+        whyTitle: "Por Qué Clientas de Park Slope Eligen IVA Nail Art",
+        whyCards: [
+          {
+            title: "Atelier 100% Privado",
+            desc: "Sin ruidos, sin prisas y sin olores químicos agresivos. Tu cita es exclusiva para ti con Ivannía en un ambiente calmo y sofisticado.",
+          },
+          {
+            title: "Builder Gel sin Desprendimientos",
+            desc: "Refuerza tus uñas naturales con gel estructurado europeo que estimula el crecimiento y dura de 3 a 4 semanas impecable.",
+          },
+          {
+            title: "Arte a Mano Alçada",
+            desc: "Efectos cromo líquido, velvet cat-eye, micro francesas y detalles botánicos o geométricos pintados a mano alzada.",
+          },
+          {
+            title: "Esterilización de Grado Clínico",
+            desc: "Protocolo de manicura rusa en seco con instrumental esterilizado en autoclave para proteger la salud de tus cutículas.",
+          },
+        ],
+        servicesTitle: "Servicios Exclusivos de Estudio",
+        servicesSubtitle: "Cada cita se realiza con higiene médica rigurosa y dedicación absoluta.",
+        services: [
+          {
+            title: "Manicura con Builder Gel (BIAB)",
+            tagline: "Fuerza, estructura y brillo por 4 semanas",
+            description: "Cuidado ruso de cutículas y nivelación con gel estructurado que fortalece uñas quebradizas y previene roturas.",
+            calendlyPrefill: "Builder Gel Manicure",
+          },
+          {
+            title: "Nail Art Editorial a Mano",
+            tagline: "Diseños artísticos a tu medida",
+            description: "Efecto cromo, ilustraciones botánicas, textura 3D en gel y acabados glaseados realizados con pincel fino.",
+            calendlyPrefill: "Custom Nail Art",
+          },
+          {
+            title: "Acrílico Esculpido y Extensiones",
+            tagline: "Forma estilizada y máxima durabilidad",
+            description: "Extensiones almond, coffin o cuadradas con estructura ligera y proporciones armónicas de gran resistencia.",
+            calendlyPrefill: "Acrylic Full Set",
+          },
+          {
+            title: "Pedicura Spa en Seco con Gel",
+            tagline: "Limpieza profunda y máxima higiene",
+            description: "Tratamiento en seco con instrumental esterilizado, exfoliación suavizante y esmaltado en gel de larga duración.",
+            calendlyPrefill: "Gel Pedicure",
+          },
+        ],
+        faqTitle: "Preguntas Frecuentes — Clientas de Park Slope",
+        faq: [
+          {
+            q: "¿Qué tan fácil es llegar en metro desde Park Slope?",
+            a: "¡Es un trayecto directo en el tren R! Desde las estaciones Union St, 4th Ave/9th St o Prospect Ave llegas en solo 12 a 15 minutos en línea recta por 4th Avenue sin cambiar de tren.",
+          },
+          {
+            q: "¿Por qué viajar desde Park Slope hasta Bay Ridge para hacerse las uñas?",
+            a: "Muchos salones de Park Slope atienden con prisa por el alto volumen de clientes. En IVA Nail Art recibes atención 1 a 1 en un estudio privado, manicura rusa precisa y builder gel que dura hasta 4 semanas intacto.",
+          },
+          {
+            q: "¿Cómo funciona la reserva y el depósito de $35?",
+            a: "Eliges tu servicio y horario en nuestro calendario de Calendly. Un depósito de $35 vía Zelle, Apple Pay o Venmo aparta tu cita y se descuenta del total el día del servicio.",
+          },
+          {
+            q: "¿Puedo llevar fotos de inspiración de Pinterest o Instagram?",
+            a: "¡Totalmente bienvenida! Ivannía es especialista en arte a mano alzada. Puedes traer tus fotos favoritas o escribirle a @iva_nailart_nyc para cotizar tu diseño.",
+          },
+        ],
+        ctaPrimary: "Reservar en Calendly",
+        ctaSecondary: "Escribir a @iva_nailart_nyc en Instagram",
+      },
+    },
+  },
+  {
+    slug: "fort-hamilton-nail-salon",
+    neighborhoodEn: "Fort Hamilton",
+    neighborhoodEs: "Fort Hamilton",
+    zipCodes: ["11209", "11252"],
+    photoOffset: 4,
+    copy: {
+      en: {
+        metaTitle: "Nail Salon near Fort Hamilton, Brooklyn | Luxury Builder Gel & Nail Art | IVA Nail Art",
+        metaDescription: "Looking for the best nail salon near Fort Hamilton, Brooklyn (11209, 11252)? Private nail atelier just 3–5 minutes away in Bay Ridge. Structured builder gel, bespoke nail art & Russian cuticle care. Book online.",
+        eyebrow: "EXCLUSIVE PRIVATE NAIL STUDIO · 3–5 MIN FROM FORT HAMILTON",
+        h1Top: "LUXURY BUILDER GEL & BESPOKE NAIL ART",
+        h1Bottom: "near Fort Hamilton, Brooklyn",
+        badge: "Immediate Neighbor · 3–5 Min from Fort Hamilton Pkwy",
+        intro: "Located right around the corner in neighboring Bay Ridge (11209), IVA Nail Art is the premier private nail studio for residents and military families of Fort Hamilton. Say goodbye to rushed commercial strip salons and hello to an intimate, odor-free luxury atelier dedicated to flawless builder gel reinforcement, precision dry manicures, and custom hand-painted nail designs.",
+        transitHeading: "Getting Here from Fort Hamilton",
+        transitBody: "Our studio is just blocks away in the same immediate community:",
+        transit: {
+          carMinutes: "3 to 5 minutes",
+          transitMinutes: "5 to 8 minutes",
+          mtaLines: ["B16 Bus (Fort Hamilton Pkwy)", "B63 Bus (5th Ave)", "B70 Bus", "R Train (Bay Ridge - 95th St / 86th St)"],
+          directionsSummary: "We are located right next door in the heart of Bay Ridge. Drive down Fort Hamilton Parkway or 4th/5th Avenue in just 3 to 5 minutes. The B16 and B63 buses connect Fort Hamilton directly to our block in minutes, or take a pleasant 10-minute neighborhood walk.",
+          parkingNote: "Quiet residential street with convenient, stress-free street parking right by our private entrance.",
+        },
+        whyTitle: "Why Fort Hamilton Clients Choose IVA Nail Art",
+        whyCards: [
+          {
+            title: "Immediate 3–5 Min Proximity",
+            desc: "Conveniently located within the 11209 district—just a quick 3 to 5-minute trip from the Fort Hamilton Parkway corridor and military base.",
+          },
+          {
+            title: "Private Calming Atmosphere",
+            desc: "Zero salon chaos, zero waiting in lines, and zero harsh acrylic smells. Enjoy a relaxing, private 1-on-1 studio experience.",
+          },
+          {
+            title: "4-Week Builder Gel Strength",
+            desc: "Natural nail reinforcement that protects your nails during busy workdays and active lifestyles without chipping or lifting.",
+          },
+          {
+            title: "Sterile Medical-Grade Care",
+            desc: "Autoclave-sterilized instruments and Russian dry e-file technique ensure your nail beds and cuticles remain healthy.",
+          },
+        ],
+        servicesTitle: "Signature Studio Services",
+        servicesSubtitle: "Every service is delivered with medical-grade disinfection and unhurried artisan care.",
+        services: [
+          {
+            title: "Structured Builder Gel (BIAB)",
+            tagline: "Natural nail reinforcement & lasting apex",
+            description: "A flexible yet durable European gel overlay that shields natural nails, encourages healthy growth, and stays chip-free for up to a month.",
+            calendlyPrefill: "Builder Gel Manicure",
+          },
+          {
+            title: "Bespoke Fine Nail Art",
+            tagline: "Editorial precision tailored to your aesthetic",
+            description: "Custom chrome, tortoise shell, textured 3D gel, glazed finishes, or delicate fine lines painted entirely by hand.",
+            calendlyPrefill: "Custom Nail Art",
+          },
+          {
+            title: "Sculpted Extensions & Acrílico",
+            tagline: "Lightweight, slender & ultra-durable length",
+            description: "Modern extensions sculpted with balanced arches and tapered sidewalls for an elegant, natural silhouette.",
+            calendlyPrefill: "Acrylic Full Set",
+          },
+          {
+            title: "Luxury Waterless Gel Pedicure",
+            tagline: "Podiatry-level hygienic foot care",
+            description: "Deep dry cuticle cleansing, calloused skin smoothing, and high-shine gel polish in a sterile, spa-grade environment.",
+            calendlyPrefill: "Gel Pedicure",
+          },
+        ],
+        faqTitle: "Frequently Asked Questions — Fort Hamilton Clients",
+        faq: [
+          {
+            q: "How close is the studio to Fort Hamilton?",
+            a: "We are practically neighbors in the 11209 zip code! It is an easy 3 to 5-minute drive down Fort Hamilton Parkway or 4th Avenue, or a quick ride on the B16/B63 bus.",
+          },
+          {
+            q: "Do you offer bilingual consultations?",
+            a: "Yes! Ivannía is completely fluent in both English and Spanish (atención 100% bilingüe) and provides warm, personalized care for every client.",
+          },
+          {
+            q: "How does the $35 deposit work?",
+            a: "When you schedule your service on Calendly, a $35 deposit via Zelle, Apple Pay, or Venmo reserves your dedicated appointment slot and is credited toward your final service balance.",
+          },
+          {
+            q: "Can builder gel withstand an active or demanding lifestyle?",
+            a: "Absolutely! European builder gel is significantly more durable and flexible than traditional gel polish or dip powder, resisting lifting and chipping for 3 to 4 full weeks.",
+          },
+        ],
+        ctaPrimary: "Book on Calendly",
+        ctaSecondary: "Message @iva_nailart_nyc on Instagram",
+      },
+      es: {
+        metaTitle: "Salón de Uñas cerca de Fort Hamilton, Brooklyn | Builder Gel y Nail Art | IVA Nail Art",
+        metaDescription: "¿Buscas un salón de uñas exclusivo cerca de Fort Hamilton, Brooklyn (11209, 11252)? Estudio privado a 3–5 min en Bay Ridge. Manicura rusa, builder gel y nail art. Reserva en Calendly.",
+        eyebrow: "ATELIER PRIVADO DE UÑAS · A 3–5 MIN DE FORT HAMILTON (11209)",
+        h1Top: "MANICURA RUSA Y BUILDER GEL",
+        h1Bottom: "cerca de Fort Hamilton, Brooklyn",
+        badge: "Vecinas Inmediatas · A 3–5 Min de Fort Hamilton Pkwy",
+        intro: "Ubicado a pocas cuadras en Bay Ridge (11209), IVA Nail Art es el estudio privado de referencia para residentes y familias de Fort Hamilton. Olvídate de los salones comerciales ruidosos y disfruta de un atelier privado, libre de olores a acrílico, especializado en nivelación con builder gel europeo, manicura rusa en seco y arte a mano alzada.",
+        transitHeading: "Cómo llegar desde Fort Hamilton",
+        transitBody: "Estamos a solo unos minutos en el mismo vecindario de South Brooklyn:",
+        transit: {
+          carMinutes: "3 a 5 minutos",
+          transitMinutes: "5 a 8 minutos",
+          mtaLines: ["Bus B16 (Fort Hamilton Pkwy)", "Bus B63 (5th Ave)", "Bus B70", "Tren R (Bay Ridge - 95th St / 86th St)"],
+          directionsSummary: "Estamos al lado, en el corazón de Bay Ridge. Puedes llegar en solo 3 a 5 minutos en auto bajando por Fort Hamilton Parkway o 4th/5th Avenue. Los buses B16 y B63 te dejan en nuestra cuadra en cuestión de minutos.",
+          parkingNote: "Calle residencial tranquila con estacionamiento fácil y cómodo frente al estudio.",
+        },
+        whyTitle: "Por Qué Clientas de Fort Hamilton Eligen IVA Nail Art",
+        whyCards: [
+          {
+            title: "Proximidad Inmediata (3–5 Min)",
+            desc: "Ubicada dentro del código postal 11209, a minutos del corredor de Fort Hamilton Parkway y de la base militar.",
+          },
+          {
+            title: "Ambiente Calmo y 1 a 1",
+            desc: "Sin salas de espera llenas ni olores químicos fuertes. Un espacio relajante dedicado exclusivamente a ti y tus manos.",
+          },
+          {
+            title: "Fuerza de 4 Semanas con BIAB",
+            desc: "Refuerzo que protege tus uñas naturales contra roturas y mantiene un brillo intacto durante semanas.",
+          },
+          {
+            title: "Higiene y Esterilización Médica",
+            desc: "Instrumental quirúrgico esterilizado y técnica rusa en seco para cuidar la salud de tus cutículas sin dolor.",
+          },
+        ],
+        servicesTitle: "Servicios Exclusivos de Estudio",
+        servicesSubtitle: "Cada cita se realiza con higiene médica rigurosa y dedicación absoluta.",
+        services: [
+          {
+            title: "Manicura con Builder Gel (BIAB)",
+            tagline: "Fuerza, estructura y brillo por 4 semanas",
+            description: "Cuidado ruso de cutículas y nivelación con gel estructurado que fortalece uñas quebradizas y previene roturas.",
+            calendlyPrefill: "Builder Gel Manicure",
+          },
+          {
+            title: "Nail Art Editorial a Mano",
+            tagline: "Diseños artísticos a tu medida",
+            description: "Efecto cromo, ilustraciones botánicas, textura 3D en gel y acabados glaseados realizados con pincel fino.",
+            calendlyPrefill: "Custom Nail Art",
+          },
+          {
+            title: "Acrílico Esculpido y Extensiones",
+            tagline: "Forma estilizada y máxima durabilidad",
+            description: "Extensiones almond, coffin o cuadradas con estructura ligera y proporciones armónicas de gran resistencia.",
+            calendlyPrefill: "Acrylic Full Set",
+          },
+          {
+            title: "Pedicura Spa en Seco con Gel",
+            tagline: "Limpieza profunda y máxima higiene",
+            description: "Tratamiento en seco con instrumental esterilizado, exfoliación suavizante y esmaltado en gel de larga duración.",
+            calendlyPrefill: "Gel Pedicure",
+          },
+        ],
+        faqTitle: "Preguntas Frecuentes — Clientas de Fort Hamilton",
+        faq: [
+          {
+            q: "¿Qué tan cerca está el estudio de Fort Hamilton?",
+            a: "¡Estamos en el mismo vecindario (11209)! En auto tardas únicamente de 3 a 5 minutos bajando por Fort Hamilton Parkway o 4th Avenue, y los buses B16 y B63 tienen paradas directas.",
+          },
+          {
+            q: "¿La atención es en español?",
+            a: "¡Sí, totalmente! Ivannía es 100% bilingüe (español e inglés) y te atenderá con calidez y dedicación en el idioma de tu preferencia.",
+          },
+          {
+            q: "¿Cómo se confirma la cita?",
+            a: "Eliges tu servicio en Calendly. Un depósito de $35 por Zelle, Apple Pay o Venmo aparta tu cita y se descuenta del total el día del servicio.",
+          },
+          {
+            q: "¿El builder gel resiste estilos de vida activos?",
+            a: "¡Totalmente! El builder gel estructurado es mucho más flexible y resistente que el esmalte tradicional o el polvo dip, previniendo quiebres y levantamientos por 3 a 4 semanas.",
+          },
+        ],
+        ctaPrimary: "Reservar en Calendly",
+        ctaSecondary: "Escribir a @iva_nailart_nyc en Instagram",
+      },
+    },
+  },
+  {
+    slug: "bath-beach-nail-salon",
+    neighborhoodEn: "Bath Beach & Gravesend",
+    neighborhoodEs: "Bath Beach y Gravesend",
+    zipCodes: ["11214", "11223"],
+    photoOffset: 5,
+    copy: {
+      en: {
+        metaTitle: "Nail Salon near Bath Beach & Gravesend, Brooklyn | Builder Gel & Nail Art | IVA Nail Art",
+        metaDescription: "Seeking a luxury nail studio near Bath Beach & Gravesend, Brooklyn (11214, 11223)? Private Bay Ridge atelier just 8–10 minutes away. Russian manicure, builder gel overlays & custom nail art. Book via Calendly.",
+        eyebrow: "PRIVATE NAIL STUDIO · 8–10 MIN FROM BATH BEACH & GRAVESEND",
+        h1Top: "RUSSIAN MANICURE & FINE NAIL ART",
+        h1Bottom: "near Bath Beach & Gravesend, Brooklyn",
+        badge: "8–10 Min via 86th St or Shore Pkwy · 1:1 Private Atelier",
+        intro: "Skip the crowded volume salons along 86th Street and Bath Avenue. Just an 8 to 10-minute trip into neighboring Bay Ridge brings you to IVA Nail Art, an exclusive private studio offering Russian-technique dry cuticle care, strengthening European builder gel (BIAB) overlays, and bespoke editorial nail art with up to 4 weeks of flawless wear.",
+        transitHeading: "Getting Here from Bath Beach & Gravesend",
+        transitBody: "Our studio is a fast and simple commute from Bath Beach and Gravesend:",
+        transit: {
+          carMinutes: "8 to 10 minutes",
+          transitMinutes: "12 to 16 minutes",
+          mtaLines: ["B1 Bus (Direct along 86th St into Bay Ridge)", "B64 Bus (Bath Ave)", "B8 Bus (Cropsey Ave)"],
+          directionsSummary: "Drive straight west along 86th Street or Cropsey Avenue, or cruise along Shore Parkway directly into Bay Ridge. By public transit, the B1 bus runs straight along 86th Street from Bath Beach directly to our neighborhood with no transfers needed.",
+          parkingNote: "Ample free street parking available around our quiet residential Bay Ridge block.",
+        },
+        whyTitle: "Why Bath Beach Clients Choose IVA Nail Art",
+        whyCards: [
+          {
+            title: "Private 1-on-1 Sanctuary",
+            desc: "Leave the busy Bath Avenue salons behind. Enjoy a peaceful, pristine private studio with zero waiting time and zero rush.",
+          },
+          {
+            title: "No-Chip Builder Gel (BIAB)",
+            desc: "Reinforces and balances natural nail arches, delivering high-gloss European durability for 3 to 4 weeks without peeling.",
+          },
+          {
+            title: "Custom Editorial Hand Art",
+            desc: "Chrome finishes, glazed textures, 3D gel droplets, and delicate hand-painted fine art tailored to your individual style.",
+          },
+          {
+            title: "Dry Russian Cuticle Precision",
+            desc: "Painless electronic cuticle cleaning and medical-grade sterilization for photo-ready, deep, clean nail beds.",
+          },
+        ],
+        servicesTitle: "Signature Studio Services",
+        servicesSubtitle: "Every service is delivered with medical-grade disinfection and unhurried artisan care.",
+        services: [
+          {
+            title: "Structured Builder Gel (BIAB)",
+            tagline: "Natural nail reinforcement & lasting apex",
+            description: "A flexible yet durable European gel overlay that shields natural nails, encourages healthy growth, and stays chip-free for up to a month.",
+            calendlyPrefill: "Builder Gel Manicure",
+          },
+          {
+            title: "Bespoke Fine Nail Art",
+            tagline: "Editorial precision tailored to your aesthetic",
+            description: "Custom chrome, tortoise shell, textured 3D gel, glazed finishes, or delicate fine lines painted entirely by hand.",
+            calendlyPrefill: "Custom Nail Art",
+          },
+          {
+            title: "Sculpted Extensions & Acrílico",
+            tagline: "Lightweight, slender & ultra-durable length",
+            description: "Modern extensions sculpted with balanced arches and tapered sidewalls for an elegant, natural silhouette.",
+            calendlyPrefill: "Acrylic Full Set",
+          },
+          {
+            title: "Luxury Waterless Gel Pedicure",
+            tagline: "Podiatry-level hygienic foot care",
+            description: "Deep dry cuticle cleansing, calloused skin smoothing, and high-shine gel polish in a sterile, spa-grade environment.",
+            calendlyPrefill: "Gel Pedicure",
+          },
+        ],
+        faqTitle: "Frequently Asked Questions — Bath Beach & Gravesend Clients",
+        faq: [
+          {
+            q: "How far is IVA Nail Art from Bath Beach and Gravesend?",
+            a: "We are located in neighboring Bay Ridge (11209). By car, it takes only 8 to 10 minutes straight down 86th Street or via Shore Parkway. The B1 bus runs directly down 86th Street to our block in about 14 minutes.",
+          },
+          {
+            q: "What makes builder gel different from standard gel manicures?",
+            a: "Builder gel adds physical structural reinforcement (creating a natural apex arch) that prevents bending and breaking. It stays flawless for 3–4 weeks without chipping, peeling, or damaging natural nail plates.",
+          },
+          {
+            q: "How do I secure an appointment?",
+            a: "Choose your preferred service on our Calendly calendar. A $35 deposit (via Zelle, Apple Pay, or Venmo) confirms your appointment and is applied toward your final service cost.",
+          },
+          {
+            q: "Where is the exact studio location?",
+            a: "To ensure absolute privacy and dedicated one-on-one attention with zero walk-in traffic, the exact Bay Ridge studio address and entrance details are sent privately upon appointment confirmation.",
+          },
+        ],
+        ctaPrimary: "Book on Calendly",
+        ctaSecondary: "Message @iva_nailart_nyc on Instagram",
+      },
+      es: {
+        metaTitle: "Salón de Uñas cerca de Bath Beach y Gravesend, Brooklyn | Builder Gel y Nail Art | IVA Nail Art",
+        metaDescription: "¿Buscas un salón de uñas exclusivo cerca de Bath Beach o Gravesend, Brooklyn (11214, 11223)? Estudio privado a 8–10 min en Bay Ridge. Manicura rusa, builder gel y nail art. Reserva en Calendly.",
+        eyebrow: "ATELIER PRIVADO DE UÑAS · A 8–10 MIN DE BATH BEACH Y GRAVESEND",
+        h1Top: "MANICURA RUSA Y NAIL ART A MANO",
+        h1Bottom: "cerca de Bath Beach y Gravesend, Brooklyn",
+        badge: "8–10 Min por 86th St o Shore Pkwy · Atelier Privado 1 a 1",
+        intro: "Evita los salones masivos y apresurados de 86th Street y Bath Avenue. A solo 8 a 10 minutos en Bay Ridge te espera IVA Nail Art: un exclusivo estudio privado dedicado a la manicura rusa en seco, refuerzo con builder gel europeo (BIAB) y nail art fino a mano con hasta 4 semanas de duración intacta.",
+        transitHeading: "Cómo llegar desde Bath Beach y Gravesend",
+        transitBody: "El trayecto desde Bath Beach y Gravesend hacia nuestro estudio en Bay Ridge es sumamente rápido:",
+        transit: {
+          carMinutes: "8 a 10 minutos",
+          transitMinutes: "12 a 16 minutos",
+          mtaLines: ["Bus B1 (Directo por 86th St a Bay Ridge)", "Bus B64 (Bath Ave)", "Bus B8 (Cropsey Ave)"],
+          directionsSummary: "Conduce hacia el oeste por 86th Street, Cropsey Avenue o toma Shore Parkway directamente hacia Bay Ridge. En transporte público, el bus B1 sube en línea recta por 86th Street hasta nuestro vecindario sin transbordos.",
+          parkingNote: "Estacionamiento en la calle accesible y cómodo en nuestra cuadra residencial.",
+        },
+        whyTitle: "Por Qué Clientas de Bath Beach Eligen IVA Nail Art",
+        whyCards: [
+          {
+            title: "Atelier 100% Privado",
+            desc: "Deja atrás los salones ruidosos y disfruta de un espacio íntimo y exclusivo sin prisas ni esperas.",
+          },
+          {
+            title: "Builder Gel sin Quiebres",
+            desc: "Nivelación y refuerzo estructural con gel europeo de alta gama que no se levanta por 3 a 4 semanas.",
+          },
+          {
+            title: "Nail Art Personalizado",
+            desc: "Líneas francesas micro, efectos cromo, velvet cat-eye y figuras detalladas dibujadas totalmente a mano.",
+          },
+          {
+            title: "Precisión Rusa en Seco",
+            desc: "Limpieza profunda de cutículas con torno e instrumental esterilizado en autoclave para un acabado limpio y duradero.",
+          },
+        ],
+        servicesTitle: "Servicios Exclusivos de Estudio",
+        servicesSubtitle: "Cada cita se realiza con higiene médica rigurosa y dedicación absoluta.",
+        services: [
+          {
+            title: "Manicura con Builder Gel (BIAB)",
+            tagline: "Fuerza, estructura y brillo por 4 semanas",
+            description: "Cuidado ruso de cutículas y nivelación con gel estructurado que fortalece uñas quebradizas y previene roturas.",
+            calendlyPrefill: "Builder Gel Manicure",
+          },
+          {
+            title: "Nail Art Editorial a Mano",
+            tagline: "Diseños artísticos a tu medida",
+            description: "Efecto cromo, ilustraciones botánicas, textura 3D en gel y acabados glaseados realizados con pincel fino.",
+            calendlyPrefill: "Custom Nail Art",
+          },
+          {
+            title: "Acrílico Esculpido y Extensiones",
+            tagline: "Forma estilizada y máxima durabilidad",
+            description: "Extensiones almond, coffin o cuadradas con estructura ligera y proporciones armónicas de gran resistencia.",
+            calendlyPrefill: "Acrylic Full Set",
+          },
+          {
+            title: "Pedicura Spa en Seco con Gel",
+            tagline: "Limpieza profunda y máxima higiene",
+            description: "Tratamiento en seco con instrumental esterilizado, exfoliación suavizante y esmaltado en gel de larga duración.",
+            calendlyPrefill: "Gel Pedicure",
+          },
+        ],
+        faqTitle: "Preguntas Frecuentes — Clientas de Bath Beach y Gravesend",
+        faq: [
+          {
+            q: "¿A qué distancia está el estudio desde Bath Beach?",
+            a: "Estamos justo al lado en Bay Ridge (11209). En auto tardas únicamente de 8 a 10 minutos subiendo por 86th Street o por Shore Parkway, y el bus B1 conecta ambos vecindarios directamente en unos 14 minutos.",
+          },
+          {
+            q: "¿En qué se diferencia el builder gel del esmalte en gel común?",
+            a: "El builder gel crea un ápice natural que refuerza el centro de la uña para evitar que se quiebre. Dura de 3 a 4 semanas con brillo perfecto sin maltratar tus uñas naturales.",
+          },
+          {
+            q: "¿Cómo se reserva y se envía el depósito?",
+            a: "Eliges tu horario en nuestro calendario de Calendly. Un depósito de $35 vía Zelle, Apple Pay o Venmo asegura tu turno exclusivo y se deduce de tu cuenta final el día de la cita.",
+          },
+          {
+            q: "¿Dónde se encuentra la dirección exacta del estudio?",
+            a: "Para asegurar la máxima privacidad y un ambiente relajado sin clientas esperando de pie, la dirección exacta en Bay Ridge se envía de forma privada por WhatsApp y correo al confirmar la cita.",
+          },
+        ],
+        ctaPrimary: "Reservar en Calendly",
+        ctaSecondary: "Escribir a @iva_nailart_nyc en Instagram",
+      },
+    },
+  },
 ];
 
 export function getHyperlocal(slug: string): HyperlocalNeighborhood {

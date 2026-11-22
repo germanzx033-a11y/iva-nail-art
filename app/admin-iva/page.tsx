@@ -8,6 +8,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import AdminWhatsAppScripts from "@/app/components/AdminWhatsAppScripts";
 import {
   Moon,
   Sun,
@@ -32,7 +33,6 @@ import {
   Eye,
   Heart,
   Sparkles,
-  FileText,
   Baby,
   Zap,
   Target,
@@ -338,6 +338,21 @@ export default function AdminPage() {
             >
               Enter Sanctuary
             </motion.button>
+
+            {/* Quick 1-Tap Access for WhatsApp Scripts on Mobile */}
+            <div className="mt-4 pt-4 border-t border-white/10 text-center">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab("scripts");
+                  setIsAuthenticated(true);
+                }}
+                className="text-xs text-[#E8B4B8] hover:text-white underline underline-offset-4 transition-colors font-medium flex items-center justify-center gap-1.5 mx-auto"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span>Open WhatsApp Quick Reply Concierge →</span>
+              </button>
+            </div>
           </motion.div>
 
           <p className="text-center text-white/30 text-xs mt-8 tracking-wide">Protected by The IVA Standard</p>
@@ -436,7 +451,7 @@ export default function AdminPage() {
             {[
               { id: "dashboard", label: "Command Center", icon: Zap },
               { id: "waitlist", label: "VIP Waitlist", icon: Users },
-              { id: "scripts", label: "Sales Scripts", icon: FileText },
+              { id: "scripts", label: "WhatsApp Concierge", icon: MessageCircle },
               { id: "analytics", label: "Growth", icon: TrendingUp },
               { id: "ezra", label: "Ezra Time", icon: Baby },
             ].map((tab) => (
@@ -776,12 +791,10 @@ export default function AdminPage() {
           </motion.div>
         )}
 
-        {/* ==================== SCRIPTS TAB ==================== */}
+        {/* ==================== SCRIPTS TAB (WHATSAPP CONCIERGE) ==================== */}
         {activeTab === "scripts" && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl border border-[#EBE8E2] overflow-hidden p-8 text-center">
-            <Sparkles className="w-12 h-12 mx-auto text-[#B76E79] mb-4" />
-            <h3 className="text-xl font-semibold text-[#2D1810] mb-2">Message Templates</h3>
-            <p className="text-[#6B5C4C]">Coming soon - Quick response templates for client communication</p>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <AdminWhatsAppScripts />
           </motion.div>
         )}
 
