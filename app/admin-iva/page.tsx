@@ -10,6 +10,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import AdminWhatsAppScripts from "@/app/components/AdminWhatsAppScripts";
 import AdminClientCRM from "@/app/components/AdminClientCRM";
+import AdminGoogleMapsKit from "@/app/components/AdminGoogleMapsKit";
 import {
   Moon,
   Sun,
@@ -41,6 +42,8 @@ import {
   Coffee,
   Sunrise,
   Sunset,
+  MapPin,
+  Printer,
 } from "lucide-react";
 
 // =============================================
@@ -134,7 +137,7 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"dashboard" | "clients" | "waitlist" | "scripts" | "analytics" | "ezra">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "clients" | "gmaps" | "scripts" | "waitlist" | "analytics" | "ezra">("dashboard");
   const [showNotifications, setShowNotifications] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -431,6 +434,18 @@ export default function AdminPage() {
               <RefreshCw className={`w-5 h-5 text-[#7A7A7A] ${isLoading ? "animate-spin" : ""}`} />
             </motion.button>
 
+            {/* Table Stand Link */}
+            <a
+              href="/table-display"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#722F37]/10 hover:bg-[#722F37] text-[#722F37] hover:text-white rounded-xl border border-[#722F37]/20 text-xs font-semibold transition-all"
+              title="Abrir Expositor QR para Imprimir"
+            >
+              <Printer className="w-4 h-4" />
+              <span className="hidden sm:inline">Expositor QR Mesa</span>
+            </a>
+
             {/* Logout */}
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -452,8 +467,9 @@ export default function AdminPage() {
             {[
               { id: "dashboard", label: "Command Center", icon: Zap },
               { id: "clients", label: "Client CRM & Refills", icon: Users },
-              { id: "waitlist", label: "VIP Waitlist", icon: Crown },
+              { id: "gmaps", label: "Google Maps & SEO", icon: MapPin },
               { id: "scripts", label: "WhatsApp Concierge", icon: MessageCircle },
+              { id: "waitlist", label: "VIP Waitlist", icon: Crown },
               { id: "analytics", label: "Growth", icon: TrendingUp },
               { id: "ezra", label: "Ezra Time", icon: Baby },
             ].map((tab) => (
@@ -797,6 +813,13 @@ export default function AdminPage() {
                 ))}
               </div>
             )}
+          </motion.div>
+        )}
+
+        {/* ==================== GOOGLE MAPS & LOCAL SEO TAB ==================== */}
+        {activeTab === "gmaps" && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <AdminGoogleMapsKit />
           </motion.div>
         )}
 
