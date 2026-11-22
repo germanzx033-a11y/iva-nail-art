@@ -438,12 +438,27 @@ export default function Home() {
               };
               const IconComponent = getServiceIcon();
 
-              // Obtener imagen de ejemplo de la galería basada en la categoría
+              // Deterministic mapping: each service category pulls from
+              // specific gallery aesthetic categories so every card shows a
+              // distinct, relevant photo.
+              const SERVICE_IMAGE_MAP: Record<string, string[]> = {
+                manicure: ["minimalist", "bridal"],   // clean, elegant gel finishes
+                pedicure: ["bridal", "minimalist"],    // soft, clean looks
+                acrylic:  ["french", "3dart"],          // sculpted, dramatic
+                nailart:  ["chrome", "3dart", "french"],// artistic, editorial
+                extras:   ["minimalist"],               // simple, clean looks
+              };
+
               const getServiceImage = () => {
-                const categoryImages = GALLERY_IMAGES.filter(img => img.category === "nails");
-                // One distinct photo per service, so every tab shows different cards
-                const imageIndex = SERVICES.findIndex((s) => s.id === service.id) % categoryImages.length;
-                return categoryImages[imageIndex]?.src || "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg";
+                const galleryCategories = SERVICE_IMAGE_MAP[service.category] || ["minimalist"];
+                const pool = GALLERY_IMAGES.filter(img =>
+                  galleryCategories.includes(img.category as string)
+                );
+                if (pool.length === 0) return "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg";
+                // Index within this service's category tab so each card gets a unique photo
+                const siblings = SERVICES.filter(s => s.category === service.category);
+                const indexInCategory = siblings.findIndex(s => s.id === service.id);
+                return pool[indexInCategory % pool.length].src;
               };
               const serviceImage = getServiceImage();
 
@@ -459,7 +474,7 @@ export default function Home() {
                       alt={lang === "en" ? service.name : service.nameEs}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-contain"
+                      className="object-cover"
                     />
                     <span className="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-[#B8864D] shadow-md">
                       <IconComponent className="h-5 w-5" />
