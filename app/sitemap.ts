@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import { SITE_URL } from '@/lib/site'
 import { SERVICE_LANDINGS, landingPath } from '@/app/data/serviceLandings'
+import { HYPERLOCAL_LANDINGS, hyperlocalPath } from '@/app/data/hyperlocalLandings'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = SITE_URL
@@ -15,6 +16,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }))
   })
 
+  const hyperlocalEntries: MetadataRoute.Sitemap = HYPERLOCAL_LANDINGS.flatMap((h) => {
+    const languages = { en: `${baseUrl}${hyperlocalPath(h.slug, 'en')}`, es: `${baseUrl}${hyperlocalPath(h.slug, 'es')}` }
+    return (['en', 'es'] as const).map((lang) => ({
+      url: `${baseUrl}${hyperlocalPath(h.slug, lang)}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: lang === 'en' ? 0.95 : 0.85,
+      alternates: { languages },
+    }))
+  })
+
   return [
     {
       url: baseUrl,
@@ -23,6 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     ...landingEntries,
+    ...hyperlocalEntries,
     ...['/try-on', '/nail-match', '/gift-card', '/aftercare', '/es/aftercare'].map((path) => ({
       url: `${baseUrl}${path}`,
       lastModified: new Date(),

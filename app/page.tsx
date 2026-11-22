@@ -85,7 +85,8 @@ function AnimatedCounter({ end, duration = 1600, suffix = "", prefix = "" }: {
     };
   }, [end, duration, prefix, suffix]);
 
-  return <span ref={ref}>{prefix}0{suffix}</span>;
+  // Render the real target value by default so it never displays as "0" during SSR or lazy paint
+  return <span ref={ref}>{prefix}{end}{suffix}</span>;
 }
 
 // ============================================================================
@@ -326,6 +327,9 @@ export default function Home() {
               </a>
               <a href="#gallery" className="inline-block py-3 hover:text-[#E8C9A8] transition-colors">
                 {t.nav.gallery}
+              </a>
+              <a href="#locations" className="inline-block py-3 hover:text-[#E8C9A8] transition-colors">
+                {lang === "en" ? "AREAS SERVED" : "ÁREAS"}
               </a>
             </div>
 
@@ -599,6 +603,110 @@ export default function Home() {
       </section>
 
       {/* ================================================================== */}
+      {/* HYPERLOCAL SOUTH BROOKLYN AREAS SERVED */}
+      {/* ================================================================== */}
+      <section id="locations" className="border-t border-[#F4EBE1]/10 bg-[#120706] py-20 px-6 md:px-12 relative overflow-hidden">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-14">
+            <p className="font-display text-xs tracking-[0.35em] text-[#D4A574] uppercase mb-2">
+              {lang === "en" ? "SOUTH BROOKLYN COVERAGE" : "COBERTURA EN SOUTH BROOKLYN"}
+            </p>
+            <h2 className="font-display text-3xl sm:text-4xl font-light text-[#F4EBE1]">
+              {lang === "en" ? "Private Studio Near Your Neighborhood" : "Estudio Privado Cerca de Tu Barrio"}
+            </h2>
+            <p className="mt-3 text-sm sm:text-base text-[#F4EBE1]/70 max-w-2xl mx-auto font-light">
+              {lang === "en"
+                ? "Located in Bay Ridge (11209), our private studio is just 5 to 12 minutes away from neighboring South Brooklyn communities."
+                : "Ubicado en Bay Ridge (11209), nuestro estudio privado está a solo 5 a 12 minutos de las comunidades vecinas del sur de Brooklyn."}
+            </p>
+          </div>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Dyker Heights */}
+            <div className="rounded-2xl border border-[#D4A574]/20 bg-[#170c0a] p-7 flex flex-col justify-between hover:border-[#D4A574]/50 transition-all group">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="rounded-full bg-[#D4A574]/15 px-3 py-1 text-xs font-semibold text-[#D4A574] border border-[#D4A574]/30">
+                    ⏱ 5–8 min
+                  </span>
+                  <span className="text-xs text-white/50">ZIP 11228</span>
+                </div>
+                <h3 className="font-display text-xl font-medium text-[#F4EBE1] mb-2 group-hover:text-[#D4A574] transition-colors">
+                  Dyker Heights
+                </h3>
+                <p className="text-xs text-[#F4EBE1]/70 leading-relaxed mb-6">
+                  {lang === "en"
+                    ? "Direct down 86th St or Bay Ridge Pkwy. B1 & B64 buses connect directly into Bay Ridge in minutes."
+                    : "Directo por 86th St o Bay Ridge Pkwy. Autobuses B1 y B64 conectan en pocos minutos."}
+                </p>
+              </div>
+              <a
+                href={lang === "en" ? "/dyker-heights-nail-salon" : "/es/dyker-heights-nail-salon"}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D4A574] hover:text-white transition-colors"
+              >
+                <span>{lang === "en" ? "Explore Dyker Heights Guide" : "Ver Guía Dyker Heights"}</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            {/* Bensonhurst */}
+            <div className="rounded-2xl border border-[#D4A574]/20 bg-[#170c0a] p-7 flex flex-col justify-between hover:border-[#D4A574]/50 transition-all group">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="rounded-full bg-[#D4A574]/15 px-3 py-1 text-xs font-semibold text-[#D4A574] border border-[#D4A574]/30">
+                    ⏱ 10–12 min
+                  </span>
+                  <span className="text-xs text-white/50">ZIP 11214</span>
+                </div>
+                <h3 className="font-display text-xl font-medium text-[#F4EBE1] mb-2 group-hover:text-[#D4A574] transition-colors">
+                  Bensonhurst
+                </h3>
+                <p className="text-xs text-[#F4EBE1]/70 leading-relaxed mb-6">
+                  {lang === "en"
+                    ? "Direct B1 bus on 86th St or fast drive via 75th St. Russian cuticle care & builder gel overlays."
+                    : "Autobús B1 directo por 86th St o viaje rápido por 75th St. Cuidado ruso de cutículas y builder gel."}
+                </p>
+              </div>
+              <a
+                href={lang === "en" ? "/bensonhurst-nail-salon" : "/es/bensonhurst-nail-salon"}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D4A574] hover:text-white transition-colors"
+              >
+                <span>{lang === "en" ? "Explore Bensonhurst Guide" : "Ver Guía Bensonhurst"}</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            {/* Sunset Park */}
+            <div className="rounded-2xl border border-[#D4A574]/20 bg-[#170c0a] p-7 flex flex-col justify-between hover:border-[#D4A574]/50 transition-all group sm:col-span-2 lg:col-span-1">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="rounded-full bg-[#D4A574]/15 px-3 py-1 text-xs font-semibold text-[#D4A574] border border-[#D4A574]/30">
+                    ⏱ 8–10 min
+                  </span>
+                  <span className="text-xs text-white/50">ZIP 11220 / 11232</span>
+                </div>
+                <h3 className="font-display text-xl font-medium text-[#F4EBE1] mb-2 group-hover:text-[#D4A574] transition-colors">
+                  Sunset Park
+                </h3>
+                <p className="text-xs text-[#F4EBE1]/70 leading-relaxed mb-6">
+                  {lang === "en"
+                    ? "Direct R train straight down 4th Ave into Bay Ridge. Bilingual studio (EN/ES) and medical-grade hygiene."
+                    : "Tren R directo hacia el sur por 4th Ave hasta Bay Ridge. Estudio bilingüe y desinfección médica."}
+                </p>
+              </div>
+              <a
+                href={lang === "en" ? "/sunset-park-nail-salon" : "/es/sunset-park-nail-salon"}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D4A574] hover:text-white transition-colors"
+              >
+                <span>{lang === "en" ? "Explore Sunset Park Guide" : "Ver Guía Sunset Park"}</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================== */}
       {/* FOOTER PREMIUM */}
       {/* ================================================================== */}
       <footer className="bg-gradient-to-br from-[#1a0202] via-[#2a0404] to-[#1a0202] text-white py-16 md:py-20 px-6 relative overflow-hidden">
@@ -695,11 +803,78 @@ className="w-16 h-auto rounded-lg"
             </div>
           </div>
 
-          <div className="border-t-2 border-white/20 pt-10 text-center">
-            <p className="text-white/70 text-base font-medium">
-              © {new Date().getFullYear()} IVA Nail Art. {lang === "en" ? "All rights reserved." : "Todos los derechos reservados."}
+          {/* Areas Served & Core Services Links for Local SEO */}
+          <div className="border-t-2 border-white/20 pt-8 pb-4 text-center">
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#D4AF37] mb-3">
+              {lang === "en" ? "Areas Served in South Brooklyn" : "Áreas que Atendemos en South Brooklyn"}
             </p>
-            <p className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm text-white/70">
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-white/80 mb-6">
+              <a
+                href={lang === "en" ? "/dyker-heights-nail-salon" : "/es/dyker-heights-nail-salon"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "Dyker Heights (11228)" : "Dyker Heights (11228)"}
+              </a>
+              <span className="text-white/30 hidden sm:inline">·</span>
+              <a
+                href={lang === "en" ? "/bensonhurst-nail-salon" : "/es/bensonhurst-nail-salon"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "Bensonhurst (11214)" : "Bensonhurst (11214)"}
+              </a>
+              <span className="text-white/30 hidden sm:inline">·</span>
+              <a
+                href={lang === "en" ? "/sunset-park-nail-salon" : "/es/sunset-park-nail-salon"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "Sunset Park (11220/11232)" : "Sunset Park (11220/11232)"}
+              </a>
+              <span className="text-white/30 hidden sm:inline">·</span>
+              <a
+                href={lang === "en" ? "/builder-gel-bay-ridge" : "/es/builder-gel-bay-ridge"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "Bay Ridge Flagship (11209)" : "Estudio Bay Ridge (11209)"}
+              </a>
+            </div>
+
+            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#D4AF37] mb-3">
+              {lang === "en" ? "Signature Treatments" : "Tratamientos Exclusivos"}
+            </p>
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-white/80 mb-6">
+              <a
+                href={lang === "en" ? "/builder-gel-bay-ridge" : "/es/builder-gel-bay-ridge"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "Builder Gel" : "Builder Gel"}
+              </a>
+              <span className="text-white/30 hidden sm:inline">·</span>
+              <a
+                href={lang === "en" ? "/nail-art-bay-ridge" : "/es/nail-art-bay-ridge"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "Custom Nail Art" : "Nail Art a Mano"}
+              </a>
+              <span className="text-white/30 hidden sm:inline">·</span>
+              <a
+                href={lang === "en" ? "/acrylic-nails-bay-ridge" : "/es/acrylic-nails-bay-ridge"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "Acrylic Extensions" : "Uñas Acrílicas"}
+              </a>
+              <span className="text-white/30 hidden sm:inline">·</span>
+              <a
+                href={lang === "en" ? "/pedicure-bay-ridge" : "/es/pedicure-bay-ridge"}
+                className="underline-offset-4 hover:text-[#D4AF37] hover:underline"
+              >
+                {lang === "en" ? "Spa Gel Pedicure" : "Pedicura en Seco"}
+              </a>
+            </div>
+
+            <p className="text-white/70 text-sm font-medium">
+              © {new Date().getFullYear()} IVA Nail Art · Official Instagram: <a href="https://instagram.com/iva_nailart_nyc" target="_blank" rel="noopener noreferrer" className="text-[#D4AF37] hover:underline">@iva_nailart_nyc</a>
+            </p>
+            <p className="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-1 text-xs text-white/70">
               <a href="/privacy" className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
                 {lang === "en" ? "Privacy Policy" : "Privacidad"}
               </a>
@@ -713,8 +888,8 @@ className="w-16 h-auto rounded-lg"
                 {lang === "en" ? "Gift card" : "Tarjeta de regalo"}
               </a>
             </p>
-            <p className="text-white/50 text-sm mt-2">
-              {lang === "en" ? "Made with ❤️ in Brooklyn" : "Hecho con ❤️ en Brooklyn"}
+            <p className="text-white/50 text-xs mt-2">
+              {lang === "en" ? "Private Studio in Bay Ridge, Brooklyn (11209) · By Appointment Only" : "Estudio Privado en Bay Ridge, Brooklyn (11209) · Solo con Cita"}
             </p>
           </div>
         </div>
