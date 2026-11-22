@@ -1,5 +1,5 @@
-# 🎬 Instagram Reels & Video Content Pipeline — @aureate_sole
-**Owner:** Director of Video & AI Content (`@aureate_sole`)  
+# 🎬 Instagram Reels & Video Content Pipeline — @iva_nailart_nyc
+**Owner:** Director of Video & AI Content (`@iva_nailart_nyc`)  
 **Studio:** IVA Nail Art NY | `ivanailartny.com`  
 
 ---

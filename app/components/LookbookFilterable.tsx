@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Sparkles, ZoomIn, X, Calendar, ArrowRight, Heart } from "lucide-react";
+import { Sparkles, ZoomIn, X, Calendar, ArrowRight } from "lucide-react";
 import {
   GALLERY_CATEGORIES,
   GALLERY_IMAGES,

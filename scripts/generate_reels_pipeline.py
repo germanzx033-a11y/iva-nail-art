@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-IVA Nail Art NY (@aureate_sole) — Programmatic Instagram Reels Pipeline
+IVA Nail Art NY (@iva_nailart_nyc) — Programmatic Instagram Reels Pipeline
 Generates viral luxury editorial storyboards, hook scripts, and FFmpeg assembly commands.
 """
 
@@ -20,7 +20,7 @@ REELS_CONCEPTS = [
             {"time": "0.0s - 2.5s", "shot": "Macro Before shot with gentle lighting. Overlay text: 'No water. No soaking. Just surgical precision.'"},
             {"time": "2.5s - 6.0s", "shot": "Diamond e-file flame bit contouring the eponychium safely without redness."},
             {"time": "6.0s - 10.0s", "shot": "Applying keratin base coat that self-levels to an apex curve."},
-            {"time": "10.0s - 15.0s", "shot": "Final glossy reflection test under studio ring light. Text: 'Book private slot via link in bio @aureate_sole'"}
+            {"time": "10.0s - 15.0s", "shot": "Final glossy reflection test under studio ring light. Text: 'Book private slot via link in bio @iva_nailart_nyc'"}
         ],
         "image_assets": ["afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg", "c61db860-4810-473d-9af3-90ea78e17226.jpg"]
     },
@@ -73,7 +73,7 @@ def generate_ffmpeg_command(reel):
 
 def main():
     print("=" * 60)
-    print("IVA NAIL ART NY (@aureate_sole) — REELS COMPILER PIPELINE")
+    print("IVA NAIL ART NY (@iva_nailart_nyc) — REELS COMPILER PIPELINE")
     print("=" * 60)
     
     output_dir = "scripts/output"
@@ -87,7 +87,7 @@ def main():
     
     sh_path = os.path.join(output_dir, "render_reels.sh")
     with open(sh_path, "w", encoding="utf-8") as f:
-        f.write("#!/bin/bash\n# Programmatic FFmpeg rendering for @aureate_sole Reels\n\n")
+        f.write("#!/bin/bash\n# Programmatic FFmpeg rendering for @iva_nailart_nyc Reels\n\n")
         for reel in REELS_CONCEPTS:
             f.write(generate_ffmpeg_command(reel))
             f.write("\n")

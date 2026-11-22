@@ -67,7 +67,7 @@
    - Instagram integration
    - 3-column grid layout
    - Hover effects with gradient overlay
-   - Direct link to @ivanailart
+   - Direct link to @iva_nailart_nyc
    - Location: [page.tsx:697-746](app/page.tsx#L697-L746)
 
 9. **Before/After Slider**
@@ -174,7 +174,7 @@
 - Number: +1 (929) 625-7273
 
 ### **Instagram**
-- @ivanailart integration
+- @iva_nailart_nyc integration
 - Gallery links
 - Press kit mentions
 - Influencer collaborations

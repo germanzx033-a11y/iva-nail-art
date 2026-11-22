@@ -198,8 +198,8 @@ export default function NailTryOn({ lang, initial }: { lang: "en" | "es"; initia
             lastTime = video.currentTime;
             const res = landmarker.detectForVideo(video, performance.now());
             const prev = smoothRef.current;
-            smoothRef.current = res.landmarks.map((hand: any[], i: number) =>
-              hand.map((p: any, j: number) => {
+            smoothRef.current = res.landmarks.map((hand: NormalizedLandmark[], i: number) =>
+              hand.map((p: NormalizedLandmark, j: number) => {
                 const q = prev[i]?.[j];
                 return q ? { ...p, x: q.x + (p.x - q.x) * 0.55, y: q.y + (p.y - q.y) * 0.55 } : p;
               })

@@ -4,44 +4,49 @@
 
 ---
 
-## 1. ASCII Pipeline Flow Diagram (Calendly Webhook Architecture)
+## 1. ASCII Pipeline Flow Diagram (9-Node Production Architecture)
 
 ```
-+--------------------------------------------------------------+
-|                  Calendly Webhook Event                      |
-|      Events: invitee.created | invitee.canceled              |
-+------------------------------+-------------------------------+
-                               |
-                               v  (HTTP POST Webhook)
-+--------------------------------------------------------------+
-|               Webhook: Calendly Trigger                      |
-|       Path: /webhook/calendly-booking-pipeline               |
-+------------------------------+-------------------------------+
-                               |
-                               v
-+--------------------------------------------------------------+
-|               Parse & Sanitize Calendly Event                |
-|   Extracts Client, Phone, Service, Time, $35 deposit note    |
-+------------------------------+-------------------------------+
-                               |
-                               v
-                 +-------------+-------------+
-                 |                           |
-        (invitee.created)            (invitee.canceled)
-                 |                           |
-                 v                           v
-+-------------------------------+ +----------------------------+
-|  Alert Iva: Confirm $35 Dep.  | |  Alert Iva: Canceled Slot  |
-|  Direct WhatsApp link to chat | |  Slot freed in calendar    |
-|  Holds slot with Zelle/Apple  | +----------------------------+
++---------------------------------------------------------------------------------+
+|                            Calendly Webhook Event                               |
+|                     Events: invitee.created | invitee.canceled                  |
++---------------------------------------+-----------------------------------------+
+                                        |
+                                        v  (HTTP POST Webhook)
++---------------------------------------------------------------------------------+
+|                        Webhook: Calendly Trigger                                |
+|                Path: /webhook/calendly-booking-pipeline                         |
++---------------------------------------+-----------------------------------------+
+                                        |
+                                        v
++---------------------------------------------------------------------------------+
+|                        Parse & Normalize Calendly Event                         |
+|   Extracts Client, Phone, Email, Service, Instagram, Formats Dates (EST),       |
+|   Calculates reminderWaitDate = startTime - 24h, sets $35 deposit terms         |
++---------------------------------------+-----------------------------------------+
+                                        |
+                                        v
+                        +---------------+---------------+
+                        |                               |
+             (invitee.created)                  (invitee.canceled)
+                        |                               |
+        +---------------+---------------+               +---------------+---------------+
+        |                               |               |                               |
+        v                               v               v                               v
++-------------------------------+ +-------------------+ +-------------------+ +-------------------+
+|  Alert Iva: Confirm $35 Dep.  | | Send Client       | | Alert Iva:        | | Send Client       |
+|  Direct WhatsApp link to chat | | Deposit Notice    | | Canceled Slot     | | Cancellation      |
+|  Holds slot with Zelle/Apple  | | Zelle/Apple/Venmo | | Slot freed in     | | Confirmation      |
++-------------------------------+ +-------------------+ | calendar          | | Rebooking link    |
+                                                        +-------------------+ +-------------------+
+        |
+        v
 +-------------------------------+
-                 |
-                 v
-+-------------------------------+
-|     Wait: 24h Pre-Service     |
-+----------------+--------------+
-                 |
-                 v
+|     Wait until 24h Before     |
+|   Targets: reminderWaitDate   |
++---------------+---------------+
+                |
+                v
 +-------------------------------+
 |    24h WhatsApp Reminder      |
 |  Address (Bay Ridge 11209)    |
@@ -82,9 +87,9 @@ curl -X POST https://api.calendly.com/webhook_subscriptions \
 
 ---
 
-## 4. Local Testing with cURL
+## 4. End-to-End Testing with cURL
 
-Simulate a new Calendly booking:
+### 4.1 Simulate a New Calendly Booking (`invitee.created`):
 
 ```bash
 curl -X POST http://localhost:5678/webhook-test/calendly-booking-pipeline \
@@ -92,13 +97,41 @@ curl -X POST http://localhost:5678/webhook-test/calendly-booking-pipeline \
   -d '{
     "event": "invitee.created",
     "payload": {
-      "name": "Camila Gomez",
-      "email": "camila@example.com",
+      "name": "Elena Rostova",
+      "email": "elena.rostova@example.com",
       "text_reminder_number": "+19295551234",
-      "event_start_time": "2026-12-05T18:00:00Z",
+      "event_start_time": "2026-12-10T16:00:00Z",
       "questions_and_answers": [
-        { "question": "Selected Service", "answer": "Builder Gel Manicure (BIAB)" }
+        { "question": "Selected Service", "answer": "Russian Mani with Tier 2 Hand-Painted Art" },
+        { "question": "Instagram Handle", "answer": "@elena_style_nyc" }
       ]
     }
   }'
+```
+
+### 4.2 Simulate a Booking Cancellation (`invitee.canceled`):
+
+```bash
+curl -X POST http://localhost:5678/webhook-test/calendly-booking-pipeline \
+  -H "Content-Type: application/json" \
+  -d '{
+    "event": "invitee.canceled",
+    "payload": {
+      "name": "Elena Rostova",
+      "email": "elena.rostova@example.com",
+      "text_reminder_number": "+19295551234",
+      "event_start_time": "2026-12-10T16:00:00Z",
+      "cancellation": {
+        "canceled_by": "Elena Rostova",
+        "reason": "Schedule conflict with photoshoot"
+      }
+    }
+  }'
+```
+
+### 4.3 Validation Script
+
+To verify workflow integrity programmatically without launching an n8n daemon:
+```bash
+node -e "const f = require('./automations/ivanailart-booking-pipeline.json'); console.log('Validated nodes:', f.nodes.length, 'connections:', Object.keys(f.connections).length);"
 ```

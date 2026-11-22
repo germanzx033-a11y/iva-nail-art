@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { occasion, preferredLength, aestheticVibe } = result.data;
+    const { occasion, preferredLength } = result.data;
     const lowerOccasion = occasion.toLowerCase();
 
     // High-Fashion Editorial Decision Matrix

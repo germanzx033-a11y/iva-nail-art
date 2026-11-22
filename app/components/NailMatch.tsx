@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { PRESETS, designLabel, drawPreview, type NailPreset } from "@/lib/nails";
 import { track } from "@/lib/track";
+import CalendlyModal from "@/app/components/CalendlyModal";
 
 type Answer = string;
 
@@ -55,6 +56,7 @@ export default function NailMatch({ lang }: { lang: "en" | "es" }) {
   const c = COPY[lang];
   const questions = QUESTIONS[lang];
   const [answers, setAnswers] = useState<Answer[]>([]);
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
   const step = answers.length;
   const done = step === questions.length;
 
@@ -138,18 +140,24 @@ export default function NailMatch({ lang }: { lang: "en" | "es" }) {
             <button type="button" onClick={() => setAnswers([])} className="py-2 text-[#E8C9A8] underline underline-offset-4 hover:text-white cursor-pointer">
               {c.again}
             </button>
-            <a
-              href={`https://calendly.com/iva_nailart_nyc?text_color=F4EBE1&primary_color=D4A574&background_color=0E0706&a1=${encodeURIComponent(`Nail Match: ${results[0]?.[lang] || "Custom Style"}`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="py-2 px-5 rounded-full bg-[#E8C9A8] text-[#0E0706] text-sm font-semibold hover:bg-white transition-colors"
+            <button
+              type="button"
+              onClick={() => setIsCalendlyOpen(true)}
+              className="py-2 px-5 rounded-full bg-[#E8C9A8] text-[#0E0706] text-sm font-semibold hover:bg-white transition-colors cursor-pointer"
             >
               {lang === "en" ? "Schedule with this look (Calendly)" : "Agendar con este diseño (Calendly)"}
-            </a>
+            </button>
             <a href="https://ig.me/m/iva_nailart_nyc" target="_blank" rel="noopener noreferrer" className="py-2 text-[#E8C9A8] underline underline-offset-4 hover:text-white">
               {c.book}
             </a>
           </div>
+
+          <CalendlyModal
+            isOpen={isCalendlyOpen}
+            onClose={() => setIsCalendlyOpen(false)}
+            lang={lang}
+            prefilledService={`Nail Match: ${results[0]?.[lang] || "Custom Style"}`}
+          />
         </div>
       )}
     </div>

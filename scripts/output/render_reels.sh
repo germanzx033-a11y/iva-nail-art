@@ -1,5 +1,5 @@
 #!/bin/bash
-# Programmatic FFmpeg rendering for @aureate_sole Reels
+# Programmatic FFmpeg rendering for @iva_nailart_nyc Reels
 
 # FFmpeg command for: The Art of the Russian Cuticle Pocket
 ffmpeg -loop 1 -t 7.5 -i public/gallery/afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg \

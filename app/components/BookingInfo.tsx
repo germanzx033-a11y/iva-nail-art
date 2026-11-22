@@ -9,6 +9,7 @@ interface BookingInfoProps {
   phone: string;
   hours: { days: string; time: string }[];
   deposit: number;
+  onBookClick?: () => void;
 }
 
 const COPY = {
@@ -86,7 +87,7 @@ const COPY = {
 
 const STEP_ICONS = [MessageCircle, Sparkles, CalendarCheck];
 
-export default function BookingInfo({ lang, bookUrl, phone, hours, deposit }: BookingInfoProps) {
+export default function BookingInfo({ lang, bookUrl, phone, hours, deposit, onBookClick }: BookingInfoProps) {
   const c = COPY[lang];
   const faq = c.faq.map((item) => ({ ...item, a: item.a.replace("{DEPOSIT}", `$${deposit}`) }));
   const tel = `tel:${phone.replace(/[^\d+]/g, "")}`;
@@ -111,6 +112,15 @@ export default function BookingInfo({ lang, bookUrl, phone, hours, deposit }: Bo
                 </div>
                 <h3 className="mb-2 font-serif text-2xl text-[#F4EBE1]">{step.title}</h3>
                 <p className="text-[#F4EBE1]/75">{step.body}</p>
+                {i === 2 && onBookClick && (
+                  <button
+                    type="button"
+                    onClick={onBookClick}
+                    className="mt-4 inline-flex items-center gap-2 text-xs uppercase tracking-wider font-semibold text-[#D4A574] hover:text-[#E8C9A8] transition-colors cursor-pointer"
+                  >
+                    <span>{lang === "en" ? "Select Date & Time on Calendly" : "Elegir Horario en Calendly"} &rarr;</span>
+                  </button>
+                )}
               </li>
             );
           })}
@@ -147,14 +157,24 @@ export default function BookingInfo({ lang, bookUrl, phone, hours, deposit }: Bo
             </dl>
             <p className="mt-1 text-[#F4EBE1]/70">{c.hoursNote}</p>
 
-            <a
-              href={bookUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glow-pill mt-8 w-full justify-center"
-            >
-              {c.cta}
-            </a>
+            {onBookClick ? (
+              <button
+                type="button"
+                onClick={onBookClick}
+                className="glow-pill mt-8 w-full justify-center cursor-pointer"
+              >
+                {lang === "en" ? "Lock In Your Date (Calendly)" : "Aparta Tu Fecha (Calendly)"}
+              </button>
+            ) : (
+              <a
+                href={bookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glow-pill mt-8 w-full justify-center"
+              >
+                {c.cta}
+              </a>
+            )}
 
             <p className="mt-6 text-sm text-[#F4EBE1]/70">{c.call}</p>
             <div className="mt-2 flex flex-wrap gap-x-6 gap-y-2">

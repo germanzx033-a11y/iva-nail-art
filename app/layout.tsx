@@ -4,7 +4,7 @@ import "./globals.css";
 import PWAProvider from "./components/PWAProvider";
 import Analytics from "./components/Analytics";
 import LocalSeoSchema from "./components/LocalSeoSchema";
-import { SITE_URL, BUSINESS } from "@/lib/site";
+import { SITE_URL } from "@/lib/site";
 
 /**
  * IVA Nail Art - LUXURY EDITORIAL
@@ -81,6 +81,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@iva_nailart_nyc",
+    creator: "@iva_nailart_nyc",
     title: "IVA Nail Art NY | Boutique Nail Studio in Bay Ridge, Brooklyn",
     description: DESCRIPTION,
     images: ["/og-image.jpg"],
@@ -95,65 +97,6 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: "#0E0706",
-};
-
-// =============================================
-// JSON-LD STRUCTURED DATA
-// Only facts that appear on the site: no ratings, prices or claims that cannot be verified.
-// =============================================
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "NailSalon",
-  "@id": `${SITE_URL}/#nailsalon`,
-  name: BUSINESS.name,
-  alternateName: BUSINESS.alternateName,
-  description: DESCRIPTION,
-  url: `${SITE_URL}/`,
-  image: `${SITE_URL}/og-image.jpg`,
-  logo: `${SITE_URL}/icon-512.png`,
-  telephone: "+1-929-625-7273",
-  priceRange: "$$",
-  founder: { "@type": "Person", name: BUSINESS.artist },
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Brooklyn",
-    addressRegion: "NY",
-    postalCode: "11209",
-    addressCountry: "US",
-  },
-  areaServed: [
-    { "@type": "Place", name: "Bay Ridge, Brooklyn, NY" },
-    { "@type": "City", name: "Brooklyn" },
-  ],
-  knowsLanguage: ["Spanish", "English"],
-  // By appointment only, within these hours
-  openingHoursSpecification: [
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      opens: "17:30",
-      closes: "22:00",
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Saturday", "Sunday"],
-      opens: "10:00",
-      closes: "22:00",
-    },
-  ],
-  sameAs: [BUSINESS.instagramUrl, BUSINESS.tiktokUrl],
-  hasOfferCatalog: {
-    "@type": "OfferCatalog",
-    name: "Nail Services",
-    itemListElement: [
-      "Builder Gel Manicure",
-      "Structured Gel Manicure",
-      "Acrylic Nail Set",
-      "Gel Pedicure",
-      "Custom Nail Art",
-    ].map((name) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name } })),
-  },
 };
 
 // =============================================

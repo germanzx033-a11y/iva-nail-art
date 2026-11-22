@@ -1,5 +1,5 @@
 # 💅 Product Requirements Document (PRD) — IVA Nail Art NY
-**Domain:** `ivanailartny.com` | **Instagram:** `@aureate_sole` | **Location:** Brooklyn, NY  
+**Domain:** `ivanailartny.com` | **Instagram:** `@iva_nailart_nyc` | **Location:** Brooklyn, NY  
 **Owner:** Director of Product & Strategy (CPO)  
 **Status:** Approved for Production Engineering  
 
@@ -8,7 +8,7 @@
 ## 1. Executive Summary & Market Positioning
 IVA Nail Art NY is an ultra-luxury private nail atelier based in Brooklyn, NY. Unlike high-volume street salons, IVA operates on an exclusive appointment model (maximum 3 clients per day, dedicated 3 to 4-hour blocks) specializing in medical-grade Russian Manicures, structured Builder Gel (BIAB), Japanese Gel-X extensions, and bespoke editorial nail art.
 
-The primary customer journey starts on **Instagram (`@aureate_sole`)** or **Google Maps (Local Search)** and converts through a seamless mobile-first editorial digital experience into a confirmed appointment with deposit protection.
+The primary customer journey starts on **Instagram (`@iva_nailart_nyc`)** or **Google Maps (Local Search)** and converts through a seamless mobile-first editorial digital experience into a confirmed appointment with deposit protection.
 
 ---
 
@@ -16,7 +16,7 @@ The primary customer journey starts on **Instagram (`@aureate_sole`)** or **Goog
 
 ```mermaid
 flowchart LR
-    A["Discovery (Instagram @aureate_sole / Google Maps)"] --> B["Mobile Editorial Experience (390x844 iPhone View)"]
+    A["Discovery (Instagram @iva_nailart_nyc / Google Maps)"] --> B["Mobile Editorial Experience (390x844 iPhone View)"]
     B --> C["Curated Lookbook / AI Nail Concierge"]
     C --> D["Service & Add-on Calculator (Transparent Pricing)"]
     D --> E["Deposit Reservation ($35 / Card / Stripe / Zelle)"]

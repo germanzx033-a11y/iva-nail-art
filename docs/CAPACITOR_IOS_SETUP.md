@@ -1,66 +1,86 @@
 # 📱 Capacitor iOS Packaging Guide — IVA Nail Art NY
 **App Name:** IVA Nails  
 **Package ID:** `com.ivanailartny.app`  
-**Target:** Apple App Store (iOS 15+)  
+**Target:** Apple App Store (iOS 16+)  
+**Architecture:** Remote Hosted Webview (Preserving Next.js 16 App Router SSR, Route Handlers & MediaPipe Performance)  
 
 ---
 
-## 1. Prerrequisitos de Apple
+## 1. Architectural Strategy: Hosted Webview vs Static Export
 
-Para publicar en la **Apple App Store**, Apple exige obligatoriamente:
-1. **Cuenta de Apple Developer:** Registro activo en [developer.apple.com](https://developer.apple.com) con membresía pagada de **$99 USD/año**.
-2. **Computadora Mac con Xcode:** Xcode 15 o superior instalado en macOS.
+Next.js 16 with App Router, server-side route handlers (`/api/bookings`, `/api/availability`), server rendering, and dynamic Open Graph images should **not** be compiled as a static export (`output: 'export'`), as static export disables API routes and dynamic headers.  
 
----
-
-## 2. Instalación de Capacitor en el Proyecto
-
-Cuando tengas tu cuenta de Apple Developer lista, ejecuta estos comandos en el proyecto:
-
-```bash
-cd C:\Users\german\iva-nail-art
-
-# 1. Instalar dependencias de Capacitor
-npm install @capacitor/core @capacitor/cli @capacitor/ios
-
-# 2. Inicializar la configuración de Capacitor
-npx cap init "IVA Nails" "com.ivanailartny.app" --web-dir "out"
-
-# 3. Agregar la plataforma iOS
-npx cap add ios
-```
+The production-standard architecture for Capacitor with Next.js 16 is **Hosted Webview**:
+- Capacitor native shell loads `https://ivanailartny.com`.
+- The PWA Service Worker (`public/sw.js`) provides instant local offline loading (`/offline.html`).
+- iOS native capabilities (Camera, Photo Library, Push Notifications, Status Bar, App Store distribution) are provided by Capacitor.
 
 ---
 
-## 3. Configuración de Cámara para MediaPipe (`/try-on`)
+## 2. Apple Developer Prerequisites
+To publish to the **Apple App Store**, Apple requires:
+1. **Apple Developer Account:** Active enrollment at [developer.apple.com](https://developer.apple.com) ($99 USD/year).
+2. **macOS Machine with Xcode:** Xcode 15 or later installed on macOS Sonoma or Sequoia.
 
-Para que el simulador de uñas con realidad aumentada (`/try-on`) funcione dentro de la app nativa de iOS, se debe agregar el permiso de cámara en `ios/App/App/Info.plist`:
+---
+
+## 3. Project Configuration (`capacitor.config.ts`)
+
+The root configuration file `capacitor.config.ts` is pre-configured with:
+- `appId: "com.ivanailartny.app"`
+- `appName: "IVA Nail Art"`
+- `server.url: "https://ivanailartny.com"`
+- `allowNavigation`: Whitelisting `ivanailartny.com`, `calendly.com`, `storage.googleapis.com` (MediaPipe model), `wa.me`, and `instagram.com`.
+- Dark editorial status bar and splash screen (`#0E0706`).
+
+---
+
+## 4. MediaPipe `/try-on` iOS WKWebView Protection
+
+### 4.1 Mandatory Privacy Keys (`Info.plist`)
+For the real-time virtual nail try-on (`/try-on`) to work seamlessly inside iOS WKWebView without crashing, the following permission keys must be declared in `ios/App/App/Info.plist`:
 
 ```xml
 <key>NSCameraUsageDescription</key>
-<string>IVA Nails requires camera access to overlay real-time virtual nail art designs on your hand.</string>
+<string>IVA Nail Art requires camera access to allow real-time virtual nail try-on on your hand.</string>
+
+<key>NSPhotoLibraryUsageDescription</key>
+<string>IVA Nail Art requires photo library access to let you select a photo of your hand for virtual nail styling.</string>
 ```
+
+### 4.2 WebAssembly SIMD & WebGL2 Acceleration
+- iOS 16.4+ WKWebView natively supports WebGL2 and WebAssembly SIMD.
+- Model weights (`hand_landmarker.task`) are fetched dynamically from Google Cloud Storage:
+  `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`.
+- CSP headers must permit `connect-src https://storage.googleapis.com`.
+
+### 4.3 Instagram In-App Browser Resilience
+Instagram's embedded WKWebView blocks `navigator.mediaDevices.getUserMedia` or throws silent permission errors.  
+`app/components/NailTryOn.tsx` provides an automatic dual mode: if camera permission fails, users can tap "Use a photo" / "Usar una foto" via `<input type="file" accept="image/*">`, which works 100% reliably inside Instagram and TikTok in-app browsers.
 
 ---
 
-## 4. Compilación y Apertura en Xcode
+## 5. Build & Deployment Commands
+
+When packaging on a macOS workstation with Xcode:
 
 ```bash
-# Generar build estático del proyecto
-npm run build
+# 1. Install Capacitor dependencies
+npm install @capacitor/core @capacitor/cli @capacitor/ios
 
-# Sincronizar archivos con el contenedor nativo de iOS
+# 2. Add iOS native platform
+npx cap add ios
+
+# 3. Synchronize assets and plugins
 npx cap sync ios
 
-# Abrir el proyecto en Xcode (en Mac)
+# 4. Open in Xcode
 npx cap open ios
 ```
 
----
-
-## 5. Pasos Finales en App Store Connect
-
-1. En Xcode, selecciona tu equipo de desarrollo (*Signing & Capabilities*).
-2. Selecciona **Any iOS Device (arm64)** y haz clic en **Product $\rightarrow$ Archive**.
-3. Sube el paquete (*Distribute App*) a **App Store Connect**.
-4. Completa la ficha de la app con capturas de pantalla de iPhone (6.7" y 6.5"), descripción, política de privacidad (`https://ivanailartny.com/privacy`) y envía a revisión de Apple.
+### Xcode Steps:
+1. In Xcode, configure Signing & Capabilities with your Apple Team ID.
+2. Select target **Any iOS Device (arm64)**.
+3. Select **Product -> Archive** to build the binary.
+4. Click **Distribute App** to upload to **App Store Connect**.
+5. Finalize App Store metadata, screenshots (6.7" and 6.5" Super Retina), and submit for App Review.

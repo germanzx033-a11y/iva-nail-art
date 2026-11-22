@@ -189,8 +189,8 @@ npm run analyze
 
 - **Nombre**: IVA Nail Art
 - **WhatsApp**: 19296257273
-- **Instagram**: @iva_nailart_ny
-- **TikTok**: @iva_nailart_ny
+- **Instagram**: @iva_nailart_nyc
+- **TikTok**: @iva_nailart_nyc
 - **Ubicación**: Bay Ridge, Brooklyn, NY 11209
 - **Horario**: 9:00 AM – 8:00 PM (Solo cita previa)
 - **Depósito**: $35 (no reembolsable)

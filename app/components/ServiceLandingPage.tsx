@@ -1,11 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Instagram, MessageCircle, Phone, Clock, Check } from "lucide-react";
 import { BUSINESS, SITE_URL } from "@/lib/site";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
 import { SERVICE_LANDINGS, SHARED, getLanding, landingPath, type Lang } from "@/app/data/serviceLandings";
-
-const DM_URL = "https://ig.me/m/iva_nailart_nyc";
+import CalendlyModal from "@/app/components/CalendlyModal";
 
 function jsonLd(slug: string, lang: Lang) {
   const landing = getLanding(slug);
@@ -50,6 +52,7 @@ function jsonLd(slug: string, lang: Lang) {
 
 /** Service landing page (server-rendered, one route per service and language). */
 export default function ServiceLandingPage({ slug, lang }: { slug: string; lang: Lang }) {
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
   const landing = getLanding(slug);
   const c = { ...SHARED[lang], ...landing.copy[lang] };
   const faq = [...landing.copy[lang].faq, { q: SHARED[lang].priceQ, a: SHARED[lang].priceA }, { q: SHARED[lang].whereQ, a: SHARED[lang].whereA }];
@@ -79,9 +82,13 @@ export default function ServiceLandingPage({ slug, lang }: { slug: string; lang:
             >
               {c.switchLabel}
             </Link>
-            <a href={DM_URL} target="_blank" rel="noopener noreferrer" className="rounded-full bg-[#E8C9A8] px-5 py-2 text-sm font-semibold text-[#0E0706] hover:bg-white">
+            <button
+              type="button"
+              onClick={() => setIsCalendlyOpen(true)}
+              className="rounded-full bg-[#E8C9A8] px-5 py-2 text-sm font-semibold text-[#0E0706] hover:bg-white transition-colors cursor-pointer"
+            >
               {c.book}
-            </a>
+            </button>
           </div>
         </nav>
       </header>
@@ -95,10 +102,14 @@ export default function ServiceLandingPage({ slug, lang }: { slug: string; lang:
             <span className="mt-1 block font-serif text-[clamp(2rem,5.5vw,3.6rem)] italic leading-[1.1] text-[#E8C9A8]">{c.h1Bottom}</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-[#F4EBE1]/80">{c.intro}</p>
-          <a href={DM_URL} target="_blank" rel="noopener noreferrer" className="glow-pill mt-8">
+          <button
+            type="button"
+            onClick={() => setIsCalendlyOpen(true)}
+            className="glow-pill mt-8 cursor-pointer"
+          >
             <Instagram className="h-5 w-5" aria-hidden />
             {c.cta}
-          </a>
+          </button>
           <p className="mt-4 text-sm text-[#F4EBE1]/70">{c.ctaNote}</p>
         </div>
         <div className="relative mx-auto aspect-[3/4] w-full max-w-sm overflow-hidden rounded-[1.75rem] bg-[#140B0A]">
@@ -219,9 +230,13 @@ export default function ServiceLandingPage({ slug, lang }: { slug: string; lang:
               ))}
             </dl>
             <p className="mt-3 text-sm text-[#F4EBE1]/70">{c.hoursNote}</p>
-            <a href={DM_URL} target="_blank" rel="noopener noreferrer" className="glow-pill mt-8 w-full justify-center">
+            <button
+              type="button"
+              onClick={() => setIsCalendlyOpen(true)}
+              className="glow-pill mt-8 w-full justify-center cursor-pointer"
+            >
               {c.cta}
-            </a>
+            </button>
             <p className="mt-6 text-sm text-[#F4EBE1]/70">{c.other}</p>
             <div className="mt-2 flex flex-wrap gap-x-6 gap-y-2">
               <a href={wa} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 py-1 text-lg text-[#E8C9A8] underline-offset-4 hover:underline">
@@ -262,6 +277,13 @@ export default function ServiceLandingPage({ slug, lang }: { slug: string; lang:
         </Link>
         <p className="mt-4 text-sm text-[#F4EBE1]/60">© {new Date().getFullYear()} {BUSINESS.name} · Bay Ridge, Brooklyn</p>
       </footer>
+
+      <CalendlyModal
+        isOpen={isCalendlyOpen}
+        onClose={() => setIsCalendlyOpen(false)}
+        lang={lang}
+        prefilledService={`${c.h1Top} ${c.h1Bottom}`}
+      />
     </main>
   );
 }

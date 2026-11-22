@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { X, Calendar, MessageCircle, Instagram, ShieldCheck, Clock, Sparkles } from "lucide-react";
+import { useMounted } from "@/app/hooks/useMounted";
 
 interface CalendlyModalProps {
   isOpen: boolean;
@@ -16,14 +17,10 @@ export default function CalendlyModal({
   lang = "en",
   prefilledService = "",
 }: CalendlyModalProps) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const calendlyBaseUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || "https://calendly.com/iva_nailart_nyc";
   const whatsappUrl = "https://wa.me/19296257273";
   const instagramDmUrl = "https://ig.me/m/iva_nailart_nyc";
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Prevent scroll when modal is open
   useEffect(() => {

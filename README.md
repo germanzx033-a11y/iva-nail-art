@@ -159,7 +159,7 @@ Switch between English and Spanish with a single click. All content, including s
 
 ### Instagram DM Integration
 
-Every "Book" button opens the studio's Instagram direct messages (`https://ig.me/m/iva_nailart_ny`, set in `instagramDmUrl` in `app/constants/data.ts` and `app/page.tsx`). Instagram cannot pre-fill a message from a link, so the booking form copies the request to the clipboard and opens the chat for the client to paste. The request contains:
+Every "Book" button opens the studio's Instagram direct messages (`https://ig.me/m/iva_nailart_nyc`, set in `instagramDmUrl` in `app/constants/data.ts` and `app/page.tsx`). Instagram cannot pre-fill a message from a link, so the booking form copies the request to the clipboard and opens the chat for the client to paste. The request contains:
 - Selected service
 - Date and time
 - Customer information
@@ -183,7 +183,7 @@ Mobile-first design that adapts perfectly to:
 **IVA Nail Art**
 - 📍 Brooklyn, NY 11209
 - 📱 +1 (929) 625-7273
-- 📸 [@iva_nailart_ny](https://instagram.com/iva_nailart_ny)
+- 📸 [@iva_nailart_nyc](https://instagram.com/iva_nailart_nyc)
 
 ## 📝 License
 

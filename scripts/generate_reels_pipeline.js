@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * IVA Nail Art NY (@aureate_sole) — Programmatic Instagram Reels Pipeline (Node.js)
+ * IVA Nail Art NY (@iva_nailart_nyc) — Programmatic Instagram Reels Pipeline (Node.js)
  * Generates viral luxury editorial storyboards, hook scripts, and FFmpeg assembly commands.
  */
 
@@ -19,7 +19,7 @@ const REELS_CONCEPTS = [
       { time: "0.0s - 2.5s", shot: "Macro Before shot with gentle lighting. Overlay text: 'No water. No soaking. Just surgical precision.'" },
       { time: "2.5s - 6.0s", shot: "Diamond e-file flame bit contouring the eponychium safely without redness." },
       { time: "6.0s - 10.0s", shot: "Applying keratin base coat that self-levels to an apex curve." },
-      { time: "10.0s - 15.0s", shot: "Final glossy reflection test under studio ring light. Text: 'Book private slot via link in bio @aureate_sole'" }
+      { time: "10.0s - 15.0s", shot: "Final glossy reflection test under studio ring light. Text: 'Book private slot via link in bio @iva_nailart_nyc'" }
     ],
     image_assets: ["afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg", "c61db860-4810-473d-9af3-90ea78e17226.jpg"]
   },
@@ -66,7 +66,7 @@ ffmpeg -loop 1 -t 7.5 -i public/gallery/${reel.image_assets[0]} \\
 
 function main() {
   console.log("=".repeat(60));
-  console.log("IVA NAIL ART NY (@aureate_sole) — REELS COMPILER PIPELINE (NODE)");
+  console.log("IVA NAIL ART NY (@iva_nailart_nyc) — REELS COMPILER PIPELINE (NODE)");
   console.log("=".repeat(60));
 
   const outputDir = path.join(__dirname, 'output');
@@ -79,7 +79,7 @@ function main() {
   console.log(`[+] Exported ${REELS_CONCEPTS.length} editorial video blueprints to: ${blueprintPath}`);
 
   const shPath = path.join(outputDir, 'render_reels.sh');
-  let scriptContent = "#!/bin/bash\n# Programmatic FFmpeg rendering for @aureate_sole Reels\n\n";
+  let scriptContent = "#!/bin/bash\n# Programmatic FFmpeg rendering for @iva_nailart_nyc Reels\n\n";
   for (const reel of REELS_CONCEPTS) {
     scriptContent += generateFFmpegCommand(reel) + "\n";
   }

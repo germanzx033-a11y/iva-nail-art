@@ -18,7 +18,8 @@
     },
     {
       "parameters": {
-        "jsCode": "// Parse and normalize Calendly webhook payload (invitee.created / invitee.canceled)\nconst body = $input.item.json.body || $input.item.json;\nconst event = body.event || 'invitee.created';\nconst payload = body.payload || body;\n\nconst clientName = payload.name || payload.first_name ? `${payload.first_name || ''} ${payload.last_name || ''}`.trim() : 'Valued Client';\nconst clientEmail = payload.email || 'N/A';\nconst questions = payload.questions_and_answers || [];\n\n// Extract phone and custom answers\nlet clientPhone = payload.text_reminder_number || 'N/A';\nlet requestedService = 'Custom Nail Art / Gel Session';\n\nfor (const q of questions) {\n  const questionText = (q.question || '').toLowerCase();\n  if (questionText.includes('phone') || questionText.includes('teléfono') || questionText.includes('whatsapp')) {\n    clientPhone = q.answer || clientPhone;\n  }\n  if (questionText.includes('service') || questionText.includes('servicio') || questionText.includes('diseño')) {\n    requestedService = q.answer || requestedService;\n  }\n}\n\nconst rawStartTime = payload.scheduled_event ? payload.scheduled_event.start_time : payload.event_start_time || new Date().toISOString();\nconst eventStartTime = new Date(rawStartTime).toLocaleString('en-US', { timeZone: 'America/New_York', dateStyle: 'full', timeStyle: 'short' });\n\nreturn {\n  json: {\n    eventType: event,\n    isCreated: event === 'invitee.created',\n    isCanceled: event === 'invitee.canceled',\n    clientName: clientName,\n    clientEmail: clientEmail,\n    clientPhone: clientPhone,\n    clientPhoneClean: clientPhone.replace(/[^0-9]/g, ''),\n    serviceName: requestedService,\n    eventStartTime: eventStartTime,\n    rawStartTime: rawStartTime,\n    depositRequired: 35,\n    studioAddress: 'Bay Ridge, Brooklyn, NY 11209 (Private Studio Atelier)',\n    studioRules: '15 min grace period; 24h advance notice for cancellations.',\n    instagramOfficial: '@iva_nailart_nyc'\n  }\n};"
+        "jsCode": "// Normalize Calendly webhook payload (invitee.created & invitee.canceled)\nconst body = $input.item.json.body || $input.item.json;\nconst event = body.event || 'invitee.created';\nconst payload = body.payload || body;\nconst scheduledEvent = payload.scheduled_event || {};\n\n// Invitee identification\nconst clientName = payload.name || (payload.first_name ? `${payload.first_name} ${payload.last_name || ''}`.trim() : 'Valued Client');\nconst clientEmail = payload.email || 'N/A';\n\n// Process questions & answers\nconst questions = payload.questions_and_answers || [];\nlet clientPhone = payload.text_reminder_number || 'N/A';\nlet requestedService = scheduledEvent.name || 'Private Atelier Nail Art Session';\nlet instagramHandle = 'Not provided';\n\nfor (const qa of questions) {\n  const q = (qa.question || '').toLowerCase();\n  const a = (qa.answer || '').trim();\n  if (q.includes('phone') || q.includes('teléfono') || q.includes('whatsapp') || q.includes('celular')) {\n    clientPhone = a || clientPhone;\n  }\n  if (q.includes('service') || q.includes('servicio') || q.includes('diseño') || q.includes('tier') || qa.position === 0) {\n    if (a) requestedService = a;\n  }\n  if (q.includes('instagram') || q.includes('ig') || q.includes('redes') || q.includes('handle')) {\n    if (a) instagramHandle = a.startsWith('@') ? a : `@${a}`;\n  }\n}\n\n// Clean phone for WhatsApp links (digits only)\nconst cleanPhone = clientPhone.replace(/[^0-9]/g, '');\n\n// Times and Timezones\nconst rawStartTime = scheduledEvent.start_time || payload.event_start_time || payload.start_time || new Date().toISOString();\nconst rawEndTime = scheduledEvent.end_time || payload.event_end_time || payload.end_time || null;\nconst timezone = payload.timezone || scheduledEvent.timezone || 'America/New_York';\n\n// Format dates for display in NY Atelier timezone\nconst startDateObj = new Date(rawStartTime);\nconst formattedDate = startDateObj.toLocaleDateString('en-US', {\n  timeZone: timezone,\n  weekday: 'long',\n  year: 'numeric',\n  month: 'long',\n  day: 'numeric'\n});\nconst formattedTime = startDateObj.toLocaleTimeString('en-US', {\n  timeZone: timezone,\n  hour: 'numeric',\n  minute: '2-digit',\n  hour12: true\n});\nconst formattedDateTime = `${formattedDate} at ${formattedTime} (${timezone})`;\n\n// Cancellation metadata\nconst cancellation = payload.cancellation || {};\nconst canceledBy = cancellation.canceled_by || clientName;\nconst cancelReason = cancellation.reason || 'No specific reason provided';\n\n// Schedule 24h prior reminder (Wait node target)\nconst reminderMs = startDateObj.getTime() - (24 * 60 * 60 * 1000);\nconst nowMs = Date.now();\nconst isShortNotice = reminderMs <= nowMs;\nconst reminderWaitDate = isShortNotice \n  ? new Date(nowMs + 15000).toISOString()\n  : new Date(reminderMs).toISOString();\n\nreturn {\n  json: {\n    eventType: event,\n    isCreated: event === 'invitee.created',\n    isCanceled: event === 'invitee.canceled',\n    clientName,\n    clientEmail,\n    clientPhone,\n    clientPhoneClean: cleanPhone,\n    instagramHandle,\n    serviceName: requestedService,\n    rawStartTime,\n    rawEndTime,\n    timezone,\n    formattedDate,\n    formattedTime,\n    formattedDateTime,\n    canceledBy,\n    cancelReason,\n    reminderWaitDate,\n    isShortNotice,\n    depositAmount: 35,\n    studioAddress: 'Bay Ridge, Brooklyn, NY 11209 (Private Atelier)',\n    studioPhone: '+1 (929) 625-7273',\n    studioPhoneE164: '+19296257273',\n    studioInstagram: '@iva_nailart_nyc',\n    studioInstagramDmUrl: 'https://ig.me/m/iva_nailart_nyc',\n    studioWhatsappUrl: 'https://wa.me/19296257273',\n    toleranceMinutes: 15,\n    cancellationHours: 24,\n    studioRules: '15 min grace period; 24h advance notice for cancellations.'\n  }\n};",
+        "language": "javascript"
       },
       "name": "Parse Calendly Event",
       "type": "n8n-nodes-base.code",
@@ -47,47 +48,69 @@
       "parameters": {
         "operation": "sendMessage",
         "chatId": "={{ $env.STUDIO_OWNER_TELEGRAM_OR_PHONE }}",
-        "text": "=💅 *NUEVA CITA REGISTRADA EN CALENDLY*\n\n• *Clienta:* {{ $json.clientName }}\n• *Teléfono/WhatsApp:* {{ $json.clientPhone }}\n• *Email:* {{ $json.clientEmail }}\n• *Servicio solicitado:* {{ $json.serviceName }}\n• *Fecha y Hora:* {{ $json.eventStartTime }}\n\n⚠️ *ACCIÓN REQUERIDA:*\nConfirmar depósito de *$35* vía Zelle, Apple Pay o Venmo.\n👉 [Abrir chat de WhatsApp con la clienta](https://wa.me/{{ $json.clientPhoneClean }})"
+        "text": "=💅 *NUEVA CITA REGISTRADA EN CALENDLY — CONFIRMAR DEPÓSITO $35*\n\n• *Clienta:* {{ $json.clientName }} (IG: {{ $json.instagramHandle }})\n• *Teléfono/WhatsApp:* {{ $json.clientPhone }}\n• *Email:* {{ $json.clientEmail }}\n• *Servicio solicitado:* {{ $json.serviceName }}\n• *Fecha y Hora:* {{ $json.formattedDateTime }}\n• *Ubicación:* {{ $json.studioAddress }}\n\n💳 *DEPÓSITO:* $35 USD (Pendiente de confirmación manual)\n⚠️ *ACCIÓN REQUERIDA:*\nConfirmar depósito de *$35* vía WhatsApp (+1 929-625-7273) o Instagram DM (@iva_nailart_nyc).\n👉 [Abrir chat de WhatsApp con la clienta](https://wa.me/{{ $json.clientPhoneClean }})"
       },
       "name": "Alert Iva: Confirm $35 Deposit",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1,
-      "position": [780, 200],
+      "position": [780, 160],
       "id": "node-alert-deposit-needed"
     },
     {
       "parameters": {
-        "amount": 24,
-        "unit": "hours"
+        "message": "=✨ *IVA Nail Art Atelier — Recibo de Reserva*\n\nHola {{ $json.clientName }}, ¡hemos recibido tu solicitud de cita en Calendly!\n\n📋 *Detalles de tu cita:*\n• Servicio: {{ $json.serviceName }}\n• Fecha: {{ $json.formattedDate }}\n• Hora: {{ $json.formattedTime }}\n• Ubicación: {{ $json.studioAddress }}\n\n🔒 *Confirmación de Turno:*\nPara asegurar tu fecha y horario en nuestro atelier privado, se requiere confirmar el depósito no reembolsable de *$35 USD* (se descuenta del total de tu servicio).\n\nPor favor envía tu comprobante de pago por:\n📲 WhatsApp: +1 (929) 625-7273 (https://wa.me/19296257273)\n📸 Instagram DM: @iva_nailart_nyc (https://ig.me/m/iva_nailart_nyc)\n\n*Métodos aceptados:* Zelle, Apple Pay, Venmo.\n*Políticas:* Tolerancia de 15 minutos el día de tu cita y 24 horas de aviso previo para cambios.",
+        "phoneNumber": "={{ $json.clientPhone }}"
+      },
+      "name": "Send Client Deposit Instructions",
+      "type": "n8n-nodes-base.whatsapp",
+      "typeVersion": 1,
+      "position": [780, 300],
+      "id": "node-send-deposit-instructions"
+    },
+    {
+      "parameters": {
+        "resume": "dateTime",
+        "dateTime": "={{ $json.reminderWaitDate }}"
       },
       "name": "Wait until 24h Before Service",
       "type": "n8n-nodes-base.wait",
-      "typeVersion": 1,
-      "position": [780, 380],
+      "typeVersion": 1.1,
+      "position": [780, 440],
       "id": "node-wait-24h-pre"
     },
     {
       "parameters": {
-        "message": "=Hola {{ $json.clientName }} ✨ Te recordamos tu cita privada en IVA Nail Art NY mañana a las {{ $json.eventStartTime }}.\n\n📍 Dirección: {{ $json.studioAddress }}\n⏱️ Políticas del estudio: Tolerancia de 15 minutos máximo. Requerimos 24 horas de aviso previo para cualquier reprogramación o cancelación.\n\n¡Te esperamos con café y atención dedicada! Responde SI para confirmar tu llegada.",
+        "message": "=Hola {{ $json.clientName }} ✨ Te recordamos tu cita privada en IVA Nail Art NY mañana: {{ $json.formattedDate }} a las {{ $json.formattedTime }}.\n\n📍 Dirección: {{ $json.studioAddress }}\n⏱️ Políticas del estudio:\n1. Tolerancia máxima de 15 minutos (para asegurar esterilización de grado hospitalario y respeto a las siguientes citas).\n2. Requerimos 24 horas de aviso previo para cualquier reprogramación o cancelación.\n\n¡Te esperamos con café y atención dedicada! Responde SI para confirmar tu llegada.",
         "phoneNumber": "={{ $json.clientPhone }}"
       },
       "name": "Send 24h WhatsApp Reminder",
       "type": "n8n-nodes-base.whatsapp",
       "typeVersion": 1,
-      "position": [1000, 380],
+      "position": [1000, 440],
       "id": "node-send-24h-reminder"
     },
     {
       "parameters": {
         "operation": "sendMessage",
         "chatId": "={{ $env.STUDIO_OWNER_TELEGRAM_OR_PHONE }}",
-        "text": "=⚠️ *CITA CANCELADA EN CALENDLY*\n\n• *Clienta:* {{ $json.clientName }}\n• *Fecha/Hora liberada:* {{ $json.eventStartTime }}\n• *Teléfono:* {{ $json.clientPhone }}\n\nNota: La franja horaria queda libre nuevamente para agendar en Bay Ridge."
+        "text": "=⚠️ *CITA CANCELADA EN CALENDLY*\n\n• *Clienta:* {{ $json.clientName }}\n• *Teléfono:* {{ $json.clientPhone }}\n• *Email:* {{ $json.clientEmail }}\n• *Servicio:* {{ $json.serviceName }}\n• *Fecha/Hora liberada:* {{ $json.formattedDateTime }}\n• *Cancelado por:* {{ $json.canceledBy }}\n• *Motivo:* {{ $json.cancelReason }}\n\nNota: La franja horaria queda libre nuevamente para agendar en Bay Ridge."
       },
       "name": "Alert Iva: Cancellation Notice",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1,
-      "position": [780, 520],
+      "position": [780, 600],
       "id": "node-alert-cancellation"
+    },
+    {
+      "parameters": {
+        "message": "=IVA Nail Art Atelier: Hola {{ $json.clientName }}, confirmamos que tu cita para el {{ $json.formattedDate }} a las {{ $json.formattedTime }} ha sido cancelada exitosamente.\n\nSi deseas reprogramar en una nueva fecha, puedes visitar https://ivanailartny.com o contactar directamente a Iva en WhatsApp (+1 929-625-7273) o Instagram DM (@iva_nailart_nyc). ¡Esperamos verte pronto!",
+        "phoneNumber": "={{ $json.clientPhone }}"
+      },
+      "name": "Send Client Cancellation Notice",
+      "type": "n8n-nodes-base.whatsapp",
+      "typeVersion": 1,
+      "position": [1000, 600],
+      "id": "node-send-cancellation-client"
     }
   ],
   "connections": {
@@ -122,6 +145,11 @@
             "index": 0
           },
           {
+            "node": "Send Client Deposit Instructions",
+            "type": "main",
+            "index": 0
+          },
+          {
             "node": "Wait until 24h Before Service",
             "type": "main",
             "index": 0
@@ -130,6 +158,11 @@
         [
           {
             "node": "Alert Iva: Cancellation Notice",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Send Client Cancellation Notice",
             "type": "main",
             "index": 0
           }
@@ -147,5 +180,8 @@
         ]
       ]
     }
+  },
+  "settings": {
+    "executionOrder": "v1"
   }
 }

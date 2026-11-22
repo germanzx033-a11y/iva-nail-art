@@ -28,15 +28,21 @@ Para un estudio privado exclusivo que atiende **solo con cita previa (1 clienta 
 
 ---
 
-## 2. Catálogo Oficial de Servicios para GBP
+## 2. Catálogo Oficial de 11 Servicios para GBP
 
-| Servicio | Categoría | Descripción Optimizada con Palabras Clave | Precio / Depósito |
-| :--- | :--- | :--- | :--- |
-| **Builder Gel Manicure (BIAB)** | Manicure | Refuerzo estructural con gel constructor multinivel para uñas naturales en Bay Ridge. Cero levantamiento, acabado ultrabrillante que dura 3 a 4 semanas. Incluye manicura rusa detallada. | Cotización personalizada · Depósito $35 |
-| **The Signature Russian Dry Mani** | Manicure | Manicura rusa combinada con instrumental esterilizado de grado médico. Limpieza profunda de cutícula al microscopio y esmaltado en gel puro bajo cutícula. | Cotización personalizada · Depósito $35 |
-| **Gel-X Nail Extensions** | Acrylic & Extensions | Extensiones completas de soft-gel sin olor ni químicos agresivos. Esculpidas a mano en formas almendradas, cuadradas o stiletto con acabado natural. | Cotización personalizada · Depósito $35 |
-| **Bespoke Editorial Nail Art** | Nail Art | Diseños pintados a mano por nivel: efecto cromo espejo, ojo de gato aterciopelado (velvet cat-eye), micro-French con perlas, relieve 3D y texturas orgánicas. | Por uña o set completo |
-| **Luxury Spa Pedicure** | Pedicure | Cuidado profundo para pies en estudio privado. Tratamiento exfoliante, limpieza de cutículas y esmaltado en gel de máxima duración sin prisas. | Cotización personalizada · Depósito $35 |
+| # | Servicio | Categoría | Descripción Optimizada con Palabras Clave (<=300 caracteres) | Precio / Modalidad |
+|---|:---|:---|:---|:---|
+| 1 | **The Signature Russian Dry Manicure** | Manicure | Manicura rusa con instrumental estéril de grado médico. Limpieza profunda de cutícula al microscopio, fortalecimiento natural y esmaltado en gel puro bajo cutícula. Duración 3-4 semanas. | $110 (Fijo) · Depósito $35 |
+| 2 | **Builder Gel Overlay (BIAB)** | Manicure | Refuerzo estructural con gel constructor flexible sobre uña natural en Bay Ridge. Previene roturas, estimula crecimiento y elimina levantamientos. | Desde $80 · Depósito $35 |
+| 3 | **Builder Gel + French Finish** | Manicure | BIAB estructurado con líneas francesas de lujo hechas a mano: micro-french, trazos curvos o perlas. Durabilidad insuperable de 3+ semanas. | $105 (Fijo) · Depósito $35 |
+| 4 | **Gel-X Full Set Extensions** | Nail Extensions | Extensiones 100% de soft gel curadas a la uña natural. Siluetas almendra, cuadrada o stiletto sin olores ni químicos agresivos. | $150 (Fijo) · Depósito $35 |
+| 5 | **Sculpted Acrylic Full Set** | Nail Extensions | Set completo de uñas acrílicas esculpidas a mano adaptadas a tu lecho ungueal con balance de ápice y acabado en gel de alta gama. | Desde $75 · Depósito $35 |
+| 6 | **Luxury Spa Pedicure** | Pedicure | Pedicura higiénica sin agua con pulido de callosidades con punta diamante, cuidado de cutícula, exfoliación botánica y gel de larga duración. | $65 (Fijo) · Depósito $35 |
+| 7 | **Gel Pedicure** | Pedicure | Pedicura en gel de larga duración con limpieza meticulosa de cutículas, tratamiento suavizante y esmaltado curado bajo lámpara LED. | $70 (Fijo) · Depósito $35 |
+| 8 | **Bespoke Nail Art Tier 1 (Minimalist)** | Nail Art | Acentos sutiles editoriales: efecto cromo glazed donut, micro-puntos, espacio negativo o perlas aisladas (hasta 4 uñas). | $30 (Fijo) |
+| 9 | **Bespoke Nail Art Tier 2 (Artisan Hand-Painted)** | Nail Art | Set completo de arte pintado a mano: degradados aura, carey (tortoiseshell), flores con blooming gel, cat-eye magnético o cromos. | $65 (Fijo) |
+| 10 | **Bespoke Nail Art Tier 3 (Haute Couture 3D)** | Nail Art | Relieves 3D esculpidos en gel de pasarela, encapsulado de cristales genuinos, gotas de cromo líquido metálico y conceptos de autor. | $95 (Fijo) |
+| 11 | **Safe Gentle E-file Removal** | Removal & Care | Retiro 100% seguro con torno eléctrico protegiendo la queratina natural de la uña. De cortesía al reaplicar un set nuevo. | $35 (Fijo) |
 
 ---
 

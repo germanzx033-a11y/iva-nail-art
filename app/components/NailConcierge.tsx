@@ -1,11 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, Compass, CheckCircle2, ArrowRight, Loader2, RefreshCw } from "lucide-react";
+import { Sparkles, Compass, ArrowRight, Loader2, RefreshCw } from "lucide-react";
+
+export interface ConciergeRecommendation {
+  serviceName: string;
+  artTierName: string;
+  estimatedPrice: number;
+  curatorEditorialNote: string;
+  designConcept?: string;
+}
 
 interface NailConciergeProps {
   lang?: "en" | "es";
-  onApplyRecommendation?: (rec: any) => void;
+  onApplyRecommendation?: (rec: ConciergeRecommendation) => void;
 }
 
 export default function NailConcierge({
@@ -15,9 +23,9 @@ export default function NailConcierge({
   const isEs = lang === "es";
 
   const [occasion, setOccasion] = useState("");
-  const [preferredLength, setPreferredLength] = useState<"short" | "medium" | "long" | "any">("any");
+  const [preferredLength] = useState<"short" | "medium" | "long" | "any">("any");
   const [isLoading, setIsLoading] = useState(false);
-  const [recommendation, setRecommendation] = useState<any | null>(null);
+  const [recommendation, setRecommendation] = useState<ConciergeRecommendation | null>(null);
 
   const presets = [
     { label: isEs ? "Boda / Novia" : "Bridal / Wedding", value: "Bridal ceremony & reception" },
@@ -168,7 +176,7 @@ export default function NailConcierge({
               </div>
 
               <p className="text-xs sm:text-sm text-stone-700 font-light italic mb-6 leading-relaxed bg-[#F4EBE1]/60 p-3.5 rounded-xl border border-stone-200">
-                "{recommendation.curatorEditorialNote}"
+                &ldquo;{recommendation.curatorEditorialNote}&rdquo;
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3">

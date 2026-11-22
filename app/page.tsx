@@ -26,7 +26,7 @@ import BookingInfo from "@/app/components/BookingInfo";
 import Reviews from "@/app/components/Reviews";
 import { BackToTop, ScrollProgressBar } from "@/app/components/ScrollUi";
 import GallerySection from "@/app/components/GallerySection";
-import { GALLERY_IMAGES } from "@/app/data/galleryData";
+import MobileBookingBar from "@/app/components/MobileBookingBar";
 import CalendlyModal from "@/app/components/CalendlyModal";
 
 // Contador animado. Escribe directo en el DOM (sin re-render por frame) y siempre
@@ -98,8 +98,8 @@ const CONFIG = {
   instagramDmUrl: "https://ig.me/m/iva_nailart_nyc",
   instagram: "iva_nailart_nyc",
   instagramUrl: "https://instagram.com/iva_nailart_nyc",
-  tiktok: "iva_nailart_ny",
-  tiktokUrl: "https://tiktok.com/@iva_nailart_ny",
+  tiktok: "iva_nailart_nyc",
+  tiktokUrl: "https://tiktok.com/@iva_nailart_nyc",
   location: "Bay Ridge, Brooklyn, NY 11209",
   // Shown in the booking card and the footer
   hours: {
@@ -541,7 +541,14 @@ export default function Home() {
       </section>
 
       {BOOKING_ENABLED && <BookingWidget lang={lang} instagramUrl={CONFIG.instagramDmUrl} />}
-      <BookingInfo lang={lang} bookUrl={CONFIG.instagramDmUrl} phone={CONFIG.phone} hours={CONFIG.hours[lang]} deposit={CONFIG.deposit} />
+      <BookingInfo
+        lang={lang}
+        bookUrl={CONFIG.instagramDmUrl}
+        phone={CONFIG.phone}
+        hours={CONFIG.hours[lang]}
+        deposit={CONFIG.deposit}
+        onBookClick={() => openBooking()}
+      />
       <Reviews lang={lang} />
 
       {/* ================================================================== */}
@@ -731,6 +738,7 @@ className="w-16 h-auto rounded-lg"
 
       <BackToTop />
       <ScrollProgressBar />
+      <MobileBookingBar lang={lang} onBookClick={() => openBooking()} />
 
       <CalendlyModal
         isOpen={isCalendlyOpen}

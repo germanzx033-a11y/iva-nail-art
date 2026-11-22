@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, Clock, Check, ShieldCheck, ArrowRight, Info } from "lucide-react";
+import { Sparkles, Clock, Check, ShieldCheck, ArrowRight } from "lucide-react";
 
 export interface CoreService {
   id: string;

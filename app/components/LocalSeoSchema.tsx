@@ -58,7 +58,7 @@ export default function LocalSeoSchema() {
         ],
         "sameAs": [
           "https://instagram.com/iva_nailart_nyc",
-          "https://tiktok.com/@iva_nailart_ny"
+          "https://tiktok.com/@iva_nailart_nyc"
         ],
         "hasOfferCatalog": {
           "@type": "OfferCatalog",
