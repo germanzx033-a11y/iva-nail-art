@@ -135,9 +135,17 @@ export default function NailMatch({ lang }: { lang: "en" | "es" }) {
             ))}
           </ol>
           <div className="mt-8 flex flex-wrap items-center gap-6">
-            <button type="button" onClick={() => setAnswers([])} className="py-2 text-[#E8C9A8] underline underline-offset-4 hover:text-white">
+            <button type="button" onClick={() => setAnswers([])} className="py-2 text-[#E8C9A8] underline underline-offset-4 hover:text-white cursor-pointer">
               {c.again}
             </button>
+            <a
+              href={`https://calendly.com/iva_nailart_nyc?text_color=F4EBE1&primary_color=D4A574&background_color=0E0706&a1=${encodeURIComponent(`Nail Match: ${results[0]?.[lang] || "Custom Style"}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="py-2 px-5 rounded-full bg-[#E8C9A8] text-[#0E0706] text-sm font-semibold hover:bg-white transition-colors"
+            >
+              {lang === "en" ? "Schedule with this look (Calendly)" : "Agendar con este diseño (Calendly)"}
+            </a>
             <a href="https://ig.me/m/iva_nailart_nyc" target="_blank" rel="noopener noreferrer" className="py-2 text-[#E8C9A8] underline underline-offset-4 hover:text-white">
               {c.book}
             </a>

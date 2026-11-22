@@ -8,6 +8,7 @@ interface HeroScrollProps {
   lang: "en" | "es";
   bookUrl: string;
   cta: string;
+  onBookClick?: () => void;
 }
 
 const SCENES = [
@@ -39,7 +40,7 @@ const SCENES = [
  * three scenes. Each photo is shown whole inside its frame; a blurred copy
  * fills the screen behind it so nothing is cropped away.
  */
-export default function HeroScroll({ lang, bookUrl, cta }: HeroScrollProps) {
+export default function HeroScroll({ lang, bookUrl, cta, onBookClick }: HeroScrollProps) {
   const trackRef = useRef<HTMLElement>(null);
   const [progress, setProgress] = useState(0);
   const isEn = lang === "en";
@@ -157,12 +158,25 @@ export default function HeroScroll({ lang, bookUrl, cta }: HeroScrollProps) {
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-5">
-              <a href={bookUrl} target="_blank" rel="noopener noreferrer" className="glow-pill group">
-                {cta}
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0E0706]/25 transition-transform group-hover:rotate-45">
-                  <ArrowUpRight className="h-4 w-4" />
-                </span>
-              </a>
+              {onBookClick ? (
+                <button
+                  type="button"
+                  onClick={onBookClick}
+                  className="glow-pill group cursor-pointer"
+                >
+                  {cta}
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0E0706]/25 transition-transform group-hover:rotate-45">
+                    <ArrowUpRight className="h-4 w-4" />
+                  </span>
+                </button>
+              ) : (
+                <a href={bookUrl} target="_blank" rel="noopener noreferrer" className="glow-pill group">
+                  {cta}
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0E0706]/25 transition-transform group-hover:rotate-45">
+                    <ArrowUpRight className="h-4 w-4" />
+                  </span>
+                </a>
+              )}
 
               <div className="font-display flex items-center gap-3 text-[0.65rem] tracking-[0.3em] text-[#F4EBE1]/60" aria-hidden>
                 <span className="text-[#E8C9A8]">0{active + 1}</span>

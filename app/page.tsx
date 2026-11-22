@@ -27,6 +27,7 @@ import Reviews from "@/app/components/Reviews";
 import { BackToTop, ScrollProgressBar } from "@/app/components/ScrollUi";
 import GallerySection from "@/app/components/GallerySection";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
+import CalendlyModal from "@/app/components/CalendlyModal";
 
 // Contador animado. Escribe directo en el DOM (sin re-render por frame) y siempre
 // termina en el valor final, aunque el navegador pause requestAnimationFrame.
@@ -251,6 +252,13 @@ const translations = {
 
 export default function Home() {
   const [lang, setLang] = useState<"en" | "es">("en");
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+  const [calendlyService, setCalendlyService] = useState("");
+
+  const openBooking = (serviceName?: string) => {
+    setCalendlyService(serviceName || "");
+    setIsCalendlyOpen(true);
+  };
 
   // Pages like the try-on link back with ?lang=es
   useEffect(() => {
@@ -328,14 +336,12 @@ export default function Home() {
               {t.langSwitch}
             </button>
 
-            <a
-              href={CONFIG.instagramDmUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-[#E8C9A8] text-[#0E0706] px-5 py-2 rounded-full text-sm font-semibold hover:bg-white transition-colors"
+            <button
+              onClick={() => openBooking()}
+              className="bg-[#E8C9A8] text-[#0E0706] px-5 py-2 rounded-full text-sm font-semibold hover:bg-white transition-colors cursor-pointer"
             >
               {t.nav.book}
-            </a>
+            </button>
           </div>
         </nav>
       </header>
@@ -343,7 +349,12 @@ export default function Home() {
       {/* ================================================================== */}
       {/* HERO SECTION */}
       {/* ================================================================== */}
-      <HeroScroll lang={lang} bookUrl={CONFIG.instagramDmUrl} cta={t.hero.cta} />
+      <HeroScroll
+        lang={lang}
+        bookUrl={CONFIG.instagramDmUrl}
+        cta={t.hero.cta}
+        onBookClick={() => openBooking()}
+      />
       <PhotoMarquee lang={lang} />
 
       {/* ================================================================== */}
@@ -513,16 +524,14 @@ export default function Home() {
                         );
                       })()}
                     </div>
-                    <a
-                      href={CONFIG.instagramDmUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-auto flex w-full items-center justify-center gap-3 rounded-full border border-[#E8C9A8]/60 px-6 py-4 text-sm font-semibold tracking-wide text-[#E8C9A8] transition-colors hover:bg-[#E8C9A8] hover:text-[#0E0706]"
-                      aria-label={`${lang === "en" ? "Send a direct message on Instagram about" : "Enviar mensaje directo por Instagram sobre"} ${lang === "en" ? service.name : service.nameEs}`}
+                    <button
+                      onClick={() => openBooking(lang === "en" ? service.name : service.nameEs)}
+                      className="mt-auto flex w-full items-center justify-center gap-3 rounded-full border border-[#E8C9A8]/60 px-6 py-4 text-sm font-semibold tracking-wide text-[#E8C9A8] transition-colors hover:bg-[#E8C9A8] hover:text-[#0E0706] cursor-pointer"
+                      aria-label={`${lang === "en" ? "Book appointment for" : "Reservar cita para"} ${lang === "en" ? service.name : service.nameEs}`}
                     >
-                      <Instagram className="h-5 w-5" />
-                      {lang === "en" ? "Get my quote" : "Pedir mi cotización"}
-                    </a>
+                      <Sparkles className="h-4 w-4" />
+                      {lang === "en" ? "Book & Get Quote" : "Reservar y Cotizar"}
+                    </button>
                   </div>
                 </article>
               );
@@ -565,17 +574,15 @@ export default function Home() {
               ? "Send a photo of the look you love, pick a time, and Iva takes care of the rest."
               : "Envía una foto del diseño que te gusta, elige un horario e Iva se encarga del resto."}
           </p>
-          <a
-            href={CONFIG.instagramDmUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="glow-pill group mt-10"
+          <button
+            onClick={() => openBooking()}
+            className="glow-pill group mt-10 cursor-pointer"
           >
             {t.hero.cta}
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0E0706]/25 transition-transform group-hover:rotate-45">
               <ChevronRight className="h-4 w-4" />
             </span>
-          </a>
+          </button>
           <p className="mt-5 text-sm text-[#FDF8F5]/70">
             {lang === "en"
               ? `Replies within 1–2 hours · $${CONFIG.deposit} deposit holds your time`
@@ -724,6 +731,13 @@ className="w-16 h-auto rounded-lg"
 
       <BackToTop />
       <ScrollProgressBar />
+
+      <CalendlyModal
+        isOpen={isCalendlyOpen}
+        onClose={() => setIsCalendlyOpen(false)}
+        lang={lang}
+        prefilledService={calendlyService}
+      />
     </main>
   );
 }

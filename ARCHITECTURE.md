@@ -142,3 +142,21 @@ CREATE POLICY "Appointments only accessible by authenticated staff" ON appointme
 ### C. n8n Automation Webhook (`POST /api/webhooks/n8n`)
 * **Headers:** `x-signature: sha256=<hmac>`
 * **Payload:** Dispatches events `booking.created`, `booking.approved`, `booking.reminder_dispatched`.
+
+---
+
+## 4. Multi-Agent Roster: Growth & Local SEO Department
+
+Bajo el **Director de Growth, SEO Local NY y Conversión**, operan 3 especialistas de ejecución técnica sin duplicidad de roles:
+
+1. **`seo-technical-structured-data` (Especialista en SEO Técnico y Datos Estructurados):**
+   * **Propósito:** Core Web Vitals 95+, indexación instantánea y Rich Snippets de Google.
+   * **Implementación:** Schema.org JSON-LD unificado (`NailSalon`, `BeautySalon`, `FAQPage`) en `app/components/LocalSeoSchema.tsx`, `sitemap.ts`, `robots.ts` y canonicals.
+
+2. **`seo-hyperlocal-bayridge` (Especialista en SEO Local Hiperlocalizado):**
+   * **Propósito:** Top 3 en búsquedas orgánicas de alta intención en Bay Ridge, Dyker Heights, Bensonhurst y Brooklyn 11209.
+   * **Implementación:** 8 páginas de aterrizaje bilingües (`/builder-gel-bay-ridge`, etc.), etiquetas `hreflang` limpias, y enriquecimiento de metadatos/alt en las 40 fotos del portafolio.
+
+3. **`google-business-maps-expert` (Experto en Google Business Profile y Maps):**
+   * **Propósito:** Dominio del Google Maps Local Pack para estudio privado por cita previa y conversión a Calendly.
+   * **Implementación:** Estrategia de Área de Servicio (SAB), catálogo de servicios GBP, calendario de Google Posts semanales y plantillas de reseñas locales documentadas en `docs/GOOGLE_BUSINESS_PROFILE.md`.

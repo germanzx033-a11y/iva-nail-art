@@ -3,6 +3,7 @@ import { Inter, Playfair_Display, Syncopate } from "next/font/google";
 import "./globals.css";
 import PWAProvider from "./components/PWAProvider";
 import Analytics from "./components/Analytics";
+import LocalSeoSchema from "./components/LocalSeoSchema";
 import { SITE_URL, BUSINESS } from "@/lib/site";
 
 /**
@@ -167,10 +168,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} ${syncopate.variable}`}>
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <LocalSeoSchema />
       </head>
       <body className="antialiased bg-[#0E0706] text-[#F4EBE1]">
         <Analytics />

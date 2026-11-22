@@ -4,47 +4,50 @@
 
 ---
 
-## 1. ASCII Pipeline Flow Diagram
+## 1. ASCII Pipeline Flow Diagram (Calendly Webhook Architecture)
 
 ```
 +--------------------------------------------------------------+
-|                    /api/bookings (Next.js)                   |
-|       Client submits reservation with $35 deposit            |
+|                  Calendly Webhook Event                      |
+|      Events: invitee.created | invitee.canceled              |
 +------------------------------+-------------------------------+
                                |
                                v  (HTTP POST Webhook)
 +--------------------------------------------------------------+
-|                  Webhook: Booking Created                    |
-|       Path: /webhook/iva-booking-pipeline                    |
+|               Webhook: Calendly Trigger                      |
+|       Path: /webhook/calendly-booking-pipeline               |
 +------------------------------+-------------------------------+
                                |
                                v
 +--------------------------------------------------------------+
-|                  Validate & Sanitize Data                    |
-|       Format dates, normalize phone, verify deposits         |
-+---------------+------------------------------+---------------+
-                |                              |
-                v                              v
+|               Parse & Sanitize Calendly Event                |
+|   Extracts Client, Phone, Service, Time, $35 deposit note    |
++------------------------------+-------------------------------+
+                               |
+                               v
+                 +-------------+-------------+
+                 |                           |
+        (invitee.created)            (invitee.canceled)
+                 |                           |
+                 v                           v
 +-------------------------------+ +----------------------------+
-|      Owner Instant Alert      | |   Wait: 24h Pre-Service    |
-| Telegram/SMS approval alert   | +--------------+-------------+
-| with client info & quick link |                |
-+-------------------------------+                v
-                                  +----------------------------+
-                                  | 24h WhatsApp Reminder      |
-                                  | Address, protocol, cancel  |
-                                  +--------------+-------------+
-                                                 |
-                                                 v
-                                  +----------------------------+
-                                  | Wait: 24h Post-Service     |
-                                  +--------------+-------------+
-                                                 |
-                                                 v
-                                  +----------------------------+
-                                  | Google 5-Star Review &     |
-                                  | 3-Week Rebooking Invite    |
-                                  +----------------------------+
+|  Alert Iva: Confirm $35 Dep.  | |  Alert Iva: Canceled Slot  |
+|  Direct WhatsApp link to chat | |  Slot freed in calendar    |
+|  Holds slot with Zelle/Apple  | +----------------------------+
++-------------------------------+
+                 |
+                 v
++-------------------------------+
+|     Wait: 24h Pre-Service     |
++----------------+--------------+
+                 |
+                 v
++-------------------------------+
+|    24h WhatsApp Reminder      |
+|  Address (Bay Ridge 11209)    |
+|  15 min grace period policy   |
+|  24h cancellation notice rule |
++-------------------------------+
 ```
 
 ---
@@ -55,44 +58,47 @@ Set these variables in your n8n instance environment or workflow credentials:
 
 | Variable Name | Description | Example Value |
 | :--- | :--- | :--- |
-| `STUDIO_OWNER_TELEGRAM_OR_PHONE` | Studio owner's Telegram Chat ID or Phone | `@aureate_sole_admin` |
+| `STUDIO_OWNER_TELEGRAM_OR_PHONE` | Studio owner's Telegram Chat ID or Phone | `@iva_nailart_nyc_admin` |
 | `WHATSAPP_API_TOKEN` | WhatsApp Cloud API / Twilio bearer token | `EAA...` |
-| `GOOGLE_REVIEW_LINK` | Direct link to Google Business profile review | `https://g.page/r/ivanailartny/review` |
+| `CALENDLY_WEBHOOK_SIGNING_KEY` | Secret key to verify Calendly webhook signatures | `cal_sec_...` |
 
 ---
 
-## 3. End-to-End Test (cURL Simulation)
+## 3. Calendly Webhook Subscription Setup
 
-Execute this command to simulate a confirmed booking flowing through the pipeline:
+To activate the webhook in Calendly, register the webhook subscription via Calendly API or dashboard:
 
 ```bash
-curl -X POST https://n8n.your-studio.com/webhook/iva-booking-pipeline \
+curl -X POST https://api.calendly.com/webhook_subscriptions \
+  -H "Authorization: Bearer <CALENDLY_API_TOKEN>" \
   -H "Content-Type: application/json" \
-  -H "x-signature: your_cryptographic_webhook_hmac_secret" \
   -d '{
-    "event": "booking.created",
-    "data": {
-      "id": "bk_test_84f9",
-      "clientName": "Elena Rostova",
-      "clientEmail": "elena.rostova@fashionny.com",
-      "clientPhone": "+19296257273",
-      "instagramHandle": "@elena.rostova",
-      "serviceName": "The Signature Russian Dry Mani",
-      "addons": ["Nail Art Tier 2 (Artisan Hand-Painted)"],
-      "appointmentDate": "2026-12-10",
-      "startTime": "11:00",
-      "totalPrice": 175.00,
-      "depositAmount": 35.00,
-      "depositStatus": "paid",
-      "notes": "Almond shape, chrome gold accents for gala"
-    }
+    "url": "https://your-n8n-instance.com/webhook/calendly-booking-pipeline",
+    "events": ["invitee.created", "invitee.canceled"],
+    "organization": "https://api.calendly.com/organizations/<ORG_ID>",
+    "scope": "organization"
   }'
 ```
 
-Expected output:
-```json
-{
-  "received": true,
-  "status": "processing"
-}
+---
+
+## 4. Local Testing with cURL
+
+Simulate a new Calendly booking:
+
+```bash
+curl -X POST http://localhost:5678/webhook-test/calendly-booking-pipeline \
+  -H "Content-Type: application/json" \
+  -d '{
+    "event": "invitee.created",
+    "payload": {
+      "name": "Camila Gomez",
+      "email": "camila@example.com",
+      "text_reminder_number": "+19295551234",
+      "event_start_time": "2026-12-05T18:00:00Z",
+      "questions_and_answers": [
+        { "question": "Selected Service", "answer": "Builder Gel Manicure (BIAB)" }
+      ]
+    }
+  }'
 ```
