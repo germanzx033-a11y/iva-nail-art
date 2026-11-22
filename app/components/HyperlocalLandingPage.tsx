@@ -6,7 +6,6 @@ import Link from "next/link";
 import {
   Instagram,
   MapPin,
-  Clock,
   Car,
   Train,
   CheckCircle2,
@@ -14,7 +13,6 @@ import {
   ShieldCheck,
   ChevronRight,
   ArrowRight,
-  Phone,
 } from "lucide-react";
 import { BUSINESS, SITE_URL } from "@/lib/site";
 import { GALLERY_IMAGES } from "@/app/data/galleryData";
