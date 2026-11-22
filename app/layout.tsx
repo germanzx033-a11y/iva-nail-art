@@ -85,6 +85,9 @@ export const metadata: Metadata = {
     images: ["/og-image.jpg"],
   },
   robots: { index: true, follow: true },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+  },
   other: { "geo.region": "US-NY", "geo.placename": "Bay Ridge, Brooklyn" },
   appleWebApp: { capable: true, title: "IVA Nails", statusBarStyle: "black-translucent" },
 };
