@@ -8,29 +8,29 @@ import {
   Instagram,
   ChevronRight,
   Sparkles,
+  Hand,
+  Footprints,
+  Palette,
+  Scissors,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { SERVICE_LANDINGS, landingPath } from "./data/serviceLandings";
 import AboutIva from "@/app/components/AboutIva";
 import HeroScroll from "@/app/components/HeroScroll";
 import PhotoMarquee from "@/app/components/PhotoMarquee";
-import WhyPrivateStudio from "@/app/components/WhyPrivateStudio";
-import DesignTools from "@/app/components/DesignTools";
+import WhyPrivateStudio from "./components/WhyPrivateStudio";
+import DesignTools from "./components/DesignTools";
+import BookingWidget, { BOOKING_ENABLED } from "./components/BookingWidget";
 import BookingInfo from "@/app/components/BookingInfo";
 import Reviews from "@/app/components/Reviews";
 import { BackToTop, ScrollProgressBar } from "@/app/components/ScrollUi";
-import LookbookFilterable from "@/app/components/LookbookFilterable";
-import ServiceSelectorLuxury from "@/app/components/ServiceSelectorLuxury";
-import MobileBookingBar from "@/app/components/MobileBookingBar";
-import NailConcierge from "@/app/components/NailConcierge";
+import GallerySection from "@/app/components/GallerySection";
+import { GALLERY_IMAGES } from "@/app/data/galleryData";
 
-// High-performance direct-DOM Animated Counter (Zero lag / Zero re-renders)
-function AnimatedCounter({
-  end,
-  duration = 1600,
-  suffix = "",
-  prefix = "",
-}: {
+// Contador animado. Escribe directo en el DOM (sin re-render por frame) y siempre
+// termina en el valor final, aunque el navegador pause requestAnimationFrame.
+function AnimatedCounter({ end, duration = 1600, suffix = "", prefix = "" }: {
   end: number;
   duration?: number;
   suffix?: string;
@@ -87,18 +87,20 @@ function AnimatedCounter({
   return <span ref={ref}>{prefix}0{suffix}</span>;
 }
 
-// Studio Business Configuration
+// ============================================================================
+// CONFIGURACIÓN DEL NEGOCIO
+// ============================================================================
 const CONFIG = {
-  businessName: "IVA Nail Art NY",
-  domain: "ivanailartny.com",
+  businessName: "IVA Nail Art",
   phone: "+1 (929) 625-7273",
-  whatsappNumber: "19296257273",
-  instagram: "aureate_sole",
-  instagramUrl: "https://www.instagram.com/aureate_sole",
+  // Instagram direct messages (ig.me opens the chat; Instagram cannot pre-fill text)
   instagramDmUrl: "https://ig.me/m/iva_nailart_nyc",
-  tiktok: "aureate_sole",
-  tiktokUrl: "https://www.tiktok.com/@aureate_sole",
+  instagram: "iva_nailart_nyc",
+  instagramUrl: "https://instagram.com/iva_nailart_nyc",
+  tiktok: "iva_nailart_ny",
+  tiktokUrl: "https://tiktok.com/@iva_nailart_ny",
   location: "Bay Ridge, Brooklyn, NY 11209",
+  // Shown in the booking card and the footer
   hours: {
     en: [
       { days: "Mon – Fri", time: "5:30 PM – 10:00 PM" },
@@ -113,111 +115,224 @@ const CONFIG = {
   cancellationHours: 24,
 };
 
-// Bilingual Translations
+// ============================================================================
+// INTERFACES TYPESCRIPT
+// ============================================================================
+interface Service {
+  id: string;
+  name: string;
+  nameEs: string;
+  category: string;
+}
+
+
+// ============================================================================
+// SERVICIOS CON PRECIOS
+// ============================================================================
+const SERVICES: Service[] = [
+  // Manicure
+  { id: "m1", name: "Classic Manicure", nameEs: "Manicura Clásica", category: "manicure" },
+  { id: "m2", name: "Gel Manicure", nameEs: "Manicura Gel", category: "manicure" },
+  { id: "m3", name: "Builder Gel Manicure", nameEs: "Manicura Builder Gel", category: "manicure" },
+  { id: "m4", name: "Structured Gel Manicure", nameEs: "Manicura Gel Estructurado", category: "manicure" },
+  { id: "m5", name: "Gel-X Extensions", nameEs: "Extensiones Gel-X", category: "manicure" },
+  // Pedicure
+  { id: "p1", name: "Classic Pedicure", nameEs: "Pedicura Clásica", category: "pedicure" },
+  { id: "p2", name: "Gel Pedicure", nameEs: "Pedicura Gel", category: "pedicure" },
+  { id: "p3", name: "Builder Gel Pedicure", nameEs: "Pedicura Builder Gel", category: "pedicure" },
+  { id: "p4", name: "Luxury Spa Pedicure", nameEs: "Pedicura Spa de Lujo", category: "pedicure" },
+  // Acrylic
+  { id: "a1", name: "Full Set Acrylic", nameEs: "Set Completo Acrílico", category: "acrylic" },
+  { id: "a2", name: "Acrylic Fill", nameEs: "Relleno Acrílico", category: "acrylic" },
+  { id: "a3", name: "Acrylic Removal", nameEs: "Remoción Acrílico", category: "acrylic" },
+  // Nail Art
+  { id: "n1", name: "Simple Nail Art (per nail)", nameEs: "Arte Simple (por uña)", category: "nailart" },
+  { id: "n2", name: "Medium Design (per nail)", nameEs: "Diseño Medio (por uña)", category: "nailart" },
+  { id: "n3", name: "Complex Art (per nail)", nameEs: "Arte Complejo (por uña)", category: "nailart" },
+  { id: "n4", name: "Chrome / Cat Eye", nameEs: "Chrome / Ojo de Gato", category: "nailart" },
+  { id: "n5", name: "French Tips", nameEs: "Puntas Francesas", category: "nailart" },
+  // Extras
+  { id: "e1", name: "Gel Removal", nameEs: "Remoción de Gel", category: "extras" },
+  { id: "e2", name: "Nail Repair (per nail)", nameEs: "Reparación (por uña)", category: "extras" },
+  { id: "e3", name: "Soak Off Only", nameEs: "Solo Remojo", category: "extras" },
+];
+
+const CATEGORIES = [
+  { id: "manicure", en: "Manicure", es: "Manicura" },
+  { id: "pedicure", en: "Pedicure", es: "Pedicura" },
+  { id: "acrylic", en: "Acrylic", es: "Acrílico" },
+  { id: "nailart", en: "Nail Art", es: "Nail Art" },
+  { id: "extras", en: "Extras", es: "Extras" },
+];
+
+
+// ============================================================================
+// TRADUCCIONES
+// ============================================================================
 const translations = {
   en: {
     nav: {
       services: "Services",
-      lookbook: "Lookbook",
-      concierge: "AI Concierge",
-      tryOn: "Virtual Try-On",
-      reviews: "Reviews",
-      book: "Book Appointment",
+      gallery: "Gallery",
+      book: "Book Now",
     },
     hero: {
       welcome: "WELCOME TO",
       tagline: "Where every nail tells a story of elegance and artistry. Expert in unique designs that reflect your personality and enhance your natural beauty.",
       cta: "Book on Instagram",
       location: "Bay Ridge, Brooklyn",
-      appointment: "By Appointment Only · Max 3 Daily",
+      appointment: "By Appointment Only",
+    },
+    about: {
+      subtitle: "MEET",
+      name: "Iva",
+      description: "Passionate nail artist based in Brooklyn, NY. I specialize in creating stunning nail designs that make every client feel special. Each set of nails is a unique work of art, crafted with love, dedication, and premium non-toxic products.",
+    },
+    services: {
+      subtitle: "OUR SERVICES",
+      title: "Manicure, pedicure & nail art",
+      note: "Prices may vary based on design complexity",
+    },
+    gallery: {
+      subtitle: "OUR WORK",
+      title: "Nail art gallery",
+      description: "Real sets made by Iva in Bay Ridge. Save the one you love and send it as your inspiration.",
     },
     footer: {
-      tagline: "Exclusive private nail studio in Brooklyn. Medical-grade sterilization, structured gel & bespoke editorial nail art.",
-      hours: "Studio Hours",
+      tagline: "Creating beauty, one nail at a time",
+      hours: "Hours",
       location: "Location",
-      followUs: "Follow Atelier",
-      contact: "Direct Concierge",
+      followUs: "Follow Us",
+      contact: "Contact",
     },
-    floatingBtn: "Message Atelier",
+    floatingBtn: "Chat with us!",
     langSwitch: "ES",
   },
   es: {
     nav: {
       services: "Servicios",
-      lookbook: "Lookbook",
-      concierge: "Estilista IA",
-      tryOn: "Probador Virtual",
-      reviews: "Reseñas",
-      book: "Reservar Cita",
+      gallery: "Galería",
+      book: "Reservar",
     },
     hero: {
       welcome: "BIENVENIDA A",
       tagline: "Donde cada uña cuenta una historia de elegancia y arte. Experta en diseños únicos que reflejan tu personalidad y realzan tu belleza natural.",
       cta: "Reserva por Instagram",
       location: "Bay Ridge, Brooklyn",
-      appointment: "Solo con Cita · Máximo 3 al Día",
+      appointment: "Solo con Cita",
+    },
+    about: {
+      subtitle: "CONOCE A",
+      name: "Iva",
+      description: "Artista de uñas apasionada en Brooklyn, NY. Me especializo en crear diseños impresionantes que hacen sentir especial a cada clienta. Cada set de uñas es una obra de arte única, hecha con amor, dedicación y productos premium no tóxicos.",
+    },
+    services: {
+      subtitle: "NUESTROS SERVICIOS",
+      title: "Manicura, pedicura y nail art",
+      note: "Los precios pueden variar según la complejidad del diseño",
+    },
+    gallery: {
+      subtitle: "NUESTRO TRABAJO",
+      title: "Galería de nail art",
+      description: "Diseños reales hechos por Iva en Bay Ridge. Guarda el que te guste y envíalo como inspiración.",
     },
     footer: {
-      tagline: "Estudio privado exclusivo en Brooklyn. Esterilización de grado médico, gel estructurado y arte de uñas de alta costura.",
-      hours: "Horarios",
+      tagline: "Creando belleza, una uña a la vez",
+      hours: "Horario",
       location: "Ubicación",
-      followUs: "Seguir Atelier",
-      contact: "Contacto Directo",
+      followUs: "Síguenos",
+      contact: "Contacto",
     },
-    floatingBtn: "Escríbenos",
+    floatingBtn: "¡Escríbenos!",
     langSwitch: "EN",
   },
 };
 
+
 export default function Home() {
   const [lang, setLang] = useState<"en" | "es">("en");
 
+  // Pages like the try-on link back with ?lang=es
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("lang") === "es") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reads the URL once on mount (not available during SSR)
       setLang("es");
     }
   }, []);
-
+  const [selectedCategory, setSelectedCategory] = useState("manicure");
   const t = translations[lang];
 
+  // Keep the page language in sync for screen readers and translation tools
   useEffect(() => {
     document.documentElement.lang = lang;
   }, [lang]);
 
+  // Estado para animaciones de scroll reveal
+  const [visibleSections, setVisibleSections] = useState<Set<string>>(new Set());
+  const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({});
+
+  // Hook para animaciones de scroll reveal
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleSections((prev) => new Set(prev).add(entry.target.id));
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
+    );
+
+    const sections = Object.values(sectionRefs.current);
+    sections.forEach((ref) => {
+      if (ref) observer.observe(ref as Element);
+    });
+
+    return () => {
+      sections.forEach((ref) => {
+        if (ref) observer.unobserve(ref as Element);
+      });
+    };
+  }, []);
+
+  // Filtrar servicios por categoría
+  const filteredServices = SERVICES.filter((s) => s.category === selectedCategory);
+
+
   return (
-    <main className="min-h-screen bg-[#FAF8F5] text-[#111111] relative overflow-x-clip selection:bg-[#C5A059]/20 selection:text-[#111111]">
+    <main className="min-h-screen bg-[#0E0706] relative overflow-x-clip">
       {/* ================================================================== */}
-      {/* LUXURY EDITORIAL HEADER */}
+      {/* HEADER */}
       {/* ================================================================== */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-[#FAF8F5]/85 backdrop-blur-md border-b border-[#111111]/8">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex justify-between items-center">
-          <a href="#" className="font-serif tracking-widest text-base sm:text-lg text-[#111111] uppercase font-medium">
-            IVA <span className="font-light text-[#C5A059]">Atelier NY</span>
+      <header className="fixed top-0 left-0 right-0 z-40 bg-[#0E0706]/70 backdrop-blur-md border-b border-[#F4EBE1]/10">
+        <nav className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+          <a href="#" className="font-display inline-block py-3 text-sm tracking-[0.3em] text-[#F4EBE1]">
+            IVA <span className="font-light">Nail Art</span>
           </a>
 
-          <div className="hidden lg:flex items-center gap-7 text-xs uppercase tracking-[0.2em] font-medium text-[#4A4A4A]">
-            <a href="#services" className="hover:text-[#C5A059] transition-colors">{t.nav.services}</a>
-            <a href="#lookbook" className="hover:text-[#C5A059] transition-colors">{t.nav.lookbook}</a>
-            <a href="#ai-concierge" className="hover:text-[#C5A059] transition-colors">{t.nav.concierge}</a>
-            <Link href="/try-on" className="hover:text-[#C5A059] transition-colors flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-[#C5A059]" />
-              {t.nav.tryOn}
-            </Link>
-            <a href="#reviews" className="hover:text-[#C5A059] transition-colors">{t.nav.reviews}</a>
-          </div>
+          <div className="flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-6 font-display text-[0.65rem] tracking-[0.25em] text-[#F4EBE1]/70">
+              <a href="#services" className="inline-block py-3 hover:text-[#E8C9A8] transition-colors">
+                {t.nav.services}
+              </a>
+              <a href="#gallery" className="inline-block py-3 hover:text-[#E8C9A8] transition-colors">
+                {t.nav.gallery}
+              </a>
+            </div>
 
-          <div className="flex items-center gap-3">
             <button
               onClick={() => setLang(lang === "en" ? "es" : "en")}
-              className="text-xs font-medium text-[#111111] border border-stone-300 px-3 py-1.5 rounded-full hover:bg-[#111111] hover:text-[#FAF8F5] transition-all"
-              aria-label="Toggle language"
+              className="text-xs font-medium text-[#F4EBE1] border border-[#F4EBE1]/30 px-3 py-1.5 rounded-full hover:bg-[#F4EBE1] hover:text-[#0E0706] transition-all"
             >
               {t.langSwitch}
             </button>
 
             <a
-              href="#booking-calculator"
-              className="bg-[#111111] hover:bg-[#C5A059] text-white hover:text-[#111111] px-4 sm:px-5 py-2 rounded-full text-xs font-medium tracking-wide transition-colors shadow-sm"
+              href={CONFIG.instagramDmUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#E8C9A8] text-[#0E0706] px-5 py-2 rounded-full text-sm font-semibold hover:bg-white transition-colors"
             >
               {t.nav.book}
             </a>
@@ -226,33 +341,27 @@ export default function Home() {
       </header>
 
       {/* ================================================================== */}
-      {/* 1. CINEMATIC SCROLL HERO */}
+      {/* HERO SECTION */}
       {/* ================================================================== */}
-      <div className="pt-16">
-        <HeroScroll lang={lang} bookUrl={CONFIG.instagramDmUrl} cta={t.hero.cta} />
-      </div>
-
-      {/* ================================================================== */}
-      {/* 2. PHOTO MARQUEE (DRIFTING PORTFOLIO SETS) */}
-      {/* ================================================================== */}
+      <HeroScroll lang={lang} bookUrl={CONFIG.instagramDmUrl} cta={t.hero.cta} />
       <PhotoMarquee lang={lang} />
 
       {/* ================================================================== */}
-      {/* 3. TRUST & PERFORMANCE STATISTICS */}
+      {/* STATISTICS SECTION PREMIUM */}
       {/* ================================================================== */}
-      <section className="bg-white border-y border-stone-200/80 px-6 py-12 md:px-10 md:py-16">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-y-8 md:grid-cols-4 md:divide-x md:divide-stone-200">
+      <section className="bg-[#0E0706] px-6 py-14 md:px-10 md:py-20">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-y-10 md:grid-cols-4 md:divide-x md:divide-[#FDF8F5]/15">
           {[
-            { end: 10, suffix: "+", en: "Years of Mastery", es: "Años de Maestría" },
-            { end: 500, suffix: "+", en: "Private Clients", es: "Clientas Exclusivas" },
-            { end: 3, suffix: " max", en: "Appointments / Day", es: "Citas por Día" },
-            { end: 100, suffix: "%", en: "Hospital-Grade Hygiene", es: "Higiene Hospitalaria" },
+            { end: 3, suffix: "", en: "Years of experience", es: "Años de experiencia" },
+            { end: 33, suffix: "+", en: "Happy clients", es: "Clientas felices" },
+            { end: 2000, suffix: "+", en: "Designs created", es: "Diseños creados" },
+            { end: 100, suffix: "%", en: "Satisfaction rate", es: "Satisfacción" },
           ].map((stat) => (
-            <div key={stat.en} className="px-3 text-center md:px-8 md:text-left">
-              <div className="font-serif text-3xl sm:text-4xl md:text-5xl text-[#111111] font-semibold">
+            <div key={stat.en} className="px-2 text-center md:px-8 md:text-left">
+              <div className="font-display text-4xl text-[#F4EBE1] md:text-6xl">
                 <AnimatedCounter end={stat.end} suffix={stat.suffix} />
               </div>
-              <p className="mt-2 text-[11px] font-medium uppercase tracking-[0.2em] text-[#C5A059]">
+              <p className="mt-3 text-xs font-medium uppercase tracking-[0.2em] text-[#FDF8F5]/70">
                 {lang === "en" ? stat.en : stat.es}
               </p>
             </div>
@@ -261,169 +370,284 @@ export default function Home() {
       </section>
 
       {/* ================================================================== */}
-      {/* 4. INTERACTIVE DESIGN TOOLS BANNER (Try-On, Match, Gift Cards) */}
+      {/* ABOUT SECTION - MEET IVA */}
       {/* ================================================================== */}
       <DesignTools lang={lang} />
-
-      {/* ================================================================== */}
-      {/* 5. WHY PRIVATE STUDIO (SANCTUARY VS COMMERCIAL SALON) */}
-      {/* ================================================================== */}
       <WhyPrivateStudio lang={lang} />
-
-      {/* ================================================================== */}
-      {/* 6. MEET THE MASTER ARTIST (ABOUT IVA) */}
-      {/* ================================================================== */}
       <AboutIva language={lang} />
 
       {/* ================================================================== */}
-      {/* 7. CURATED EDITORIAL LOOKBOOK (STYLE FILTERABLE) */}
+      {/* SERVICES SECTION - LUXURY SPA MENU STYLE */}
       {/* ================================================================== */}
-      <LookbookFilterable lang={lang} />
+      <section
+        id="services"
+        ref={(el) => { sectionRefs.current['services'] = el as HTMLElement | null; }}
+        className={`py-24 md:py-32 px-4 md:px-6 bg-[#0E0706] transition-all duration-1000 relative overflow-hidden ${visibleSections.has('services')
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 translate-y-10'
+          }`}
+      >
+        <div className="max-w-7xl mx-auto relative z-10">
+          {/* Header Section - Estilo Premium Minimalista */}
+          <div className="text-center mb-20">
+            <p className="font-display text-[#D4A574] tracking-[0.35em] text-[0.65rem] md:text-xs mb-6">
+              {t.services.subtitle}
+            </p>
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#F4EBE1] mb-8 font-light italic tracking-tight leading-tight">
+              {t.services.title}
+            </h2>
+            <p className="text-[#F4EBE1]/70 text-sm md:text-base font-light max-w-2xl mx-auto leading-relaxed">
+              {lang === "en" ? "Every set is quoted personally. Send Iva your idea and she confirms the price before your appointment." : "Cada diseño se cotiza de forma personalizada. Escríbele a Iva con tu idea y te confirma el precio antes de tu cita."}{" "}
+              <Link
+                href={lang === "en" ? "/builder-gel-bay-ridge" : "/es/builder-gel-bay-ridge"}
+                className="text-[#E8C9A8] underline underline-offset-4 hover:text-white"
+              >
+                {lang === "en" ? "Discover builder gel" : "Descubre el builder gel"}
+              </Link>
+            </p>
+          </div>
+
+          {/* Category Tabs - Estilo Premium con bordes dorados sutiles */}
+          <div className="flex flex-wrap justify-center gap-3 mb-16">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                aria-pressed={selectedCategory === cat.id}
+                className={`px-6 py-2.5 rounded-full text-sm font-light tracking-wide transition-all duration-300 ${selectedCategory === cat.id
+                  ? "bg-[#E8C9A8] text-[#0E0706] border border-[#E8C9A8] font-medium"
+                  : "bg-transparent text-[#F4EBE1]/80 border border-[#F4EBE1]/25 hover:border-[#E8C9A8] hover:text-[#E8C9A8]"
+                  }`}
+                aria-label={`${lang === "en" ? "Filter by" : "Filtrar por"} ${lang === "en" ? cat.en : cat.es}`}
+              >
+                {lang === "en" ? cat.en : cat.es}
+              </button>
+            ))}
+          </div>
+
+          {/* Services Grid - Luxury Cards con imágenes y efectos premium */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            {filteredServices.map((service) => {
+              // Icon mapping for services
+              const getServiceIcon = () => {
+                if (service.category === "manicure") return Hand;
+                if (service.category === "pedicure") return Footprints;
+                if (service.category === "nailart") return Palette;
+                if (service.category === "acrylic") return Sparkles;
+                return Scissors;
+              };
+              const IconComponent = getServiceIcon();
+
+              // Obtener imagen de ejemplo de la galería basada en la categoría
+              const getServiceImage = () => {
+                const categoryImages = GALLERY_IMAGES.filter(img => img.category === "nails");
+                // One distinct photo per service, so every tab shows different cards
+                const imageIndex = SERVICES.findIndex((s) => s.id === service.id) % categoryImages.length;
+                return categoryImages[imageIndex]?.src || "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg";
+              };
+              const serviceImage = getServiceImage();
+
+              return (
+                <article
+                  key={service.id}
+                  className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-[#F4EBE1]/12 bg-[#1A0F0D] transition-colors duration-300 hover:border-[#E8C9A8]/50"
+                >
+                  {/* Whole photo, never cropped: the frame has the same 3:4 ratio as the pictures */}
+                  <div className="relative aspect-[3/4] w-full bg-[#140B0A]">
+                    <Image
+                      src={serviceImage}
+                      alt={lang === "en" ? service.name : service.nameEs}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-contain"
+                    />
+                    <span className="absolute left-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/90 text-[#B8864D] shadow-md">
+                      <IconComponent className="h-5 w-5" />
+                    </span>
+                  </div>
+
+                  <div className="flex flex-1 flex-col gap-5 p-6">
+                    <div>
+                      <h3 className="font-serif text-2xl leading-tight text-[#F4EBE1]">
+                        {lang === "en" ? service.name : service.nameEs}
+                      </h3>
+                      <p className="mt-2 text-sm text-[#F4EBE1]/70">
+                        {lang === "en" ? "Personal quote by message" : "Cotización personalizada por mensaje"}
+                      </p>
+                      {(() => {
+                        const landing = SERVICE_LANDINGS.find((l) => l.homeCategory === service.category);
+                        if (!landing || (service.category === "manicure" && service.id !== "m3")) return null;
+                        return (
+                          <Link
+                            href={landingPath(landing.slug, lang)}
+                            className="mt-2 inline-block py-1 text-sm text-[#E8C9A8] underline underline-offset-4 hover:text-white"
+                          >
+                            {lang === "en" ? `More about ${landing.copy.en.h1Top.toLowerCase()}` : `Más sobre ${landing.copy.es.h1Top.toLowerCase()}`}
+                          </Link>
+                        );
+                      })()}
+                    </div>
+                    <a
+                      href={CONFIG.instagramDmUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-auto flex w-full items-center justify-center gap-3 rounded-full border border-[#E8C9A8]/60 px-6 py-4 text-sm font-semibold tracking-wide text-[#E8C9A8] transition-colors hover:bg-[#E8C9A8] hover:text-[#0E0706]"
+                      aria-label={`${lang === "en" ? "Send a direct message on Instagram about" : "Enviar mensaje directo por Instagram sobre"} ${lang === "en" ? service.name : service.nameEs}`}
+                    >
+                      <Instagram className="h-5 w-5" />
+                      {lang === "en" ? "Get my quote" : "Pedir mi cotización"}
+                    </a>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {BOOKING_ENABLED && <BookingWidget lang={lang} instagramUrl={CONFIG.instagramDmUrl} />}
+      <BookingInfo lang={lang} bookUrl={CONFIG.instagramDmUrl} phone={CONFIG.phone} hours={CONFIG.hours[lang]} deposit={CONFIG.deposit} />
+      <Reviews lang={lang} />
 
       {/* ================================================================== */}
-      {/* 8. HAUTE AI NAIL CONCIERGE (BESPOKE STYLING CONSULTATION) */}
+      {/* GALLERY SECTION - GALERÍA VISUAL IMPRESIONANTE */}
       {/* ================================================================== */}
-      <NailConcierge lang={lang} />
+      <GallerySection lang={lang} t={t} CONFIG={CONFIG} />
 
       {/* ================================================================== */}
-      {/* 9. LUXURY SERVICE CALCULATOR (TRANSPARENT PRICING & DEPOSIT) */}
+      {/* CTA SECTION */}
       {/* ================================================================== */}
-      <div id="services">
-        <ServiceSelectorLuxury lang={lang} />
-      </div>
-
-      {/* ================================================================== */}
-      {/* 10. BOOKING INFO & FAQ (POLICIES & LOCATION) */}
-      {/* ================================================================== */}
-      <BookingInfo
-        lang={lang}
-        bookUrl={CONFIG.instagramDmUrl}
-        phone={CONFIG.phone}
-        hours={CONFIG.hours[lang]}
-        deposit={CONFIG.deposit}
-      />
-
-      {/* ================================================================== */}
-      {/* 11. REPUTATION & CLIENT REVIEWS */}
-      {/* ================================================================== */}
-      <div id="reviews">
-        <Reviews lang={lang} />
-      </div>
-
-      {/* ================================================================== */}
-      {/* 12. CLOSING EDITORIAL CTA */}
-      {/* ================================================================== */}
-      <section className="relative isolate overflow-hidden bg-[#111111] px-6 py-20 md:px-10 md:py-28 text-white">
+      <section className="relative isolate overflow-hidden bg-[#1C0A0A] px-6 py-24 md:px-10 md:py-36">
         <Image
           src="/gallery/aurora-chrome-gold.jpg"
           alt=""
           fill
           sizes="100vw"
-          className="-z-10 object-cover opacity-20"
+          className="-z-10 object-cover opacity-25"
         />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#111111] via-[#111111]/90 to-[#111111]/60" />
-        <div className="mx-auto max-w-4xl text-center">
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#C5A059]">
-            {lang === "en" ? "By Appointment Only · Brooklyn, NY" : "Solo con Cita · Brooklyn, NY"}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#1C0A0A] via-[#1C0A0A]/85 to-[#1C0A0A]/40" />
+        <div className="mx-auto max-w-7xl">
+          <p className="mb-6 text-xs font-semibold uppercase tracking-[0.3em] text-[#D4A574]">
+            {lang === "en" ? "By appointment only" : "Solo con cita"}
           </p>
-          <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl leading-[1.1] text-[#FAF8F5] mb-6">
-            <span className="block font-light italic">{lang === "en" ? "Your Next Masterpiece" : "Tu Próxima Creación"}</span>
-            <span className="font-normal text-[#EAD8B1]">{lang === "en" ? "Begins in the Atelier" : "Comienza en el Atelier"}</span>
+          <h2 className="max-w-4xl font-serif text-[clamp(2.75rem,8vw,6.5rem)] leading-[0.95] text-[#FDF8F5]">
+            <span className="font-display block text-[0.72em] font-bold">{lang === "en" ? "Your next set" : "Tu próximo diseño"}</span>
+            <span className="font-normal italic text-[#E8C9A8]">{lang === "en" ? "starts with a DM" : "empieza con un mensaje"}</span>
           </h2>
-          <p className="text-sm md:text-base text-stone-300 max-w-xl mx-auto mb-8 font-light leading-relaxed">
+          <p className="mt-8 max-w-xl text-base leading-relaxed text-[#FDF8F5]/75 md:text-lg">
             {lang === "en"
-              ? "Send a photo of your desired aesthetic, reserve your dedicated 3 to 4-hour session with a $35 deposit, and experience private luxury nail care."
-              : "Envía una foto de tu diseño favorito, asegura tu bloque exclusivo de 3 a 4 horas con un depósito de $35 y vive una experiencia de manicura de lujo."}
+              ? "Send a photo of the look you love, pick a time, and Iva takes care of the rest."
+              : "Envía una foto del diseño que te gusta, elige un horario e Iva se encarga del resto."}
           </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="#booking-calculator"
-              className="w-full sm:w-auto px-8 py-4 rounded-full bg-[#C5A059] hover:bg-[#EAD8B1] text-[#111111] text-xs uppercase tracking-widest font-semibold transition-all shadow-xl"
-            >
-              {lang === "en" ? "Design & Book Session" : "Diseñar y Reservar Cita"}
-            </a>
-            <a
-              href={CONFIG.instagramDmUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto px-8 py-4 rounded-full border border-stone-400 hover:bg-white/10 text-white text-xs uppercase tracking-widest font-semibold transition-all"
-            >
-              <Instagram className="w-4 h-4 inline mr-2 text-[#C5A059]" />
-              {lang === "en" ? "Direct DM @aureate_sole" : "Mensaje Directo"}
-            </a>
-          </div>
+          <a
+            href={CONFIG.instagramDmUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="glow-pill group mt-10"
+          >
+            {t.hero.cta}
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0E0706]/25 transition-transform group-hover:rotate-45">
+              <ChevronRight className="h-4 w-4" />
+            </span>
+          </a>
+          <p className="mt-5 text-sm text-[#FDF8F5]/70">
+            {lang === "en"
+              ? `Replies within 1–2 hours · $${CONFIG.deposit} deposit holds your time`
+              : `Respuesta en 1 a 2 horas · Depósito de $${CONFIG.deposit} para apartar tu cita`}
+          </p>
         </div>
       </section>
 
       {/* ================================================================== */}
-      {/* 13. EDITORIAL FOOTER */}
+      {/* FOOTER PREMIUM */}
       {/* ================================================================== */}
-      <footer className="bg-[#FAF8F5] text-[#111111] border-t border-stone-200 py-16 px-6 sm:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-            <div>
-              <h3 className="font-serif text-2xl uppercase tracking-widest mb-3 font-semibold">
-                IVA <span className="font-light text-[#C5A059]">Atelier</span>
+      <footer className="bg-gradient-to-br from-[#1a0202] via-[#2a0404] to-[#1a0202] text-white py-16 md:py-20 px-6 relative overflow-hidden">
+        {/* Decorative gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#D4AF37]/5 via-transparent to-transparent"></div>
+
+        {/* Marca de agua del logo en footer */}
+        <div className="pointer-events-none absolute -right-16 -bottom-10 w-80 sm:w-96 opacity-10 rotate-6">
+          <Image
+src="/logo-iva.png"
+alt="IVA watermark footer"
+width={631}
+height={436}
+className="w-full h-auto drop-shadow-[0_25px_45px_rgba(0,0,0,0.25)]"
+/>
+        </div>
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="grid md:grid-cols-4 gap-10 mb-12">
+            {/* Brand PREMIUM */}
+            <div className="text-center md:text-left">
+              <h3 className="font-serif text-3xl mb-5 bg-gradient-to-r from-white via-[#D4AF37] to-white bg-clip-text text-transparent font-bold">
+                IVA <span className="font-light">Nail Art</span>
               </h3>
-              <p className="text-xs text-stone-600 font-light leading-relaxed mb-4">
-                {t.footer.tagline}
-              </p>
-              <p className="text-[11px] uppercase tracking-wider text-[#C5A059] font-medium">
-                Brooklyn, NY · Private Sanctuary
-              </p>
+              <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
+                <Image
+src="/logo-iva.png"
+alt="IVA Nail Art logo footer"
+width={631}
+height={436}
+className="w-16 h-auto rounded-lg"
+/>
+                <p className="text-[#D4AF37] text-sm font-semibold tracking-wide">
+                  Luxury Nails · NY
+                </p>
+              </div>
+              <p className="text-white/80 text-base font-medium leading-relaxed">{t.footer.tagline}</p>
             </div>
 
-            <div>
-              <h4 className="text-xs uppercase tracking-[0.2em] font-semibold text-[#111111] mb-4 flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-[#C5A059]" />
+            {/* Hours */}
+            <div className="text-center md:text-left">
+              <h4 className="font-medium mb-4 flex items-center justify-center md:justify-start gap-2">
+                <Clock className="w-4 h-4 text-[#D4AF37]" />
                 {t.footer.hours}
               </h4>
-              <ul className="space-y-1.5 text-xs text-stone-600">
+              <ul className="space-y-1 text-sm text-white/60">
                 {CONFIG.hours[lang].map((h) => (
                   <li key={h.days}>
-                    <span className="font-medium text-[#111111]">{h.days}:</span> {h.time}
+                    <span className="text-white/80">{h.days}</span> · {h.time}
                   </li>
                 ))}
               </ul>
-              <p className="text-[11px] text-[#C5A059] mt-2 font-medium">Strictly by appointment</p>
+              <p className="text-[#D4AF37] text-sm mt-1">{t.hero.appointment}</p>
             </div>
 
-            <div>
-              <h4 className="text-xs uppercase tracking-[0.2em] font-semibold text-[#111111] mb-4 flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#C5A059]" />
+            {/* Location */}
+            <div className="text-center md:text-left">
+              <h4 className="font-medium mb-4 flex items-center justify-center md:justify-start gap-2">
+                <MapPin className="w-4 h-4 text-[#D4AF37]" />
                 {t.footer.location}
               </h4>
-              <p className="text-xs text-stone-600 mb-2">{CONFIG.location}</p>
-              <p className="text-[11px] text-stone-500">Private studio details provided upon deposit confirmation.</p>
+              <p className="text-white/60 text-sm">{CONFIG.location}</p>
             </div>
 
-            <div>
-              <h4 className="text-xs uppercase tracking-[0.2em] font-semibold text-[#111111] mb-4 flex items-center gap-1.5">
-                <Phone className="w-3.5 h-3.5 text-[#C5A059]" />
+            {/* Contact */}
+            <div className="text-center md:text-left">
+              <h4 className="font-medium mb-4 flex items-center justify-center md:justify-start gap-2">
+                <Phone className="w-4 h-4 text-[#D4AF37]" />
                 {t.footer.contact}
               </h4>
-              <a href={`tel:${CONFIG.phone.replace(/[^\d+]/g, "")}`} className="text-xs text-stone-700 hover:text-[#C5A059] block mb-3 font-medium">
-                {CONFIG.phone}
-              </a>
-              <div className="flex gap-3">
+              <a href={`tel:${CONFIG.phone.replace(/[^\d+]/g, "")}`} className="inline-block py-2 text-white/70 text-sm hover:text-[#D4AF37]">{CONFIG.phone}</a>
+              <div className="flex justify-center md:justify-start gap-4 mt-4">
                 <a
                   href={CONFIG.instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-full border border-stone-300 hover:border-[#C5A059] text-stone-700 hover:text-[#C5A059] transition-all"
-                  aria-label="Instagram"
+                  className="text-white/70 hover:text-[#D4AF37] transition-all hover:scale-110 p-2 rounded-full hover:bg-white/10"
+                  aria-label={`${lang === "en" ? "Follow us on Instagram" : "Síguenos en Instagram"}`}
                 >
-                  <Instagram className="w-4 h-4" />
+                  <Instagram className="w-6 h-6" />
                 </a>
                 <a
                   href={CONFIG.tiktokUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-full border border-stone-300 hover:border-[#C5A059] text-stone-700 hover:text-[#C5A059] transition-all"
-                  aria-label="TikTok"
+                  className="text-white/70 hover:text-[#D4AF37] transition-all hover:scale-110 p-2 rounded-full hover:bg-white/10"
+                  aria-label={`${lang === "en" ? "Follow us on TikTok" : "Síguenos en TikTok"}`}
                 >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z" />
                   </svg>
                 </a>
@@ -431,26 +655,50 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border-t border-stone-200/80 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-4">
-            <p>© {new Date().getFullYear()} IVA Nail Art NY. All rights reserved.</p>
-            <div className="flex flex-wrap gap-x-5 gap-y-2 text-stone-600">
-              <Link href="/try-on" className="hover:text-[#C5A059]">{lang === "en" ? "Virtual Try-On" : "Probador Virtual"}</Link>
-              <Link href="/nail-match" className="hover:text-[#C5A059]">{lang === "en" ? "Nail Match" : "Quiz de Estilo"}</Link>
-              <Link href="/gift-card" className="hover:text-[#C5A059]">{lang === "en" ? "Gift Cards" : "Tarjetas de Regalo"}</Link>
-              <Link href="/aftercare" className="hover:text-[#C5A059]">{lang === "en" ? "Aftercare Guide" : "Cuidados Posteriores"}</Link>
-              <Link href="/privacy" className="hover:text-[#C5A059]">{lang === "en" ? "Privacy" : "Privacidad"}</Link>
-              <Link href="/terms" className="hover:text-[#C5A059]">{lang === "en" ? "Terms" : "Términos"}</Link>
-            </div>
+          <div className="border-t-2 border-white/20 pt-10 text-center">
+            <p className="text-white/70 text-base font-medium">
+              © {new Date().getFullYear()} IVA Nail Art. {lang === "en" ? "All rights reserved." : "Todos los derechos reservados."}
+            </p>
+            <p className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 text-sm text-white/70">
+              <a href="/privacy" className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
+                {lang === "en" ? "Privacy Policy" : "Privacidad"}
+              </a>
+              <a href="/terms" className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
+                {lang === "en" ? "Terms & Conditions" : "Términos y Condiciones"}
+              </a>
+              <a href={lang === "en" ? "/aftercare" : "/es/aftercare"} className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
+                {lang === "en" ? "Aftercare" : "Cuidados"}
+              </a>
+              <a href={lang === "en" ? "/gift-card" : "/gift-card?lang=es"} className="inline-block py-2 underline-offset-4 hover:text-[#D4AF37] hover:underline">
+                {lang === "en" ? "Gift card" : "Tarjeta de regalo"}
+              </a>
+            </p>
+            <p className="text-white/50 text-sm mt-2">
+              {lang === "en" ? "Made with ❤️ in Brooklyn" : "Hecho con ❤️ en Brooklyn"}
+            </p>
           </div>
         </div>
       </footer>
 
       {/* ================================================================== */}
-      {/* 14. MOBILE STICKY ACTION BAR & FLOATING ELEMENTS */}
+      {/* FLOATING INSTAGRAM DM BUTTON */}
       {/* ================================================================== */}
-      <MobileBookingBar lang={lang} />
+      <a
+        href={CONFIG.instagramDmUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white p-4 rounded-full shadow-2xl hover:brightness-110 hover:scale-110 transition-all z-40 group"
+        aria-label={lang === "en" ? "Message us on Instagram" : "Escríbenos por Instagram"}
+      >
+        <Instagram className="w-7 h-7" />
+        <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-[#4A0404] text-white text-sm px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
+          {t.floatingBtn}
+        </span>
+      </a>
+
       <BackToTop />
       <ScrollProgressBar />
     </main>
   );
 }
+

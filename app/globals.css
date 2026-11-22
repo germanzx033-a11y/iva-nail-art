@@ -196,10 +196,14 @@
    BASE STYLES
    ============================================= */
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* Reset in the base layer: outside a layer, `margin: 0; padding: 0` on `*`
+   overrides every Tailwind spacing utility (px-4, mb-6, ...) on the whole site. */
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 html {
@@ -210,8 +214,8 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  background: #0e0706;
+  color: #f4ebe1;
   line-height: 1.8;
   font-size: 16px;
   font-weight: 400;
@@ -221,17 +225,36 @@ body {
    TYPOGRAPHY - LUXURY IMPACT
    ============================================= */
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  color: var(--text-primary);
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+}
+
+/* Default text colours live in the base layer so Tailwind utilities such as
+   text-white or text-[#D4AF37] can override them. Outside a layer these rules
+   beat every utility, which left white/gold text rendered dark on dark sections. */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--text-primary);
+  }
+
+  p {
+    color: var(--text-secondary);
+  }
 }
 
 .font-serif {
@@ -243,10 +266,11 @@ h6 {
   font-family: var(--font-sans);
 }
 
-p {
-  color: var(--text-secondary);
-  line-height: 1.8;
-  letter-spacing: 0.01em;
+@layer base {
+  p {
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+  }
 }
 
 /* Hero Title - Maximum Impact */
@@ -889,36 +913,6 @@ p {
   animation: glitch 0.1s infinite;
 }
 
-/* Efecto de typing */
-@keyframes typing {
-  from {
-    width: 0;
-  }
-
-  to {
-    width: 100%;
-  }
-}
-
-@keyframes blink-caret {
-
-  from,
-  to {
-    border-color: transparent;
-  }
-
-  50% {
-    border-color: #D4AF37;
-  }
-}
-
-.typing-effect {
-  overflow: hidden;
-  border-right: 3px solid #D4AF37;
-  white-space: nowrap;
-  animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
-}
-
 /* Scroll progress bar avanzado */
 .scroll-progress {
   position: fixed;
@@ -1385,10 +1379,14 @@ html {
 }
 
 /* Smooth transitions for all interactive elements */
-* {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+/* In the base layer so Tailwind's duration-/transition- utilities still apply. */
+@layer base {
+  a,
+  button {
+    transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
 }
 
 /* Performance optimizations */
@@ -1595,10 +1593,7 @@ html {
 }
 
 /* Smooth transitions for all interactive elements */
-a,
-button {
-  transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
-}
+
 
 /* =============================================
    RESPONSIVE
@@ -1994,8 +1989,6 @@ button {
     transform: translateX(100%) translateY(100%);
   }
 }
-
-
 /* Editorial hero + photo marquee */
 @keyframes marquee-left { from { transform: translateX(0); } to { transform: translateX(-33.333%); } }
 @keyframes marquee-half { from { transform: translateX(0); } to { transform: translateX(-50%); } }
@@ -2008,7 +2001,7 @@ button {
   .marquee-track, .marquee-track-reverse, .hero-rise { animation: none; }
 }
 
-/* Immersive scroll hero & glow pill */
+/* Immersive scroll hero */
 .font-display {
   font-family: var(--font-syncopate), var(--font-inter), sans-serif;
   text-transform: uppercase;
@@ -2035,4 +2028,9 @@ button {
 }
 @media (max-width: 480px) {
   .glow-pill { font-size: 0.7rem; letter-spacing: 0.08em; padding-left: 1.25rem; gap: 0.5rem; }
+}
+
+/* Elements with the hidden attribute must never show, whatever their utility classes say */
+[hidden] {
+  display: none !important;
 }
