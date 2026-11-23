@@ -44,6 +44,9 @@ import {
   Sunset,
   MapPin,
   Printer,
+  ExternalLink,
+  Copy,
+  Check,
 } from "lucide-react";
 
 // =============================================
@@ -137,7 +140,8 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"dashboard" | "clients" | "gmaps" | "scripts" | "waitlist" | "analytics" | "ezra">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "clients" | "portal" | "gmaps" | "scripts" | "waitlist" | "analytics" | "ezra">("dashboard");
+  const [copiedPortalLink, setCopiedPortalLink] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -396,33 +400,33 @@ export default function AdminPage() {
   // =============================================
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F3F0] to-[#EDE9E3]">
+    <main className="min-h-screen bg-gradient-to-br from-[#FAF9F7] via-[#F5F3F0] to-[#EDE9E3] w-full max-w-full overflow-x-hidden">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-[#EBE8E2]">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-[#EBE8E2] w-full">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5 sm:gap-4 min-w-0">
             <motion.div
               whileHover={{ rotate: 5 }}
-              className="w-12 h-12 bg-gradient-to-br from-[#B76E79] via-[#722F37] to-[#5A252C] rounded-2xl flex items-center justify-center shadow-lg shadow-[#722F37]/20"
+              className="w-9 h-9 sm:w-12 sm:h-12 bg-gradient-to-br from-[#B76E79] via-[#722F37] to-[#5A252C] rounded-xl sm:rounded-2xl flex items-center justify-center shadow-md shadow-[#722F37]/20 flex-shrink-0"
             >
-              <span className="text-white font-serif text-xl">IVA</span>
+              <span className="text-white font-serif text-sm sm:text-xl">IVA</span>
             </motion.div>
-            <div>
-              <div className="flex items-center gap-2">
-                <greeting.icon className={`w-4 h-4 text-transparent bg-gradient-to-r ${greeting.color} bg-clip-text`} style={{ color: greeting.color.includes("amber") ? "#f59e0b" : greeting.color.includes("purple") ? "#a855f7" : "#eab308" }} />
-                <h1 className="font-serif text-xl text-[#1A1A1A]">{greeting.text}, Iva</h1>
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <greeting.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#722F37]" />
+                <h1 className="font-serif text-sm sm:text-xl text-[#1A1A1A] truncate">{greeting.text}, Iva</h1>
               </div>
-              <p className="text-xs text-[#7A7A7A]">
-                {currentTime.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+              <p className="text-[10px] sm:text-xs text-[#7A7A7A] truncate">
+                {currentTime.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
             {/* Live Status */}
-            <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${isResting ? "bg-gray-100" : "bg-green-100"}`}>
+            <div className={`flex items-center gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full ${isResting ? "bg-gray-100" : "bg-green-100"}`}>
               <span className={`w-2 h-2 rounded-full ${isResting ? "bg-gray-400" : "bg-green-500 animate-pulse"}`} />
-              <span className={`text-xs font-medium ${isResting ? "text-gray-600" : "text-green-700"}`}>
+              <span className={`text-[10px] sm:text-xs font-medium hidden sm:inline ${isResting ? "text-gray-600" : "text-green-700"}`}>
                 {isResting ? "Rest Mode" : "Live"}
               </span>
             </div>
@@ -432,14 +436,14 @@ export default function AdminPage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowNotifications(!showNotifications)}
-              className="relative p-2.5 bg-white rounded-xl border border-[#EBE8E2] hover:shadow-md transition-all"
+              className="relative p-2 sm:p-2.5 bg-white rounded-xl border border-[#EBE8E2] hover:shadow-md transition-all"
             >
-              <Bell className="w-5 h-5 text-[#7A7A7A]" />
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-[#7A7A7A]" />
               {unreadCount > 0 && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-[#B76E79] to-[#722F37] text-white text-[10px] rounded-full flex items-center justify-center font-medium"
+                  className="absolute -top-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 bg-gradient-to-r from-[#B76E79] to-[#722F37] text-white text-[9px] sm:text-[10px] rounded-full flex items-center justify-center font-medium"
                 >
                   {unreadCount}
                 </motion.span>
@@ -455,9 +459,9 @@ export default function AdminPage() {
                 fetchBrief();
               }}
               disabled={isLoading}
-              className="p-2.5 bg-white rounded-xl border border-[#EBE8E2] hover:shadow-md transition-all"
+              className="p-2 sm:p-2.5 bg-white rounded-xl border border-[#EBE8E2] hover:shadow-md transition-all"
             >
-              <RefreshCw className={`w-5 h-5 text-[#7A7A7A] ${isLoading ? "animate-spin" : ""}`} />
+              <RefreshCw className={`w-4 h-4 sm:w-5 sm:h-5 text-[#7A7A7A] ${isLoading ? "animate-spin" : ""}`} />
             </motion.button>
 
             {/* Table Stand Link */}
@@ -465,11 +469,11 @@ export default function AdminPage() {
               href="/table-display"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#722F37]/10 hover:bg-[#722F37] text-[#722F37] hover:text-white rounded-xl border border-[#722F37]/20 text-xs font-semibold transition-all"
+              className="inline-flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 bg-[#722F37]/10 hover:bg-[#722F37] text-[#722F37] hover:text-white rounded-xl border border-[#722F37]/20 text-xs font-semibold transition-all"
               title="Abrir Expositor QR para Imprimir"
             >
               <Printer className="w-4 h-4" />
-              <span className="hidden sm:inline">Expositor QR Mesa</span>
+              <span className="hidden md:inline">Expositor QR</span>
             </a>
 
             {/* Logout */}
@@ -483,19 +487,20 @@ export default function AdminPage() {
                 setIsAuthenticated(false);
                 setAdminKey("");
               }}
-              className="p-2.5 bg-white rounded-xl border border-[#EBE8E2] hover:shadow-md transition-all"
+              className="p-2 sm:p-2.5 bg-white rounded-xl border border-[#EBE8E2] hover:shadow-md transition-all"
             >
-              <LogOut className="w-5 h-5 text-[#7A7A7A]" />
+              <LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-[#7A7A7A]" />
             </motion.button>
           </div>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex gap-1 overflow-x-auto pb-2">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6">
+          <div className="flex gap-1 overflow-x-auto pb-2 scrollbar-none">
             {[
               { id: "dashboard", label: "Command Center", icon: Zap },
               { id: "clients", label: "Client CRM & Refills", icon: Users },
+              { id: "portal", label: "Portal VIP Clientas", icon: Sparkles },
               { id: "gmaps", label: "Google Maps & SEO", icon: MapPin },
               { id: "scripts", label: "WhatsApp Concierge", icon: MessageCircle },
               { id: "waitlist", label: "VIP Waitlist", icon: Crown },
@@ -507,13 +512,13 @@ export default function AdminPage() {
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
-                className={`flex items-center gap-2 px-5 py-3 text-sm font-medium rounded-xl transition-all whitespace-nowrap ${
+                className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-xl transition-all whitespace-nowrap ${
                   activeTab === tab.id
                     ? "bg-gradient-to-r from-[#722F37] to-[#8B3A44] text-white shadow-lg shadow-[#722F37]/20"
                     : "text-[#7A7A7A] hover:bg-white hover:shadow-md"
                 }`}
               >
-                <tab.icon className="w-4 h-4" />
+                <tab.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 {tab.label}
               </motion.button>
             ))}
@@ -565,7 +570,7 @@ export default function AdminPage() {
         )}
       </AnimatePresence>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-5 sm:py-8">
         {/* Error Message */}
         {error && (
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center gap-3 mb-6">
@@ -577,6 +582,111 @@ export default function AdminPage() {
         {/* ==================== COMMAND CENTER TAB ==================== */}
         {activeTab === "dashboard" && (
           <div className="space-y-6">
+            {/* Quick Action Launchpad */}
+            <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#EBE8E2] shadow-sm">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#722F37]" />
+                  <h3 className="font-serif text-lg sm:text-xl text-[#1A1A1A]">Sanctuary Executive Launchpad</h3>
+                </div>
+                <span className="text-[11px] text-[#7A7A7A] bg-[#FAF9F7] px-2.5 py-1 rounded-full border border-[#EBE8E2] w-fit">
+                  Centro de control en 1 toque
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {/* Launchpad Card 1: CRM */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("clients")}
+                  className="text-left p-4 rounded-xl border border-[#EBE8E2] hover:border-[#722F37]/40 hover:bg-[#FDF8F6] transition-all group"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="w-8 h-8 rounded-lg bg-rose-50 text-[#722F37] flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <Users className="w-4 h-4" />
+                    </span>
+                    <span className="text-[10px] uppercase font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                      CRM Activo
+                    </span>
+                  </div>
+                  <h4 className="font-medium text-sm text-[#1A1A1A]">Client CRM & Refills</h4>
+                  <p className="text-xs text-[#7A7A7A] mt-1">Control de visitas, sellos de fidelidad y recordatorios de 3-4 semanas.</p>
+                </button>
+
+                {/* Launchpad Card 2: Portal Clientas */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("portal")}
+                  className="text-left p-4 rounded-xl border border-amber-200 bg-gradient-to-br from-amber-50/50 to-white hover:border-amber-300 transition-all group"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="w-8 h-8 rounded-lg bg-amber-100 text-amber-900 flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <Sparkles className="w-4 h-4" />
+                    </span>
+                    <span className="text-[10px] uppercase font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
+                      Nuevo • Clave/PIN
+                    </span>
+                  </div>
+                  <h4 className="font-medium text-sm text-[#1A1A1A]">Portal VIP de Clientas</h4>
+                  <p className="text-xs text-[#7A7A7A] mt-1">Acceso privado por teléfono + PIN (1234), tarjeta Apple Wallet y auto-agendamiento.</p>
+                </button>
+
+                {/* Launchpad Card 3: WhatsApp Concierge */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("scripts")}
+                  className="text-left p-4 rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50/40 to-white hover:border-emerald-300 transition-all group"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <MessageCircle className="w-4 h-4" />
+                    </span>
+                    <span className="text-[10px] uppercase font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full">
+                      10 Respuestas
+                    </span>
+                  </div>
+                  <h4 className="font-medium text-sm text-[#1A1A1A]">WhatsApp Concierge</h4>
+                  <p className="text-xs text-[#7A7A7A] mt-1">Plantillas rápidas para confirmar citas, cobrar depósitos y solicitar reseñas.</p>
+                </button>
+
+                {/* Launchpad Card 4: Google Maps Kit */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("gmaps")}
+                  className="text-left p-4 rounded-xl border border-[#EBE8E2] hover:border-[#722F37]/40 hover:bg-[#FAF9F7] transition-all group"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="w-8 h-8 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <MapPin className="w-4 h-4" />
+                    </span>
+                    <span className="text-[10px] uppercase font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+                      SEO Bay Ridge
+                    </span>
+                  </div>
+                  <h4 className="font-medium text-sm text-[#1A1A1A]">Google Maps & SEO Kit</h4>
+                  <p className="text-xs text-[#7A7A7A] mt-1">Generador de QR para reseñas de 5 estrellas, sitemaps y posicionamiento en Google.</p>
+                </button>
+
+                {/* Launchpad Card 5: Table Stand */}
+                <a
+                  href="/table-display"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-left p-4 rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50/40 to-white hover:border-purple-300 transition-all group"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="w-8 h-8 rounded-lg bg-purple-100 text-purple-900 flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <Printer className="w-4 h-4" />
+                    </span>
+                    <span className="text-[10px] uppercase font-bold text-purple-800 bg-purple-100 px-2 py-0.5 rounded-full flex items-center gap-1">
+                      Imprimir <ExternalLink className="w-2.5 h-2.5" />
+                    </span>
+                  </div>
+                  <h4 className="font-medium text-sm text-[#1A1A1A]">Expositor QR de Mesa</h4>
+                  <p className="text-xs text-[#7A7A7A] mt-1">Página elegante en blanco y dorado para imprimir en soporte de mesa del salón.</p>
+                </a>
+              </div>
+            </div>
             {/* Hero Stats Row */}
             <div className="grid md:grid-cols-4 gap-4">
               {/* Status Toggle Card */}
@@ -777,6 +887,103 @@ export default function AdminPage() {
         {activeTab === "clients" && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <AdminClientCRM />
+          </motion.div>
+        )}
+
+        {/* ==================== VIP CLIENT PORTAL TAB ==================== */}
+        {activeTab === "portal" && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+            <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#EBE8E2] shadow-sm">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#EBE8E2]">
+                <div className="space-y-1">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-amber-900 border border-amber-200 text-xs font-semibold">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                    <span>Portal de Autoservicio para Clientas</span>
+                  </div>
+                  <h2 className="font-serif text-xl sm:text-2xl text-[#1A1A1A]">Portal VIP & Auto-Agendamiento de Refill</h2>
+                  <p className="text-xs sm:text-sm text-[#7A7A7A]">
+                    Tus clientas ahora pueden ingresar con su propio teléfono y PIN predeterminado (1234) para gestionar su cita, sellos y perfil.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await navigator.clipboard.writeText("https://www.ivanailartny.com/es/portal");
+                        setCopiedPortalLink(true);
+                        setTimeout(() => setCopiedPortalLink(false), 2500);
+                      } catch {}
+                    }}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#FAF9F7] hover:bg-[#F0EDE8] border border-[#EBE8E2] rounded-xl text-xs font-semibold text-[#1A1A1A] transition-all"
+                  >
+                    {copiedPortalLink ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-[#7A7A7A]" />}
+                    <span>{copiedPortalLink ? "Enlace Copiado" : "Copiar Enlace"}</span>
+                  </button>
+
+                  <a
+                    href="/es/portal"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#722F37] hover:bg-[#5A252C] text-white rounded-xl text-xs font-semibold shadow-md shadow-[#722F37]/20 transition-all"
+                  >
+                    <span>Abrir Portal en Vivo</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+
+              {/* Feature Highlights Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6">
+                <div className="p-4 rounded-xl bg-[#FAF9F7] border border-[#EBE8E2]">
+                  <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-900 flex items-center justify-center mb-2">
+                    <Crown className="w-4 h-4" />
+                  </div>
+                  <h4 className="font-medium text-sm text-[#1A1A1A]">Pase Digital Apple Wallet (1-6 Sellos)</h4>
+                  <p className="text-xs text-[#7A7A7A] mt-1">
+                    La clienta ve en tiempo real cuántas visitas lleva acumuladas y cuándo desbloquea su ritual de lujo o manicura gratis.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[#FAF9F7] border border-[#EBE8E2]">
+                  <div className="w-8 h-8 rounded-lg bg-rose-100 text-[#722F37] flex items-center justify-center mb-2">
+                    <Clock className="w-4 h-4" />
+                  </div>
+                  <h4 className="font-medium text-sm text-[#1A1A1A]">Auto-Agendamiento de Refill (21-28d)</h4>
+                  <p className="text-xs text-[#7A7A7A] mt-1">
+                    El sistema calcula la fecha exacta en que sus uñas necesitan mantenimiento y le permite agendar en 1 clic sin tener que escribir.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[#FAF9F7] border border-[#EBE8E2]">
+                  <div className="w-8 h-8 rounded-lg bg-purple-100 text-purple-900 flex items-center justify-center mb-2">
+                    <Gift className="w-4 h-4" />
+                  </div>
+                  <h4 className="font-medium text-sm text-[#1A1A1A]">Forma Favorita & Referidos $15</h4>
+                  <p className="text-xs text-[#7A7A7A] mt-1">
+                    Elige su forma favorita (Almond, Coffin, Square, Oval, Stiletto) y comparte su enlace VIP con amigas por WhatsApp.
+                  </p>
+                </div>
+              </div>
+
+              {/* Instructions banner */}
+              <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="text-xs text-amber-900 space-y-0.5">
+                  <p className="font-semibold">💡 ¿Cómo invitar a tus clientas?</p>
+                  <p className="text-amber-800">
+                    Ve a la pestaña <strong>Client CRM & Refills</strong> y pulsa el botón morado <strong>Portal VIP</strong> en cualquier clienta. Se abrirá WhatsApp con el enlace directo y su PIN ya pre-redactado.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("clients")}
+                  className="px-3.5 py-1.5 bg-[#722F37] text-white text-xs font-semibold rounded-lg hover:bg-[#5A252C] transition-all whitespace-nowrap shadow-sm"
+                >
+                  Ir al CRM de Clientas →
+                </button>
+              </div>
+            </div>
           </motion.div>
         )}
 

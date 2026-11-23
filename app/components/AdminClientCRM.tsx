@@ -249,15 +249,6 @@ export default function AdminClientCRM() {
     setTimeout(() => setToastMessage(null), 4000);
   };
 
-  const sendWhatsAppStampNotification = (c: ClientProfile) => {
-    const cleanPhone = c.phone.replace(/\D/g, "");
-    const normalized = cleanPhone.length === 10 ? `1${cleanPhone}` : cleanPhone;
-    const stampsMod = ((c.totalVisits - 1) % 6) + 1;
-    const vipUrlWithParams = `https://www.ivanailartny.com/es/vip-club?stamps=${stampsMod}&name=${encodeURIComponent(c.name)}`;
-    const msg = `¡Hola ${c.name}! ✨ Muchas gracias por tu visita hoy a IVA Nail Art. Tu cita quedó registrada y sumaste tu sello #${stampsMod} en tu Pase Digital VIP. Puedes ver tu tarjeta y recompensas aquí: ${vipUrlWithParams} 💅🤍`;
-    window.open(`https://wa.me/${normalized}?text=${encodeURIComponent(msg)}`, "_blank");
-  };
-
   // WhatsApp Follow-Up Generator
   const sendWhatsAppRefill = (c: ClientProfile, days: number) => {
     const cleanPhone = c.phone.replace(/\D/g, "");
@@ -270,6 +261,14 @@ export default function AdminClientCRM() {
     const cleanPhone = c.phone.replace(/\D/g, "");
     const normalized = cleanPhone.length === 10 ? `1${cleanPhone}` : cleanPhone;
     const msg = `¡Hola ${c.name}! 🤍 Quería pasar a saludarte y ver cómo van sintiéndose tus uñas y cutículas desde tu cita en el estudio. Recuerda aplicar tu aceite de cutícula a diario para mantener la flexibilidad del gel: https://www.ivanailartny.com/es/aftercare ¡Cualquier duda aquí estoy! ✨`;
+    window.open(`https://wa.me/${normalized}?text=${encodeURIComponent(msg)}`, "_blank");
+  };
+
+  const sendWhatsAppPortalInvitation = (c: ClientProfile) => {
+    const cleanPhone = c.phone.replace(/\D/g, "");
+    const normalized = cleanPhone.length === 10 ? `1${cleanPhone}` : cleanPhone;
+    const portalUrl = `https://www.ivanailartny.com/es/portal?phone=${cleanPhone}`;
+    const msg = `¡Hola ${c.name}! ✨ Ya está activo tu nuevo Portal VIP de IVA Nail Art. Desde tu celular puedes ver tus sellos acumulados, elegir tu forma de uña favorita y agendar tu refill en 1 toque. Ingresa aquí con tu teléfono y tu PIN (1234): ${portalUrl} 💅🤍`;
     window.open(`https://wa.me/${normalized}?text=${encodeURIComponent(msg)}`, "_blank");
   };
 
@@ -445,30 +444,22 @@ export default function AdminClientCRM() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#EBE8E2]">
+                <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-[#EBE8E2]">
                   {/* +1 Visit & Stamp */}
                   <button
                     onClick={() => handleAddVisit(client)}
-                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-semibold active:scale-95 transition-all shadow-sm"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 text-xs font-semibold active:scale-95 transition-all shadow-sm"
                     title="Anotar visita hoy y sumar +1 sello VIP"
                   >
                     <Crown className="w-3.5 h-3.5 text-amber-700" />
                     <span>+1 Sello VIP</span>
                   </button>
 
-                  <button
-                    onClick={() => sendWhatsAppStampNotification(client)}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 text-xs font-medium transition-all"
-                    title="Enviar enlace del pase digital VIP por WhatsApp"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-                    <span className="hidden xl:inline">Pase VIP</span>
-                  </button>
-
+                  {/* Refill / Aftercare WhatsApp */}
                   {days >= 15 ? (
                     <button
                       onClick={() => sendWhatsAppRefill(client, days)}
-                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#25D366] text-white text-xs font-semibold hover:brightness-105 active:scale-95 transition-all shadow-sm"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#25D366] text-white text-xs font-semibold hover:brightness-105 active:scale-95 transition-all shadow-sm"
                       title="Enviar recordatorio personalizado de refill por WhatsApp"
                     >
                       <MessageCircle className="w-3.5 h-3.5" />
@@ -477,7 +468,7 @@ export default function AdminClientCRM() {
                   ) : (
                     <button
                       onClick={() => sendWhatsAppAftercare(client)}
-                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-blue-50 text-blue-800 border border-blue-200 text-xs font-medium hover:bg-blue-100 transition-all"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 text-blue-800 border border-blue-200 text-xs font-medium hover:bg-blue-100 transition-all"
                       title="Enviar check-in de cuidados posteriores"
                     >
                       <Droplets className="w-3.5 h-3.5 text-blue-600" />
@@ -485,21 +476,34 @@ export default function AdminClientCRM() {
                     </button>
                   )}
 
+                  {/* Send Portal VIP Access */}
                   <button
-                    onClick={() => handleOpenEdit(client)}
-                    className="p-2 rounded-xl border border-[#EBE8E2] text-gray-600 hover:text-[#1A1A1A] hover:bg-[#FAF9F7]"
-                    title="Editar datos de clienta"
+                    onClick={() => sendWhatsAppPortalInvitation(client)}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-900 border border-purple-200 text-xs font-medium transition-all"
+                    title="Enviar acceso a su Portal VIP por WhatsApp"
                   >
-                    <Edit2 className="w-3.5 h-3.5" />
+                    <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                    <span>Portal VIP</span>
                   </button>
 
-                  <button
-                    onClick={() => handleDeleteClient(client.id)}
-                    className="p-2 rounded-xl border border-[#EBE8E2] text-rose-500 hover:text-rose-700 hover:bg-rose-50"
-                    title="Eliminar clienta"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                  {/* Edit & Delete Mini-cluster */}
+                  <div className="flex items-center gap-1 ml-auto">
+                    <button
+                      onClick={() => handleOpenEdit(client)}
+                      className="p-1.5 rounded-lg border border-[#EBE8E2] text-gray-500 hover:text-[#1A1A1A] hover:bg-[#FAF9F7]"
+                      title="Editar datos de clienta"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+
+                    <button
+                      onClick={() => handleDeleteClient(client.id)}
+                      className="p-1.5 rounded-lg border border-[#EBE8E2] text-rose-500 hover:text-rose-700 hover:bg-rose-50"
+                      title="Eliminar clienta"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               </div>
             );
