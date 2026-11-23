@@ -3,7 +3,6 @@ import { Inter, Playfair_Display, Syncopate } from "next/font/google";
 import "./globals.css";
 import PWAProvider from "./components/PWAProvider";
 import Analytics from "./components/Analytics";
-import LocalSeoSchema from "./components/LocalSeoSchema";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -49,6 +48,11 @@ export const metadata: Metadata = {
   },
   description: DESCRIPTION,
   keywords: [
+    "nail art Bay Ridge",
+    "builder gel Brooklyn",
+    "Russian manicure Brooklyn",
+    "Russian manicure Bay Ridge",
+    "BIAB Brooklyn",
     "nail artist Bay Ridge",
     "nail art Brooklyn",
     "private nail studio Brooklyn",
@@ -88,7 +92,12 @@ export const metadata: Metadata = {
   verification: {
     google: "u2BZ_Xdw5tHJCQYm7BRVjw6xcwPVIHz8IDBZ3oWMBCI",
   },
-  other: { "geo.region": "US-NY", "geo.placename": "Bay Ridge, Brooklyn" },
+  other: {
+    "geo.region": "US-NY",
+    "geo.placename": "Bay Ridge, Brooklyn",
+    "geo.position": "40.6262;-74.0328",
+    "ICBM": "40.6262, -74.0328",
+  },
   appleWebApp: { capable: true, title: "IVA Nails", statusBarStyle: "black-translucent" },
 };
 
@@ -110,9 +119,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} ${syncopate.variable}`}>
-      <head>
-        <LocalSeoSchema />
-      </head>
       <body className="antialiased bg-[#0E0706] text-[#F4EBE1]">
         <Analytics />
         <PWAProvider>

@@ -31,7 +31,7 @@ export const CONFIG = {
   tiktokUrl: "https://www.tiktok.com/@iva_nailart_nyc",
   calendlyUrl: "https://calendly.com/iva_nailart_nyc",
   location: "Brooklyn, NY 11209",
-  hours: "8:00 AM – 8:00 PM",
+  hours: "Mon–Fri: 5:30 PM – 10:00 PM | Sat–Sun: 10:00 AM – 10:00 PM",
   deposit: 35,
   cancellationHours: 24,
   maternityMode: true, // 🤰 Modo Maternidad activado

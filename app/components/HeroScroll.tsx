@@ -2,12 +2,14 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Instagram } from "lucide-react";
 
 interface HeroScrollProps {
   lang: "en" | "es";
   bookUrl: string;
   cta: string;
+  secondaryCtaUrl?: string;
+  secondaryCtaText?: string;
   onBookClick?: () => void;
 }
 
@@ -40,7 +42,14 @@ const SCENES = [
  * three scenes. Each photo is shown whole inside its frame; a blurred copy
  * fills the screen behind it so nothing is cropped away.
  */
-export default function HeroScroll({ lang, bookUrl, cta, onBookClick }: HeroScrollProps) {
+export default function HeroScroll({
+  lang,
+  bookUrl,
+  cta,
+  secondaryCtaUrl,
+  secondaryCtaText,
+  onBookClick,
+}: HeroScrollProps) {
   const trackRef = useRef<HTMLElement>(null);
   const [progress, setProgress] = useState(0);
   const isEn = lang === "en";
@@ -135,7 +144,7 @@ export default function HeroScroll({ lang, bookUrl, cta, onBookClick }: HeroScro
                 return (
                   <Heading
                     key={scene.src}
-                    aria-hidden={i !== active}
+                    aria-hidden={i === 0 ? false : i !== active}
                     className="absolute inset-x-0 bottom-0 transition-all duration-700 ease-out"
                     style={{
                       opacity: i === active ? 1 : 0,
@@ -157,7 +166,7 @@ export default function HeroScroll({ lang, bookUrl, cta, onBookClick }: HeroScro
               {isEn ? SCENES[active].noteEn : SCENES[active].noteEs}
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center gap-5">
+            <div className="mt-6 flex flex-wrap items-center gap-4">
               {onBookClick ? (
                 <button
                   type="button"
@@ -175,6 +184,18 @@ export default function HeroScroll({ lang, bookUrl, cta, onBookClick }: HeroScro
                   <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0E0706]/25 transition-transform group-hover:rotate-45">
                     <ArrowUpRight className="h-4 w-4" />
                   </span>
+                </a>
+              )}
+
+              {secondaryCtaUrl && (
+                <a
+                  href={secondaryCtaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-[#E8C9A8]/50 px-5 py-3 text-xs md:text-sm font-semibold text-[#E8C9A8] hover:bg-[#E8C9A8]/10 transition-colors"
+                >
+                  <Instagram className="h-4 w-4" />
+                  <span>{secondaryCtaText || (isEn ? "Instagram DM" : "Mensaje DM")}</span>
                 </a>
               )}
 

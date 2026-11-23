@@ -33,13 +33,13 @@ export default function AdminGoogleMapsKit() {
 
   const napData = {
     businessName: "IVA Nail Art NY",
-    recommendedTitle: "IVA Nail Art NY - Russian Manicure & Luxury Nail Art Brooklyn",
-    address: "7208 5th Ave, Brooklyn, NY 11209",
+    recommendedTitle: "IVA Nail Art NY",
+    address: "Service Area Business (Bay Ridge 11209, Dyker Heights 11228, Bensonhurst 11214, Sunset Park 11220)",
     neighborhood: "Bay Ridge, Brooklyn, NY",
     phone: "+1 (929) 625-7273",
     cleanPhone: "9296257273",
-    website: "https://www.ivanailartny.com",
-    bookingUrl: "https://www.ivanailartny.com",
+    website: "https://ivanailartny.com",
+    bookingUrl: "https://ivanailartny.com",
     primaryCategory: "Nail salon",
     secondaryCategories: ["Manicurist", "Beauty salon", "Spa"],
     serviceAreas: [
@@ -52,8 +52,8 @@ export default function AdminGoogleMapsKit() {
       "Park Slope, Brooklyn, NY",
     ],
     hours: [
-      { days: "Monday - Saturday", hours: "9:00 AM - 7:00 PM (By Appointment Only)" },
-      { days: "Sunday", hours: "Closed (VIP Special Events Only)" },
+      { days: "Mon–Fri", hours: "5:30 PM – 10:00 PM" },
+      { days: "Sat–Sun", hours: "10:00 AM – 10:00 PM" },
     ],
     shortBio:
       "Private luxury nail sanctuary in Bay Ridge, Brooklyn, founded by artist Ivannía. Specializing in flawless Russian dry manicures, structured European builder gel (BIAB), non-toxic dry pedicures, and bespoke hand-painted nail art. Dedicated 1-on-1 private appointments with medical-grade sterilization.",

@@ -1,10 +1,12 @@
 import { Star } from "lucide-react";
 import { REVIEWS, GOOGLE_REVIEW_URL } from "@/app/data/reviews";
+import { BUSINESS } from "@/lib/site";
 
 /** Renders only real reviews. With no reviews and no Google link it renders nothing. */
 export default function Reviews({ lang }: { lang: "en" | "es" }) {
   const isEn = lang === "en";
-  if (REVIEWS.length === 0 && !GOOGLE_REVIEW_URL) return null;
+  const googleReviewLink = GOOGLE_REVIEW_URL || BUSINESS.googleReviewUrl;
+  if (REVIEWS.length === 0 && !googleReviewLink) return null;
 
   return (
     <section id="reviews" className="bg-[#0E0706] px-6 py-20 md:px-10 md:py-24">
@@ -26,9 +28,9 @@ export default function Reviews({ lang }: { lang: "en" | "es" }) {
             ))}
           </ul>
         )}
-        {GOOGLE_REVIEW_URL && (
+        {googleReviewLink && (
           <a
-            href={GOOGLE_REVIEW_URL}
+            href={googleReviewLink}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-8 inline-flex items-center gap-2 rounded-full border border-[#E8C9A8]/60 px-6 py-3 text-sm font-semibold text-[#E8C9A8] hover:bg-[#E8C9A8] hover:text-[#0E0706]"

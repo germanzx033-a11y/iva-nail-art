@@ -174,7 +174,7 @@ En IVA Nail Art ofrecemos un ritual nupcial exclusivo diseñado para que tus uñ
 ✨ Paquete Novia & Dama / Mamá ($310): Sesión privada y champaña.
 
 👰 Puedes ver nuestra guía de cuenta regresiva y estilos aquí:
-https://www.ivanailartny.com/es/bridal-nails-brooklyn
+https://ivanailartny.com/es/bridal-nails-brooklyn
 
 ¿Cuál es la fecha de tu boda? Te ayudamos a programar tu prueba y el set definitivo con la antelación ideal 🤍`
           : `Congratulations on your upcoming wedding, ${nameVal}! 💍 We would be honored to be part of your bridal journey.
@@ -184,7 +184,7 @@ At IVA Nail Art, our bridal nail ritual is crafted for timeless elegance and las
 ✨ Bride & Maid of Honor Duo ($310): Private salon takeover.
 
 👰 View our complete bridal countdown guide and lookbook here:
-https://www.ivanailartny.com/bridal-nails-brooklyn
+https://ivanailartny.com/bridal-nails-brooklyn
 
 What date is your wedding? Let's map out your trial set and final appointment timing! 🤍`,
     },
@@ -206,7 +206,7 @@ Presentamos 6 estilos exclusivos de temporada:
 ✨ Gotas y lazos 3D en cromo fundido
 
 ❄️ Explora las fotos y tendencias completas aquí:
-https://www.ivanailartny.com/es/winter-collection
+https://ivanailartny.com/es/winter-collection
 
 *Aviso:* Los cupos para la semana de Navidad y Fin de Año son limitados y se reservan rápido. ¿Te gustaría apartar tu fecha hoy mismo? 💅`
           : `Hi ${nameVal}! ❄️ Our 2025/2026 Winter & Holiday Editorial Lookbook is officially live at IVA Nail Art!
@@ -218,7 +218,7 @@ Explore our 6 signature seasonal looks:
 ✨ Sculptural 3D Molten Metallic Ribbons
 
 ❄️ View the complete lookbook here:
-https://www.ivanailartny.com/winter-collection
+https://ivanailartny.com/winter-collection
 
 *Note:* Holiday and New Year's Eve appointment slots fill quickly. Would you like to reserve your preferred date and time today? 💅`,
     },
@@ -262,7 +262,7 @@ I'll reply promptly with the design tier and available time slots. Can't wait! �
 🌸 Recordatorio de salud de la uña: Cuando el builder gel crece más de 4 semanas, el centro de gravedad (ápice) se desplaza hacia la punta, ejerciendo palanca sobre tu uña natural y aumentando el riesgo de quiebres o levantamientos.
 
 📅 Puedes apartar tu retoque fácilmente desde nuestro calendario:
-https://www.ivanailartny.com/es
+https://ivanailartny.com/es
 
 ¡Nos encantará verte de nuevo para renovar tu brillo y mantener tus uñas fuertes! 💅`
           : `Hi ${nameVal}! 🤍 It's been almost 4 weeks since your last appointment with IVA Nail Art. We hope you've been loving your set!
@@ -270,7 +270,7 @@ https://www.ivanailartny.com/es
 🌸 Nail Health Reminder: When builder gel grows past 4 weeks, the structural apex shifts toward the free edge, placing extra leverage on your natural nail and increasing the risk of breakage or lifting.
 
 📅 You can easily book your refill session online here:
-https://www.ivanailartny.com
+https://ivanailartny.com
 
 We'd love to refresh your set and keep your natural nails healthy and strong! 💅`,
     },
@@ -291,7 +291,7 @@ We'd love to refresh your set and keep your natural nails healthy and strong! �
 • Comparte tu enlace personal con amigas: ellas reciben $15 de descuento en su primera visita y tú ganas $15 de crédito.
 
 💳 Abre y guarda tu pase digital directamente en tu celular aquí:
-https://www.ivanailartny.com/es/vip-club
+https://ivanailartny.com/es/vip-club
 
 ¡Gracias por tu lealtad! 🤍`
           : `Hi ${nameVal}! ✨ Thank you for being such a wonderful part of IVA Nail Art.
@@ -302,7 +302,7 @@ https://www.ivanailartny.com/es/vip-club
 • Share your personal link with friends: they get $15 off their first set, and you get $15 credit.
 
 💳 View and save your digital pass right on your phone here:
-https://www.ivanailartny.com/vip-club
+https://ivanailartny.com/vip-club
 
 Thank you for your ongoing support! 🤍`,
     },
@@ -323,7 +323,7 @@ Aquí tienes 3 reglas de oro para mantener tu set perfecto por 3 a 4 semanas:
 3. Usa guantes al limpiar con detergentes o químicos fuertes.
 
 📖 Puedes consultar nuestra guía completa de cuidados aquí:
-https://www.ivanailartny.com/es/aftercare
+https://ivanailartny.com/es/aftercare
 
 ¡Disfruta mucho tus uñas! 💅`
           : `Hi ${nameVal}! Thank you for coming in today—your nails look absolutely stunning! ✨
@@ -334,7 +334,7 @@ Here are 3 golden rules to keep your set looking flawless for 3–4 weeks:
 3. Wear gloves when using harsh household cleaning products.
 
 📖 Check out our complete aftercare guide here:
-https://www.ivanailartny.com/aftercare
+https://ivanailartny.com/aftercare
 
 Enjoy your fresh set! 💅`,
     },
@@ -350,13 +350,13 @@ Enjoy your fresh set! 💅`,
           ? `¡Hola ${nameVal}! 🤍 ¡Me encantó consentir tus uñas hoy! Como artista independiente en Bay Ridge, las reseñas de mis clientas son el motor de mi estudio.
 
 Si te encantó tu set, ¿podrías dedicar 60 segundos a dejarnos una reseña de 5 estrellas en Google?
-⭐️ Califica aquí: https://www.ivanailartny.com/es/qr-review
+⭐️ Califica aquí: https://ivanailartny.com/es/qr-review
 
 Además, si subes fotos de tus uñas a Instagram, ¡etiquétanos en @iva_nailart_nyc para compartir tu look! ¡Mil gracias por tu apoyo! ✨`
           : `Hi ${nameVal}! 🤍 I loved doing your nails today! As an independent nail artist in Bay Ridge, client reviews mean the world to my small business.
 
 If you loved your experience, would you take 60 seconds to leave a 5-star review on Google?
-⭐️ Leave a review here: https://www.ivanailartny.com/qr-review
+⭐️ Leave a review here: https://ivanailartny.com/qr-review
 
 Also, if you post a photo of your fresh set on Instagram, tag @iva_nailart_nyc so I can feature you! Thank you so much for your support! ✨`,
     },

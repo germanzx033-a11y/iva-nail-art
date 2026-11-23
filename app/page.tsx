@@ -28,6 +28,9 @@ import { BackToTop, ScrollProgressBar } from "@/app/components/ScrollUi";
 import GallerySection from "@/app/components/GallerySection";
 import MobileBookingBar from "@/app/components/MobileBookingBar";
 import CalendlyModal from "@/app/components/CalendlyModal";
+import ServiceSelectorLuxury from "@/app/components/ServiceSelectorLuxury";
+import LookbookFilterable from "@/app/components/LookbookFilterable";
+import LocalSeoSchema from "@/app/components/LocalSeoSchema";
 
 // Contador animado. Escribe directo en el DOM (sin re-render por frame) y siempre
 // termina en el valor final, aunque el navegador pause requestAnimationFrame.
@@ -311,6 +314,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#0E0706] relative overflow-x-clip">
+      <LocalSeoSchema />
       {/* ================================================================== */}
       {/* HEADER */}
       {/* ================================================================== */}
@@ -356,7 +360,9 @@ export default function Home() {
       <HeroScroll
         lang={lang}
         bookUrl={CONFIG.instagramDmUrl}
-        cta={t.hero.cta}
+        cta={lang === "en" ? "Book Appointment" : "Reservar Cita"}
+        secondaryCtaUrl="https://ig.me/m/iva_nailart_nyc"
+        secondaryCtaText={lang === "en" ? "Instagram DM" : "Mensaje por Instagram"}
         onBookClick={() => openBooking()}
       />
       <PhotoMarquee lang={lang} />
@@ -541,6 +547,17 @@ export default function Home() {
               );
             })}
           </div>
+
+          {/* Interactive Luxury Service Selector & Calculator */}
+          <div className="mt-20 rounded-[2.5rem] bg-[#FAF8F5] text-[#111111] p-4 sm:p-8 md:p-12 shadow-2xl border border-[#D4A574]/40">
+            <ServiceSelectorLuxury
+              lang={lang}
+              onProceedToBooking={(summary) => {
+                const serviceLabel = `${summary.service.name}${summary.addons.length ? ' + ' + summary.addons.map(a => a.name).join(', ') : ''} ($${summary.totalPrice})`;
+                openBooking(serviceLabel);
+              }}
+            />
+          </div>
         </div>
       </section>
 
@@ -556,8 +573,16 @@ export default function Home() {
       <Reviews lang={lang} />
 
       {/* ================================================================== */}
-      {/* GALLERY SECTION - GALERÍA VISUAL IMPRESIONANTE */}
+      {/* GALLERY & LOOKBOOK SECTION */}
       {/* ================================================================== */}
+      <div className="max-w-7xl mx-auto px-4 md:px-6 my-16">
+        <div className="rounded-[2.5rem] bg-[#FAF8F5] text-[#111111] p-4 sm:p-8 md:p-12 shadow-2xl border border-[#D4A574]/40">
+          <LookbookFilterable
+            lang={lang}
+            onSelectStyle={(styleName) => openBooking(styleName)}
+          />
+        </div>
+      </div>
       <GallerySection lang={lang} t={t} CONFIG={CONFIG} />
 
       {/* ================================================================== */}
@@ -1028,10 +1053,10 @@ className="w-16 h-auto rounded-lg"
         href={CONFIG.instagramDmUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white p-4 rounded-full shadow-2xl hover:brightness-110 hover:scale-110 transition-all z-40 group"
+        className="fixed bottom-20 right-4 md:bottom-6 md:right-6 bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white p-3.5 md:p-4 rounded-full shadow-2xl hover:brightness-110 hover:scale-110 transition-all z-40 group"
         aria-label={lang === "en" ? "Message us on Instagram" : "Escríbenos por Instagram"}
       >
-        <Instagram className="w-7 h-7" />
+        <Instagram className="w-6 h-6 md:w-7 md:h-7" />
         <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-[#4A0404] text-white text-sm px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-lg">
           {t.floatingBtn}
         </span>

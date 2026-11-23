@@ -10,17 +10,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export function isAdminAuthorized(request: NextRequest): boolean {
   const configuredKey = process.env.ADMIN_SECRET_KEY;
+  if (!configuredKey) {
+    return false;
+  }
   const header = request.headers.get('authorization') ?? '';
 
-  // Accept configured env key, or default studio passwords
-  const validKeys = Array.from(new Set([configuredKey, 'iva2025', 'iva', 'sanctuary'].filter(Boolean))) as string[];
-
-  for (const k of validKeys) {
-    const expected = Buffer.from(`Bearer ${k}`);
-    const received = Buffer.from(header);
-    if (received.length === expected.length && timingSafeEqual(received, expected)) {
-      return true;
-    }
+  const expected = Buffer.from(`Bearer ${configuredKey}`);
+  const received = Buffer.from(header);
+  if (received.length === expected.length && timingSafeEqual(received, expected)) {
+    return true;
   }
 
   return false;

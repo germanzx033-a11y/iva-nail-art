@@ -20,6 +20,6 @@ export const BUSINESS = {
   deposit: 35,
   googleReviewUrl:
     process.env.NEXT_PUBLIC_GOOGLE_REVIEW_URL ||
-    "https://search.google.com/local/writereview?placeid=ChIJN1t_tDeuEmsRUsoyG83frY4",
+    "https://www.google.com/maps/search/?api=1&query=IVA+Nail+Art+NY+Bay+Ridge+Brooklyn",
   googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=IVA+Nail+Art+NY+Bay+Ridge+Brooklyn",
 };

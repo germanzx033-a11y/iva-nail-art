@@ -97,6 +97,132 @@ const getQuote = {
 
 export const SERVICE_LANDINGS: ServiceLanding[] = [
   {
+    slug: "russian-manicure-bay-ridge",
+    serviceType: "The Signature Russian Dry Manicure",
+    photoOffset: 0,
+    homeCategory: "manicure",
+    copy: {
+      en: {
+        metaTitle: "Russian Manicure in Bay Ridge, Brooklyn | IVA Nail Art NY",
+        metaDescription:
+          "The Signature Russian Dry Manicure ($110, 90 min) in Bay Ridge, Brooklyn. Sterile e-file diamond bit cuticle care, keratin base, and 4-week flawless retention.",
+        eyebrow: "Russian Dry Manicure · Bay Ridge, Brooklyn",
+        h1Top: "Russian dry manicure",
+        h1Bottom: "in Bay Ridge, Brooklyn",
+        intro:
+          "The Signature Russian Dry Manicure ($110, 90 min) by Ivannia Rodríguez. Specialized multi-bit hardware e-file cuticle detailing without water, non-toxic keratin reinforcement, and seamless pigment application with guaranteed 4-week clean retention in our private Bay Ridge sanctuary.",
+        whatTitle: "What is a Russian dry manicure?",
+        whatBody: [
+          "A Russian manicure (also known as an e-file dry hardware manicure) uses specialized diamond and ceramic bits instead of water soaking to precisely lift, gently exfoliate, and detail the cuticle pocket.",
+          "By cleaning beneath the proximal nail fold with micro-precision, polish or structured builder gel can be applied deeper beneath the cuticle line. This eliminates unsightly gaps and gives your manicure a flawless Pinterest-ready grow-out that lasts 3 to 4+ weeks without chipping.",
+        ],
+        forTitle: "Who it is for",
+        forList: [
+          "Clients seeking 3 to 4+ weeks of clean retention with zero lifting",
+          "Dry, ragged, overgrown, or peeling cuticles needing medical-grade exfoliation",
+          "Natural nails that need structured reinforcement without harsh chemicals",
+          "Anyone who appreciates precision artistry and hygienic 1-on-1 private appointments in 11209",
+        ],
+        steps: [
+          sendIdea.en,
+          getQuote.en,
+          {
+            t: "Diamond bit dry cuticle prep",
+            d: "Specialized flame and ball diamond bits clean the cuticle pocket and polish skin folds without water or cuticle-cutting nippers.",
+          },
+          {
+            t: "Keratin base & signature color",
+            d: "Keratin base reinforcement followed by precision polish application flush with the cuticle edge for extended wear.",
+          },
+        ],
+        careTitle: "Retention and aftercare",
+        careBody: [
+          "Apply organic jojoba cuticle oil daily to nourish the proximal nail fold and maintain maximum skin suppleness.",
+          "Avoid using nails as tools. Schedule maintenance every 3 to 4 weeks to keep apex balance and pristine cuticle cleanliness.",
+        ],
+        faqTitle: "Russian manicure questions",
+        faq: [
+          {
+            q: "What makes a Russian manicure different from a regular salon manicure?",
+            a: "Traditional manicures soak fingers in water and cut cuticles with nippers, often causing hangnails and uneven edges. A Russian manicure is performed 100% dry with sterile precision e-file diamond bits, producing an impeccably smooth finish that allows polish to sit deeper and last twice as long.",
+          },
+          {
+            q: "Does a Russian manicure hurt?",
+            a: "No. When performed by an experienced, certified specialist like Ivannia, the e-file treatment is completely painless, gentle, and relaxing. It feels like a light vibration on the nail surface.",
+          },
+          {
+            q: "How long does the service take?",
+            a: "The Signature Russian Dry Manicure takes approximately 90 minutes. We dedicate unhurried 1-on-1 time for hospital-grade sanitization and precision cuticle grooming.",
+          },
+          {
+            q: "Can I combine Russian manicure with builder gel (BIAB) or nail art?",
+            a: "Yes! Russian manicure prep is the ideal foundation for builder gel overlays, chrome finishes, French tips, and hand-painted bespoke nail art.",
+          },
+        ],
+        waText: "Hi Iva! I would like to book The Signature Russian Dry Manicure ($110, 90 min) in Bay Ridge. Preferred date: …",
+      },
+      es: {
+        metaTitle: "Manicura Rusa en Bay Ridge, Brooklyn | IVA Nail Art NY",
+        metaDescription:
+          "The Signature Russian Dry Manicure ($110, 90 min) en Bay Ridge, Brooklyn. Limpieza profunda con torno de diamante, base de queratina y 4 semanas de duración.",
+        eyebrow: "Manicura Rusa en Seco · Bay Ridge, Brooklyn",
+        h1Top: "Manicura rusa en seco",
+        h1Bottom: "en Bay Ridge, Brooklyn",
+        intro:
+          "The Signature Russian Dry Manicure ($110, 90 min) por Ivannia Rodríguez. Detallado de cutícula con torno y fresas de diamante sin agua, refuerzo con queratina no tóxica y aplicación de esmaltado impecable con retención garantizada de 4 semanas en nuestro estudio privado en Bay Ridge.",
+        whatTitle: "¿Qué es la manicura rusa?",
+        whatBody: [
+          "La manicura rusa (manicura combinada o en seco con torno) utiliza fresas especializadas de diamante en seco en lugar de remojar los dedos en agua, limpiando y puliendo la cutícula con extrema precisión.",
+          "Al despejar el bolsillo de la cutícula al milímetro, el esmalte o gel constructor se aplica mucho más cerca de la raíz. Esto permite un crecimiento limpio y elegante que dura entre 3 y 4 semanas sin desprendimientos ni padrastros.",
+        ],
+        forTitle: "Para quién es",
+        forList: [
+          "Clientas que buscan 3 a 4 semanas de duración impecable sin levantamientos",
+          "Cutículas secas, gruesas o difíciles que necesitan un pulido suave y preciso",
+          "Uñas naturales que requieren fortalecimiento sin químicos agresivos",
+          "Quienes valoran la higiene de grado hospitalario y atención 1 a 1 en Bay Ridge (11209)",
+        ],
+        steps: [
+          sendIdea.es,
+          getQuote.es,
+          {
+            t: "Pulido en seco con fresas de diamante",
+            d: "Fresas de diamante esterilizadas limpian la cutícula y pulen la piel circundante sin agua ni cortes bruscos.",
+          },
+          {
+            t: "Base de queratina y color signature",
+            d: "Refuerzo de la uña natural con base nutritiva y aplicación de esmalte de alta gama al ras de la cutícula.",
+          },
+        ],
+        careTitle: "Cuidado y mantenimiento",
+        careBody: [
+          "Aplica aceite de cutícula a diario para mantener la piel suave e hidratada entre visitas.",
+          "Renueva tu set cada 3 a 4 semanas para rebalancear la estructura y mantener la limpieza de la cutícula.",
+        ],
+        faqTitle: "Preguntas frecuentes sobre manicura rusa",
+        faq: [
+          {
+            q: "¿Qué diferencia a la manicura rusa de una manicura convencional?",
+            a: "Las manicuras tradicionales remojan las manos en agua y cortan con alicates, lo que suele provocar padrastros y desgastes prematuros. La manicura rusa se hace 100% en seco con torno y fresas de diamante, logrando un acabado perfecto y una duración de más del doble.",
+          },
+          {
+            q: "¿Duele la manicura rusa?",
+            a: "Para nada. Realizada por una especialista certificada como Ivannia, el procedimiento es suave, indoloro y muy relajante. Solo sientes una leve vibración.",
+          },
+          {
+            q: "¿Cuánto dura la cita?",
+            a: "The Signature Russian Dry Manicure toma aproximadamente 90 minutos de dedicación exclusiva y esterilización rigurosa.",
+          },
+          {
+            q: "¿Puedo combinar manicura rusa con builder gel o nail art?",
+            a: "¡Totalmente! La preparación de manicura rusa es la mejor base posible para builder gel (BIAB), cromo, francesa o diseños a mano alzada.",
+          },
+        ],
+        waText: "¡Hola Iva! Me gustaría reservar The Signature Russian Dry Manicure ($110, 90 min) en Bay Ridge. Fecha preferida: …",
+      },
+    },
+  },
+  {
     slug: "builder-gel-bay-ridge",
     serviceType: "Builder Gel Manicure",
     photoOffset: 0,
