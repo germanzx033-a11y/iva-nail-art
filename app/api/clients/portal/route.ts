@@ -161,10 +161,14 @@ export async function POST(request: NextRequest) {
       const stamps = ((existing.totalVisits - 1) % 6) + 1;
       const tier = existing.totalVisits >= 6 ? "Obsidian VIP" : existing.totalVisits >= 3 ? "Champagne Gold" : "Alabaster";
 
+      // Sanitize client payload so PIN is never sent over the wire
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { pin: _pin, ...safeExisting } = existing;
+
       return NextResponse.json({
         success: true,
         client: {
-          ...existing,
+          ...safeExisting,
           daysSinceLastAppt: days,
           stamps,
           tier,
@@ -205,10 +209,13 @@ export async function POST(request: NextRequest) {
 
       const refillWindow = getRefillWindow(newClient.lastApptDate);
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { pin: _newPin, ...safeNewClient } = newClient;
+
       return NextResponse.json({
         success: true,
         client: {
-          ...newClient,
+          ...safeNewClient,
           daysSinceLastAppt: 0,
           stamps: 1,
           tier: "Alabaster",
@@ -242,10 +249,13 @@ export async function POST(request: NextRequest) {
       const stamps = ((updatedClient.totalVisits - 1) % 6) + 1;
       const tier = updatedClient.totalVisits >= 6 ? "Obsidian VIP" : updatedClient.totalVisits >= 3 ? "Champagne Gold" : "Alabaster";
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { pin: _upPin, ...safeUpdatedClient } = updatedClient;
+
       return NextResponse.json({
         success: true,
         client: {
-          ...updatedClient,
+          ...safeUpdatedClient,
           daysSinceLastAppt: days,
           stamps,
           tier,

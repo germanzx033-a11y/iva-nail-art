@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "iva-nail-art.vercel.app",
       },
+      {
+        protocol: "https",
+        hostname: "ivanailartny.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.ivanailartny.com",
+      },
     ],
   },
   async headers() {
