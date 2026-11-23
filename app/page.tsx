@@ -501,6 +501,7 @@ export default function Home() {
               };
 
               const serviceImage =
+                siteContent?.serviceImages?.[service.id] ||
                 SERVICE_EXACT_IMAGE_MAP[service.id] ||
                 "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg";
 

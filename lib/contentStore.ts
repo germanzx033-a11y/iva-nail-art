@@ -17,6 +17,22 @@ export interface ServiceContentItem {
   tagEs: string;
 }
 
+export interface UploadedImageItem {
+  id: string;
+  src: string;
+  name: string;
+  timestamp: number;
+}
+
+export interface GalleryItemContent {
+  id: string;
+  src: string;
+  alt: string;
+  altEs?: string;
+  styleTag?: string;
+  category: string;
+}
+
 export interface SiteContent {
   businessName: string;
   phone: string;
@@ -36,7 +52,48 @@ export interface SiteContent {
     bioEs: string;
   };
   services: ServiceContentItem[];
+  serviceImages: Record<string, string>;
+  galleryItems: GalleryItemContent[];
+  uploadedImages: UploadedImageItem[];
 }
+
+export const DEFAULT_SERVICE_IMAGES: Record<string, string> = {
+  m1: "/gallery/241c7f28-5927-40de-8e0c-0a9c468846f0.jpg",
+  m2: "/gallery/03d9f11c-1dfb-494d-9195-eb0db1acfb1e.jpg",
+  m3: "/gallery/afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg",
+  m4: "/gallery/f6a27073-5f54-4bdb-8fe1-736ed181a126.jpg",
+  m5: "/gallery/1c77f4d1-58a0-4b2f-b1ca-f7054eeb9627.jpg",
+  p1: "/gallery/427a7f8e-1a34-4441-b9ca-fc60cb512ee7.jpg",
+  p2: "/gallery/03d9f11c-1dfb-494d-9195-eb0db1acfb1e.jpg",
+  p3: "/gallery/3923d364-f716-4ba2-961d-83f75dedb613.jpg",
+  p4: "/gallery/5ab8ff73-fcb2-421d-b6bf-8169824f1a52.jpg",
+  a1: "/gallery/0ee48e92-e11b-42dc-8a05-93c1aac67179.jpg",
+  a2: "/gallery/810c6eb7-e2e7-49eb-87e4-c6867d09f390.jpg",
+  a3: "/gallery/2b1d20c5-dd9d-45d5-85eb-da7821a34743.jpg",
+  n1: "/gallery/7f90a13c-e5fa-4911-9798-a038d8e5753e.jpg",
+  n2: "/gallery/0252121b-f561-4b19-bf43-11cdd5a1f36a.jpg",
+  n3: "/gallery/14e8d740-b174-48d9-8c87-bddcb007ec72.jpg",
+  n4: "/gallery/bff1062d-a2d4-4432-af01-0853a1a8cc82.jpg",
+  n5: "/gallery/d9206f5a-c79f-4487-870d-a7bb5d75cef7.jpg",
+  e1: "/gallery/5a9cfad8-1d83-41a9-adbc-5e4b6b5895e1.jpg",
+  e2: "/gallery/c2bba6fb-d001-4658-bda3-2c78d8d59011.jpg",
+  e3: "/gallery/fbec4b74-7503-47de-9cd8-d78bc318cc18.jpg",
+};
+
+export const DEFAULT_GALLERY_ITEMS: GalleryItemContent[] = [
+  { id: "img-1", src: "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg", alt: "Editorial Orange Floral Contour Tips", altEs: "Puntas Florales Naranja Editorial", category: "french", styleTag: "Artisan Floral" },
+  { id: "img-2", src: "/gallery/afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg", alt: "High-Gloss Nude Minimalist Nails", altEs: "Uñas Nude Minimalistas de Alto Brillo", category: "minimalist", styleTag: "Clean Girl" },
+  { id: "img-3", src: "/gallery/f0d71275-94d3-4325-9592-55cbe28a5bdd.jpg", alt: "Leopard Micro-French Tips", altEs: "Micro-Francesa Estampado Leopardo", category: "french", styleTag: "Animalier French" },
+  { id: "img-4", src: "/gallery/1c77f4d1-58a0-4b2f-b1ca-f7054eeb9627.jpg", alt: "Champagne Glazed Finish", altEs: "Acabado Glaseado Champaña", category: "chrome", styleTag: "Glazed Chrome" },
+  { id: "img-5", src: "/gallery/2b1d20c5-dd9d-45d5-85eb-da7821a34743.jpg", alt: "Delicate Negative Space Linear Art", altEs: "Arte Lineal en Espacio Negativo", category: "minimalist", styleTag: "Negative Space" },
+  { id: "img-6", src: "/gallery/14e8d740-b174-48d9-8c87-bddcb007ec72.jpg", alt: "Sculpted 3D Metallic Pearl Drops", altEs: "Gotas de Perla y Metal Esculpidas en 3D", category: "3dart", styleTag: "3D Metallic Drops" },
+  { id: "img-7", src: "/gallery/810c6eb7-e2e7-49eb-87e4-c6867d09f390.jpg", alt: "Sculpted Acrylic Hand-Painted Lemon & Fruit Swirl Art", altEs: "Acrílico Escultural con Arte Frutal a Mano y Ondas", category: "3dart", styleTag: "Sculpted Acrylic Art" },
+  { id: "img-8", src: "/gallery/0252121b-f561-4b19-bf43-11cdd5a1f36a.jpg", alt: "Liquid Gold French Smile Line", altEs: "Línea de Sonrisa Francesa Oro Líquido", category: "french", styleTag: "Molten Gold French" },
+  { id: "img-9", src: "/gallery/2e0b31b1-9878-4a33-a0a9-6b505f577892.jpg", alt: "Gold Studded Haute French Tips", altEs: "Francesa de Alta Costura con Tachuelas de Oro", category: "french", styleTag: "Gold Studded French" },
+  { id: "img-10", src: "/trabajo1.jpg", alt: "Signature Sculpted Acrylic Set", altEs: "Set Signature de Uñas Acrílicas Esculpidas", category: "3dart", styleTag: "Signature Acrylic" },
+  { id: "img-11", src: "/trabajo2.jpg", alt: "Hand-Painted Nail Art Masterpiece", altEs: "Obra de Arte Pintada a Mano", category: "french", styleTag: "Bespoke Art" },
+  { id: "img-12", src: "/trabajo3.jpg", alt: "Holiday Red & Gold Ribbon Velvet Nails", altEs: "Uñas de Terciopelo con Lazos Rojos y Dorados", category: "3dart", styleTag: "Holiday Velvet" },
+];
 
 export const DEFAULT_SITE_CONTENT: SiteContent = {
   businessName: "IVA Nail Art NY",
@@ -116,6 +173,9 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       tagEs: "Mantenimiento",
     },
   ],
+  serviceImages: DEFAULT_SERVICE_IMAGES,
+  galleryItems: DEFAULT_GALLERY_ITEMS,
+  uploadedImages: [],
 };
 
 export const SITE_CONTENT_STORAGE_KEY = "iva_site_content_custom_v1";
@@ -135,6 +195,9 @@ export function getSavedSiteContent(): SiteContent {
       heroScenes: Array.isArray(parsed.heroScenes) && parsed.heroScenes.length === 3 ? parsed.heroScenes : DEFAULT_SITE_CONTENT.heroScenes,
       aboutIva: { ...DEFAULT_SITE_CONTENT.aboutIva, ...(parsed.aboutIva || {}) },
       services: Array.isArray(parsed.services) && parsed.services.length ? parsed.services : DEFAULT_SITE_CONTENT.services,
+      serviceImages: { ...DEFAULT_SITE_CONTENT.serviceImages, ...(parsed.serviceImages || {}) },
+      galleryItems: Array.isArray(parsed.galleryItems) && parsed.galleryItems.length ? parsed.galleryItems : DEFAULT_SITE_CONTENT.galleryItems,
+      uploadedImages: Array.isArray(parsed.uploadedImages) ? parsed.uploadedImages : [],
     };
   } catch {
     return DEFAULT_SITE_CONTENT;
