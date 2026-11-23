@@ -37,7 +37,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...landingEntries,
     ...hyperlocalEntries,
     ...[
-      '/try-on',
       '/nail-match',
       '/gift-card',
       '/aftercare',

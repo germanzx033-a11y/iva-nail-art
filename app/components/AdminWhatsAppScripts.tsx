@@ -235,7 +235,7 @@ https://ivanailartny.com/winter-collection
 
 Para darte una cotización exacta y apartar el tiempo adecuado en tu cita, por favor envíame:
 1. Una foto de referencia o captura de pantalla de lo que tienes en mente (Instagram o Pinterest).
-2. Si prefieres hacerlo sobre tus uñas naturales con Builder Gel, o si deseas extensiones Gel-X para mayor longitud.
+2. Si prefieres acrílico esculpido para mayor longitud o sobre tus uñas naturales con manicura rusa.
 3. El estado actual de tus uñas (¿tienes acrílico o gel anterior?).
 
 Te responderé en breve con el nivel de arte correspondiente y la disponibilidad. ¡Gracias! ✨`
@@ -243,7 +243,7 @@ Te responderé en breve con el nivel de arte correspondiente y la disponibilidad
 
 To provide an accurate quote and ensure we book the right amount of time for your appointment, please send over:
 1. An inspiration photo or screenshot (from Instagram, Pinterest, etc.).
-2. Whether you'd like this over your natural nails with Builder Gel, or with Gel-X extensions for extra length.
+2. Whether you prefer sculpted acrylic extensions for length or natural nail care with a Russian manicure.
 3. Your current nail state (do you have previous gel/acrylic that needs safe removal?).
 
 I'll reply promptly with the design tier and available time slots. Can't wait! ✨`,
@@ -477,7 +477,8 @@ Also, if you post a photo of your fresh set on Instagram, tag @iva_nailart_nyc s
               <option value="Builder Gel Manicure">Builder Gel Manicure (BIAB)</option>
               <option value="Russian Dry Hardware Manicure">Russian Dry Manicure</option>
               <option value="Bespoke Nail Art Set">Bespoke Nail Art Set</option>
-              <option value="Après Gel-X Extensions">Après Gel-X Extensions</option>
+              <option value="Set Completo de Acrílico">Set Completo de Acrílico</option>
+              <option value="Relleno de Acrílico">Relleno de Acrílico</option>
               <option value="Luxury Russian Dry Pedicure">Luxury Dry Pedicure</option>
               <option value="Bespoke Bridal Nail Ritual">Bridal Nail Ritual</option>
               <option value="Winter Holiday Lookbook Set">Winter Holiday Set</option>

@@ -424,7 +424,8 @@ export default function ClientPortalDashboard({ lang }: ClientPortalProps) {
                     >
                       <option value="Builder Gel Manicure (BIAB)">Builder Gel Manicure (BIAB)</option>
                       <option value="Russian Dry Manicure">Russian Dry Manicure</option>
-                      <option value="Gel-X Extensions">Gel-X Extensions</option>
+                      <option value="Set Completo de Acrílico">Set Completo de Acrílico</option>
+                      <option value="Relleno de Acrílico">Relleno de Acrílico</option>
                       <option value="Japanese Hard Gel">Japanese Hard Gel</option>
                     </select>
                   </div>

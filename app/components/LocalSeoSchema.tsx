@@ -9,7 +9,7 @@ export default function LocalSeoSchema() {
         "@id": `${SITE_URL}/#nailsalon`,
         "name": BUSINESS.name,
         "alternateName": "IVA Nail Art Brooklyn",
-        "description": "Exclusive private nail studio in Bay Ridge, Brooklyn NY 11209. Specializing in luxury Russian dry manicures, structured builder gel overlays (BIAB), Gel-X extensions, and bespoke editorial nail art. By appointment only.",
+        "description": "Exclusive private nail studio in Bay Ridge, Brooklyn NY 11209. Specializing in sculpted acrylic full sets, Russian dry manicures, and bespoke hand-painted nail art. By appointment only.",
         "url": `${SITE_URL}/`,
         "telephone": "+1-929-625-7273",
         "priceRange": "$$",
@@ -73,8 +73,8 @@ export default function LocalSeoSchema() {
               "@type": "Offer",
               "itemOffered": {
                 "@type": "Service",
-                "name": "Builder Gel Manicure (BIAB)",
-                "description": "Multi-layer structured builder gel overlay reinforcing natural nail plate health for 3 to 4 weeks with zero lifting."
+                "name": "Sculpted Acrylic Full Set",
+                "description": "Custom sculpted acrylic extensions tailored in length and shape (coffin, square, almond) with perfect apex balance."
               }
             },
             {
@@ -89,8 +89,8 @@ export default function LocalSeoSchema() {
               "@type": "Offer",
               "itemOffered": {
                 "@type": "Service",
-                "name": "Gel-X Extensions",
-                "description": "Full cover soft gel tip extension system sculpted to natural almond, square, or coffin silhouettes."
+                "name": "Acrylic Refill & Maintenance",
+                "description": "Structural rebalancing and acrylic maintenance for 3 to 4 weeks flawless wear."
               }
             },
             {

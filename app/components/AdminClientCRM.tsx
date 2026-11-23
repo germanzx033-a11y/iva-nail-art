@@ -65,7 +65,7 @@ const DEFAULT_CLIENTS: ClientProfile[] = [
     phone: "9295550123",
     email: "jess.t@example.com",
     preferredShape: "Coffin",
-    service: "Gel-X Extensions",
+    service: "Set Completo de Acrílico",
     lastApptDate: daysAgoDate(18), // 18 days ago -> Approaching window
     notes: "Prefers velvet cat-eye or dark emerald tones. Fast grower.",
     totalVisits: 5,
