@@ -462,20 +462,20 @@ export default function Home() {
               // Curation per individual service: each service gets an exact,
               // tailored editorial photograph matching its technique and style.
               const SERVICE_EXACT_IMAGE_MAP: Record<string, string> = {
-                // Manicure
+                // Manicure (Natural Nail, Russian & Builder Gel / Gel-X)
                 m1: "/gallery/241c7f28-5927-40de-8e0c-0a9c468846f0.jpg", // Clean Cuticle Russian Mani Natural
-                m2: "/gallery/afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg", // High-Gloss Nude Minimalist Nails
-                m3: "/gallery/0ee48e92-e11b-42dc-8a05-93c1aac67179.jpg", // Fine Cuticle Perfection Russian Builder Set
+                m2: "/gallery/03d9f11c-1dfb-494d-9195-eb0db1acfb1e.jpg", // Soft Blush Porcelain Gel Manicure
+                m3: "/gallery/afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg", // Flawless High-Gloss Structured Builder Gel Overlay
                 m4: "/gallery/f6a27073-5f54-4bdb-8fe1-736ed181a126.jpg", // Clean Rose Quartz Structured Set
-                m5: "/gallery/810c6eb7-e2e7-49eb-87e4-c6867d09f390.jpg", // Pure Ivory Bridal Almond Extensions
+                m5: "/gallery/1c77f4d1-58a0-4b2f-b1ca-f7054eeb9627.jpg", // Champagne Glazed Soft Gel Extensions (Gel-X)
                 // Pedicure
                 p1: "/gallery/427a7f8e-1a34-4441-b9ca-fc60cb512ee7.jpg", // Sheer Silk Milky
                 p2: "/gallery/03d9f11c-1dfb-494d-9195-eb0db1acfb1e.jpg", // Soft Blush Porcelain
                 p3: "/gallery/3923d364-f716-4ba2-961d-83f75dedb613.jpg", // Bridal Opal Crystal
                 p4: "/gallery/5ab8ff73-fcb2-421d-b6bf-8169824f1a52.jpg", // French Ombre Baby Boomer
-                // Acrylic
-                a1: "/gallery/2e0b31b1-9878-4a33-a0a9-6b505f577892.jpg", // Gold Studded Haute French Tips
-                a2: "/gallery/f0d71275-94d3-4325-9592-55cbe28a5bdd.jpg", // Leopard Micro-French Tips
+                // Acrylic (Long Sculpted Sets & Hand-Crafted Acrylic Art)
+                a1: "/gallery/0ee48e92-e11b-42dc-8a05-93c1aac67179.jpg", // Sculpted Stiletto Acrylic with 3D Starfish & Tortoiseshell
+                a2: "/gallery/810c6eb7-e2e7-49eb-87e4-c6867d09f390.jpg", // Sculpted Almond Acrylic with Hand-Painted Lemon, Berries & Swirls
                 a3: "/gallery/2b1d20c5-dd9d-45d5-85eb-da7821a34743.jpg", // Delicate Negative Space Linear Art
                 // Nail Art
                 n1: "/gallery/7f90a13c-e5fa-4911-9798-a038d8e5753e.jpg", // Geometric Minimal Gold Thread
@@ -553,7 +553,7 @@ export default function Home() {
             <ServiceSelectorLuxury
               lang={lang}
               onProceedToBooking={(summary) => {
-                const serviceLabel = `${summary.service.name}${summary.addons.length ? ' + ' + summary.addons.map(a => a.name).join(', ') : ''} ($${summary.totalPrice})`;
+                const serviceLabel = `${summary.service.name}${summary.addons.length ? ' + ' + summary.addons.map(a => a.name).join(', ') : ''}`;
                 openBooking(serviceLabel);
               }}
             />

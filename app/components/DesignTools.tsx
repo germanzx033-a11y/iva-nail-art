@@ -1,25 +1,25 @@
 import Link from "next/link";
-import { Hand, Sparkles, Gift } from "lucide-react";
+import { Crown, Sparkles, Gift } from "lucide-react";
 
 const COPY = {
   en: {
-    eyebrow: "Find your design",
-    titleA: "Try it before",
-    titleB: "you book it",
+    eyebrow: "Atelier Experience",
+    titleA: "Crafted for you,",
+    titleB: "before you arrive",
     cards: [
-      { href: "/nail-match", icon: Sparkles, t: "Nail Match", d: "4 quick questions, 3 designs made for you.", cta: "Take the quiz" },
-      { href: "/try-on", icon: Hand, t: "Virtual try-on", d: "See shapes, lengths and finishes on your own hand with your camera.", cta: "Open the try-on" },
-      { href: "/gift-card", icon: Gift, t: "Gift card", d: "Design a digital gift card and send it by WhatsApp or Instagram.", cta: "Create a gift card" },
+      { href: "/nail-match", icon: Sparkles, t: "Nail Match", d: "4 quick questions, 3 bespoke designs curated for your style.", cta: "Take the quiz" },
+      { href: "/vip-club", icon: Crown, t: "VIP Sanctuary Club", d: "Collect digital stamps on each appointment and enjoy complimentary signature rituals on your 6th visit.", cta: "Join the VIP Circle" },
+      { href: "/gift-card", icon: Gift, t: "Gift card", d: "Design a luxury digital gift card and send it via WhatsApp or Instagram.", cta: "Create a gift card" },
     ],
   },
   es: {
-    eyebrow: "Encuentra tu diseño",
-    titleA: "Pruébalo antes",
-    titleB: "de reservar",
+    eyebrow: "Experiencia Atelier",
+    titleA: "Diseñado para ti,",
+    titleB: "antes de tu cita",
     cards: [
-      { href: "/nail-match", icon: Sparkles, t: "Nail Match", d: "4 preguntas rápidas y 3 diseños hechos para ti.", cta: "Hacer el quiz" },
-      { href: "/try-on", icon: Hand, t: "Probador virtual", d: "Mira formas, largos y acabados en tu propia mano con la cámara.", cta: "Abrir el probador" },
-      { href: "/gift-card", icon: Gift, t: "Tarjeta de regalo", d: "Diseña una tarjeta de regalo digital y envíala por WhatsApp o Instagram.", cta: "Crear tarjeta" },
+      { href: "/nail-match", icon: Sparkles, t: "Nail Match", d: "4 preguntas rápidas y 3 diseños a medida recomendados para tu estilo.", cta: "Hacer el quiz" },
+      { href: "/es/vip-club", icon: Crown, t: "Club VIP Sanctuary", d: "Acumula sellos digitales en cada cita y recibe rituales de cortesía en tu 6ª visita.", cta: "Unirme al Club VIP" },
+      { href: "/gift-card", icon: Gift, t: "Tarjeta de regalo", d: "Diseña una tarjeta de regalo digital de lujo y envíala por WhatsApp o Instagram.", cta: "Crear tarjeta" },
     ],
   },
 };

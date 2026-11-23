@@ -40,8 +40,8 @@ const TAGS: Record<string, string[]> = {
 };
 
 const COPY = {
-  en: { eyebrow: "Nail Match", title: "Find your", titleB: "perfect set", step: (n: number) => `Question ${n} of 4`, back: "Back", result: "Your 3 matches", try: "Try it on my hand", similar: "Inspiration from the studio", again: "Start over", book: "Book on Instagram" },
-  es: { eyebrow: "Nail Match", title: "Encuentra tu", titleB: "set perfecto", step: (n: number) => `Pregunta ${n} de 4`, back: "Atrás", result: "Tus 3 diseños ideales", try: "Probar en mi mano", similar: "Inspiración del estudio", again: "Empezar de nuevo", book: "Reservar por Instagram" },
+  en: { eyebrow: "Nail Match", title: "Find your", titleB: "perfect set", step: (n: number) => `Question ${n} of 4`, back: "Back", result: "Your 3 matches", try: "Inquire for quote on WhatsApp", similar: "Inspiration from the studio", again: "Start over", book: "Book on Instagram" },
+  es: { eyebrow: "Nail Match", title: "Encuentra tu", titleB: "set perfecto", step: (n: number) => `Pregunta ${n} de 4`, back: "Atrás", result: "Tus 3 diseños ideales", try: "Cotizar este diseño por WhatsApp", similar: "Inspiración del estudio", again: "Empezar de nuevo", book: "Reservar por Instagram" },
 };
 
 function Preview({ look }: { look: NailPreset }) {
@@ -129,9 +129,18 @@ export default function NailMatch({ lang }: { lang: "en" | "es" }) {
                     <Image src={look.photo} alt={c.similar} fill sizes="(max-width: 768px) 90vw, 30vw" className="object-cover" />
                   </div>
                   <p className="text-xs text-[#F4EBE1]/60">{c.similar}</p>
-                  <Link href={`/try-on?preset=${look.id}${lang === "es" ? "&lang=es" : ""}`} className="glow-pill mt-auto justify-center">
+                  <a
+                    href={`https://wa.me/19296257273?text=${encodeURIComponent(
+                      lang === "es"
+                        ? `¡Hola Ivannía! ✨ Hice el test de estilo y me encantó el look "${look.es}". ¿Me podrías confirmar la cotización y tus próximas fechas disponibles? 💅`
+                        : `Hello Ivannía! ✨ I completed your style quiz and fell in love with "${look.en}". Could you share a custom quote and your next openings? 💅`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="glow-pill mt-auto justify-center text-center"
+                  >
                     {c.try}
-                  </Link>
+                  </a>
                 </div>
               </li>
             ))}

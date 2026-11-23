@@ -15,25 +15,25 @@ interface HeroScrollProps {
 
 const SCENES = [
   {
-    src: "/hero.jpg",
-    en: ["Custom nail art", "in Bay Ridge, Brooklyn"],
-    es: ["Nail art a medida", "en Bay Ridge, Brooklyn"],
-    noteEn: "Builder gel, acrylics and hand-painted designs in a private studio, with time that is only yours.",
-    noteEs: "Builder gel, acrílico y diseños pintados a mano en un estudio privado, con un tiempo solo para ti.",
+    src: "/trabajo1.jpg",
+    en: ["Sculpted acrylics & bespoke art", "in Bay Ridge, Brooklyn"],
+    es: ["Uñas acrílicas & nail art", "en Bay Ridge, Brooklyn"],
+    noteEn: "Sculpted acrylics, Russian manicure, and hand-painted bespoke designs in a private studio, with time that is only yours.",
+    noteEs: "Uñas acrílicas esculpidas, manicura rusa y diseños a mano alzada en un estudio privado, con un tiempo solo para ti.",
   },
   {
-    src: "/gallery/lilac-3d-orchid.jpg",
-    en: ["Painted", "by hand"],
-    es: ["Pintadas", "a mano"],
-    noteEn: "Every set is drawn for you — no two are the same.",
-    noteEs: "Cada diseño se dibuja para ti: no hay dos iguales.",
+    src: "/trabajo2.jpg",
+    en: ["Handcrafted", "with precision"],
+    es: ["Diseños únicos", "a mano alzada"],
+    noteEn: "Every acrylic set is sculpted and detailed exclusively for you — no two are the same.",
+    noteEs: "Cada set se esculpe y pinta exclusivamente para ti: no hay dos iguales.",
   },
   {
-    src: "/gallery/chocolate-cat-eye.jpg",
-    en: ["Booked in", "one message"],
-    es: ["Tu cita,", "en un solo mensaje"],
-    noteEn: "Send a photo, get your quote, pick your time. Iva replies within 1–2 hours.",
-    noteEs: "Envía una foto, recibe tu cotización y elige tu horario. Iva responde en 1 a 2 horas.",
+    src: "/trabajo3.jpg",
+    en: ["Quote & booking", "in one message"],
+    es: ["Cotización a medida", "en un solo mensaje"],
+    noteEn: "Send your inspiration photo, get your custom quote, and pick your time. Iva replies within 1–2 hours.",
+    noteEs: "Envía una foto de tu diseño, recibe tu cotización personalizada y elige tu horario. Iva responde en 1 a 2 horas.",
   },
 ];
 
