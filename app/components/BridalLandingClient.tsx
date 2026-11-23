@@ -353,7 +353,9 @@ export default function BridalLandingClient({ lang }: BridalLandingClientProps) 
                   <span className="text-[11px] uppercase tracking-wider font-semibold text-[#D4A574] bg-[#D4A574]/15 border border-[#D4A574]/30 px-3 py-1 rounded-full">
                     {isEs ? "EL MÁS ELEGIDO" : "MOST POPULAR"}
                   </span>
-                  <span className="font-serif text-2xl font-light text-[#D4A574]">$165–$195</span>
+                  <span className="text-xs uppercase tracking-wider font-semibold text-[#D4A574]">
+                    {isEs ? "A Consultar" : "Bespoke Quote"}
+                  </span>
                 </div>
                 <h3 className="font-display text-xl text-[#F4EBE1] font-medium">
                   {isEs ? "The Solo Bride Sanctuary Set" : "The Solo Bride Sanctuary Set"}
@@ -402,7 +404,9 @@ export default function BridalLandingClient({ lang }: BridalLandingClientProps) 
                   <span className="text-[11px] uppercase tracking-wider font-semibold text-[#F4EBE1]/60">
                     {isEs ? "DÚO NUPCIAL" : "BRIDAL DUO"}
                   </span>
-                  <span className="font-serif text-2xl font-light text-[#F4EBE1]">$310</span>
+                  <span className="text-xs uppercase tracking-wider font-semibold text-[#F4EBE1]/80">
+                    {isEs ? "A Consultar" : "Bespoke Quote"}
+                  </span>
                 </div>
                 <h3 className="font-display text-xl text-[#F4EBE1] font-medium">
                   {isEs ? "Novia & Dama de Honor / Mamá" : "Bride & Maid of Honor / Mother"}

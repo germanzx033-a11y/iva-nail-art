@@ -63,7 +63,7 @@ export default function AdminGoogleMapsKit() {
     {
       id: "russian-manicure",
       name: "Russian Dry Hardware Manicure",
-      price: "$85",
+      price: "Cotización personalizada",
       duration: "90 min",
       description:
         "Precision multi-bit dry diamond e-file cuticle detailing, micro-shearing, and natural nail preparation without soaking. Deep cuticle tucking allows polish to grow out seamlessly for 3 to 4 weeks without lifting.",
@@ -71,7 +71,7 @@ export default function AdminGoogleMapsKit() {
     {
       id: "builder-gel",
       name: "Structured Builder Gel (BIAB / Russian Leveling)",
-      price: "$110",
+      price: "Cotización personalizada",
       duration: "105 min",
       description:
         "Complete Russian dry manicure followed by apex rebalancing with premium European builder gel. Fortifies natural nails, prevents breakage, and creates a perfectly smooth, mirror-like architectural surface.",
@@ -79,7 +79,7 @@ export default function AdminGoogleMapsKit() {
     {
       id: "bespoke-art",
       name: "Bespoke Hand-Painted & 3D Nail Art",
-      price: "$135 - $165",
+      price: "Cotización a medida",
       duration: "120 min",
       description:
         "Custom editorial nail art hand-crafted with fine-line Japanese brushes. Options include glazed chrome, velvet magnetic cat-eye, 3D molten metallic ribbons, pearls, and seasonal collections.",
@@ -87,7 +87,7 @@ export default function AdminGoogleMapsKit() {
     {
       id: "gel-x-extensions",
       name: "Après Gel-X Full Set Extensions",
-      price: "$130",
+      price: "Cotización personalizada",
       duration: "105 min",
       description:
         "Full-coverage 100% soft gel extensions sculpted with gentle apex alignment. No harsh acrylic powder, no fumes, zero natural nail damage, providing instant lightweight length in custom shapes.",
@@ -95,7 +95,7 @@ export default function AdminGoogleMapsKit() {
     {
       id: "dry-pedicure",
       name: "Luxury Russian Dry Pedicure",
-      price: "$95",
+      price: "Cotización personalizada",
       duration: "75 min",
       description:
         "Waterless podiatry-grade dry pedicure using diamond disc smoothing and gentle cuticle refinement. Eliminates rough calluses hygienic-safely without blade scraping or foot basin bacteria risks.",
@@ -103,7 +103,7 @@ export default function AdminGoogleMapsKit() {
     {
       id: "bridal-ritual",
       name: "Bespoke Bridal & Wedding Nail Ritual",
-      price: "$165 - $195",
+      price: "Cotización a medida",
       duration: "135 min",
       description:
         "Signature bridal treatment including full Russian hardware cuticle prep, builder gel reinforcement, handcrafted bridal art (Glazed Pearl, Micro-French, Velvet Silk), and 4-week honeymoon retention guarantee.",
@@ -111,7 +111,7 @@ export default function AdminGoogleMapsKit() {
     {
       id: "winter-collection",
       name: "Winter & Holiday Editorial Lookbook Set",
-      price: "$140",
+      price: "Cotización a medida",
       duration: "120 min",
       description:
         "Seasonal holiday styling featuring Midnight Emerald Velvet, Champagne Frost, Bordeaux Glazed Cherry, and Molten 3D Chrome on structured European gel. Limited seasonal openings.",
@@ -119,7 +119,7 @@ export default function AdminGoogleMapsKit() {
     {
       id: "safe-removal",
       name: "Safe Product Removal & Keratin Rehab",
-      price: "$35",
+      price: "Consultar con Ivannía",
       duration: "45 min",
       description:
         "Gentle e-file debulking and Japanese foil soak-off. Never scraped or peeled, finished with organic cold-pressed jojoba keratin oil treatment to maintain natural nail plate integrity.",

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Heart, Award, Star, Quote } from "lucide-react";
+import { Award, Star, Quote } from "lucide-react";
 import { ABOUT_COPY } from "../constants/luxuryRituals";
 
 // Set to "/ivannia.jpg" (4:5 portrait in /public) once the photo is ready; until then the nail photo stays.

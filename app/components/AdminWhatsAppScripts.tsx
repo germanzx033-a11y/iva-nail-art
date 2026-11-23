@@ -170,8 +170,8 @@ If you need to reschedule, please let me know at least 24 hours in advance. Can'
           ? `¡Felicidades por tu compromiso, ${nameVal}! 💍 Nos encantaría ser parte de tu gran día.
 
 En IVA Nail Art ofrecemos un ritual nupcial exclusivo diseñado para que tus uñas luzcan impecables desde el altar hasta tu luna de miel:
-✨ Paquete Novia Solo ($165 – $195): Manicura rusa completa, nivelación con builder gel europeo, arte nupcial a medida (Glazed Pearl, Micro-French, Velvet Silk) y Garantía de 4 semanas para Luna de Miel.
-✨ Paquete Novia & Dama / Mamá ($310): Sesión privada y champaña.
+✨ Paquete Novia Solo (Cotización a medida): Manicura rusa completa, nivelación con builder gel europeo, arte nupcial a medida (Glazed Pearl, Micro-French, Velvet Silk) y Garantía de 4 semanas para Luna de Miel.
+✨ Paquete Novia & Dama / Mamá (Cotización a medida): Sesión privada y champaña.
 
 👰 Puedes ver nuestra guía de cuenta regresiva y estilos aquí:
 https://ivanailartny.com/es/bridal-nails-brooklyn
@@ -180,8 +180,8 @@ https://ivanailartny.com/es/bridal-nails-brooklyn
           : `Congratulations on your upcoming wedding, ${nameVal}! 💍 We would be honored to be part of your bridal journey.
 
 At IVA Nail Art, our bridal nail ritual is crafted for timeless elegance and lasting wear:
-✨ Solo Bride Ritual ($165 – $195): Complete Russian dry cuticle prep, European builder gel apex leveling, bespoke bridal art (Glazed Pearl, Hand-painted Micro-French, Velvet Silk), and our 4-Week Honeymoon Retention Guarantee.
-✨ Bride & Maid of Honor Duo ($310): Private salon takeover.
+✨ Solo Bride Ritual (Bespoke Quote): Complete Russian dry cuticle prep, European builder gel apex leveling, bespoke bridal art (Glazed Pearl, Hand-painted Micro-French, Velvet Silk), and our 4-Week Honeymoon Retention Guarantee.
+✨ Bride & Maid of Honor Duo (Bespoke Quote): Private salon takeover.
 
 👰 View our complete bridal countdown guide and lookbook here:
 https://ivanailartny.com/bridal-nails-brooklyn

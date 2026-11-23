@@ -105,12 +105,12 @@ export const SERVICE_LANDINGS: ServiceLanding[] = [
       en: {
         metaTitle: "Russian Manicure in Bay Ridge, Brooklyn | IVA Nail Art NY",
         metaDescription:
-          "The Signature Russian Dry Manicure ($110, 90 min) in Bay Ridge, Brooklyn. Sterile e-file diamond bit cuticle care, keratin base, and 4-week flawless retention.",
+          "The Signature Russian Dry Manicure (90 min) in Bay Ridge, Brooklyn. Sterile e-file diamond bit cuticle care, keratin base, and 4-week flawless retention.",
         eyebrow: "Russian Dry Manicure · Bay Ridge, Brooklyn",
         h1Top: "Russian dry manicure",
         h1Bottom: "in Bay Ridge, Brooklyn",
         intro:
-          "The Signature Russian Dry Manicure ($110, 90 min) by Ivannia Rodríguez. Specialized multi-bit hardware e-file cuticle detailing without water, non-toxic keratin reinforcement, and seamless pigment application with guaranteed 4-week clean retention in our private Bay Ridge sanctuary.",
+          "The Signature Russian Dry Manicure (90 min) by Ivannia Rodríguez. Specialized multi-bit hardware e-file cuticle detailing without water, non-toxic keratin reinforcement, and seamless pigment application with guaranteed 4-week clean retention in our private Bay Ridge sanctuary.",
         whatTitle: "What is a Russian dry manicure?",
         whatBody: [
           "A Russian manicure (also known as an e-file dry hardware manicure) uses specialized diamond and ceramic bits instead of water soaking to precisely lift, gently exfoliate, and detail the cuticle pocket.",
@@ -159,17 +159,17 @@ export const SERVICE_LANDINGS: ServiceLanding[] = [
             a: "Yes! Russian manicure prep is the ideal foundation for builder gel overlays, chrome finishes, French tips, and hand-painted bespoke nail art.",
           },
         ],
-        waText: "Hi Iva! I would like to book The Signature Russian Dry Manicure ($110, 90 min) in Bay Ridge. Preferred date: …",
+        waText: "Hi Iva! I would like to book The Signature Russian Dry Manicure (90 min) in Bay Ridge. Preferred date: …",
       },
       es: {
         metaTitle: "Manicura Rusa en Bay Ridge, Brooklyn | IVA Nail Art NY",
         metaDescription:
-          "The Signature Russian Dry Manicure ($110, 90 min) en Bay Ridge, Brooklyn. Limpieza profunda con torno de diamante, base de queratina y 4 semanas de duración.",
+          "The Signature Russian Dry Manicure (90 min) en Bay Ridge, Brooklyn. Limpieza profunda con torno de diamante, base de queratina y 4 semanas de duración.",
         eyebrow: "Manicura Rusa en Seco · Bay Ridge, Brooklyn",
         h1Top: "Manicura rusa en seco",
         h1Bottom: "en Bay Ridge, Brooklyn",
         intro:
-          "The Signature Russian Dry Manicure ($110, 90 min) por Ivannia Rodríguez. Detallado de cutícula con torno y fresas de diamante sin agua, refuerzo con queratina no tóxica y aplicación de esmaltado impecable con retención garantizada de 4 semanas en nuestro estudio privado en Bay Ridge.",
+          "The Signature Russian Dry Manicure (90 min) por Ivannia Rodríguez. Detallado de cutícula con torno y fresas de diamante sin agua, refuerzo con queratina no tóxica y aplicación de esmaltado impecable con retención garantizada de 4 semanas en nuestro estudio privado en Bay Ridge.",
         whatTitle: "¿Qué es la manicura rusa?",
         whatBody: [
           "La manicura rusa (manicura combinada o en seco con torno) utiliza fresas especializadas de diamante en seco en lugar de remojar los dedos en agua, limpiando y puliendo la cutícula con extrema precisión.",
@@ -218,7 +218,7 @@ export const SERVICE_LANDINGS: ServiceLanding[] = [
             a: "¡Totalmente! La preparación de manicura rusa es la mejor base posible para builder gel (BIAB), cromo, francesa o diseños a mano alzada.",
           },
         ],
-        waText: "¡Hola Iva! Me gustaría reservar The Signature Russian Dry Manicure ($110, 90 min) en Bay Ridge. Fecha preferida: …",
+        waText: "¡Hola Iva! Me gustaría consultar disponibilidad para The Signature Russian Dry Manicure (90 min) en Bay Ridge. Fecha preferida: …",
       },
     },
   },

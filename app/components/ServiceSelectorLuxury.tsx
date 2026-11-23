@@ -153,11 +153,17 @@ export default function ServiceSelectorLuxury({
       // Direct WhatsApp bridge with pre-filled luxury concierge message
       const addonNames = chosenAddons.map((a) => (isEs ? a.nameEs : a.name)).join(", ");
       const msg = encodeURIComponent(
-        `Hello IVA Atelier Brooklyn! ✨ I would love to reserve an appointment:\n\n• Primary Service: ${
-          isEs ? selectedService.nameEs : selectedService.name
-        } ($${selectedService.price})\n• Add-ons: ${addonNames || "None"}\n• Estimated Total: $${totalPrice} (~${formatDuration(
-          totalDuration
-        )})\n• Deposit: $35 Non-refundable\n\nPlease let me know your next available dates!`
+        isEs
+          ? `¡Hola Ivannía! ✨ Me encantaría consultar la cotización y reservar una cita en tu estudio:\n\n• Servicio Base: ${
+              selectedService.nameEs
+            }\n• Adicionales de Arte: ${addonNames || "Ninguno"}\n• Duración estimada: ~${formatDuration(
+              totalDuration
+            )}\n\n¿Me podrías confirmar la cotización para mi diseño y tus próximas fechas disponibles? ¡Muchas gracias! 💅🤍`
+          : `Hello Ivannía! ✨ I would love to inquire about pricing and reserve a session at your Brooklyn atelier:\n\n• Foundational Service: ${
+              selectedService.name
+            }\n• Bespoke Art & Add-ons: ${addonNames || "None"}\n• Estimated Duration: ~${formatDuration(
+              totalDuration
+            )}\n\nCould you please let me know your custom quote and next available dates? Thank you! 💅🤍`
       );
       window.open(`https://wa.me/19296257273?text=${msg}`, "_blank");
     }
@@ -168,15 +174,15 @@ export default function ServiceSelectorLuxury({
       {/* Header */}
       <div className="text-center max-w-3xl mx-auto mb-14">
         <span className="text-xs uppercase tracking-[0.25em] font-medium text-[#C5A059] block mb-2">
-          {isEs ? "Tarifario Transparente & Personalizado" : "Transparent Haute Pricing"}
+          {isEs ? "Cotización Personalizada & Atelier Privado" : "Bespoke Atelier Consultation"}
         </span>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#111111] tracking-tight mb-4">
-          {isEs ? "Diseña tu Experiencia & Cita" : "Curate Your Atelier Experience"}
+          {isEs ? "Diseña tu Experiencia & Consulta tu Cita" : "Curate Your Atelier Experience"}
         </h2>
         <p className="text-sm md:text-base text-[#4A4A4A] font-light max-w-2xl mx-auto">
           {isEs
-            ? "Selecciona tu servicio principal y añade los niveles de arte que desees. Calculamos en tiempo real el tiempo y valor de tu sesión."
-            : "Select your foundational service and bespoke design tiers. We reserve dedicated 3 to 4-hour appointments with zero rushing."}
+            ? "Cada set se cotiza de forma personalizada según el largo, estado de tus uñas y el diseño deseado. Selecciona tu servicio base y consulta tu cita directamente con Ivannía."
+            : "Every set is uniquely crafted and quoted individually based on nail condition, length, and custom design. Select your service and inquire directly with Ivannía."}
         </p>
       </div>
 
@@ -222,8 +228,8 @@ export default function ServiceSelectorLuxury({
                     </div>
 
                     <div className="flex items-center justify-between pt-3 border-t border-stone-100">
-                      <span className="text-base font-serif font-semibold text-[#111111]">
-                        ${srv.price}
+                      <span className="text-xs uppercase tracking-wider font-semibold text-[#C5A059]">
+                        {isEs ? "Cotizar con Ivannía" : "Bespoke Quote"}
                       </span>
                       <span className="text-xs text-stone-500 flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5 text-stone-400" />
@@ -281,8 +287,8 @@ export default function ServiceSelectorLuxury({
                     </div>
 
                     <div className="text-right whitespace-nowrap">
-                      <span className="text-sm font-semibold text-[#111111] block">
-                        +${addon.price}
+                      <span className="text-xs uppercase tracking-wider font-semibold text-[#C5A059] block">
+                        {isEs ? "A Medida" : "Custom"}
                       </span>
                       <span className="text-[11px] text-stone-400">+{addon.durationMin} min</span>
                     </div>
@@ -307,13 +313,13 @@ export default function ServiceSelectorLuxury({
             <div className="space-y-3 pb-6 border-b border-stone-200 text-xs sm:text-sm">
               <div className="flex justify-between items-center text-[#111111] font-medium">
                 <span>{isEs ? selectedService.nameEs : selectedService.name}</span>
-                <span>${selectedService.price}</span>
+                <span className="text-xs text-[#C5A059] font-semibold">{isEs ? "Cotización personalizada" : "Bespoke quote"}</span>
               </div>
 
               {chosenAddons.map((item) => (
                 <div key={item.id} className="flex justify-between items-center text-stone-600">
                   <span className="line-clamp-1">{isEs ? item.nameEs : item.name}</span>
-                  <span>+${item.price}</span>
+                  <span className="text-xs text-stone-400 font-medium">{isEs ? "Diseño a medida" : "Custom design"}</span>
                 </div>
               ))}
             </div>
@@ -329,10 +335,10 @@ export default function ServiceSelectorLuxury({
               </div>
               <div className="flex justify-between items-baseline pt-2">
                 <span className="text-sm font-serif text-[#111111]">
-                  {isEs ? "Inversión Total" : "Estimated Total"}
+                  {isEs ? "Tarifa Estimada" : "Pricing Policy"}
                 </span>
-                <span className="text-3xl font-serif font-semibold text-[#111111]">
-                  ${totalPrice}
+                <span className="text-base sm:text-lg font-serif font-semibold text-[#111111]">
+                  {isEs ? "A Consultar con Ivannía" : "Quote by Ivannía"}
                 </span>
               </div>
             </div>
@@ -342,22 +348,22 @@ export default function ServiceSelectorLuxury({
               <div className="flex items-center gap-1.5 font-medium text-[#111111]">
                 <ShieldCheck className="w-4 h-4 text-[#C5A059]" />
                 <span>
-                  {isEs ? `Depósito de Reserva: $${deposit}` : `Required Deposit: $${deposit}`}
+                  {isEs ? "Reserva Exclusiva de Horario" : "Private Dedicated Slot"}
                 </span>
               </div>
               <p className="text-[11px] font-light leading-relaxed text-stone-500">
                 {isEs
-                  ? "Deducible del total el día de tu cita. Protege tu bloque exclusivo de 3-4 horas sin prisas."
-                  : "Deducted from your final total upon service. Guarantees your private 4-hour session."}
+                  ? "Cada diseño se cotiza según tu largo y arte. Un depósito de $35 confirma tu horario exclusivo de 2 a 3 horas y se descuenta de tu cita."
+                  : "Every set is quoted personally based on your design. A $35 deposit confirms your exclusive 3-hour session and is credited toward your service."}
               </p>
             </div>
 
             {/* Action CTA */}
             <button
               onClick={handleBookingClick}
-              className="w-full py-4 px-6 rounded-xl bg-[#111111] hover:bg-[#C5A059] text-white hover:text-[#111111] font-medium text-sm tracking-wide transition-all duration-300 shadow-lg flex items-center justify-center gap-2 group"
+              className="w-full py-4 px-6 rounded-xl bg-[#111111] hover:bg-[#C5A059] text-white hover:text-[#111111] font-medium text-xs sm:text-sm tracking-wide transition-all duration-300 shadow-lg flex items-center justify-center gap-2 group"
             >
-              <span>{isEs ? "Asegurar Fecha con Depósito" : "Lock Slot with $35 Deposit"}</span>
+              <span>{isEs ? "Consultar Tarifa & Fechas por WhatsApp" : "Inquire for Quote & Dates on WhatsApp"}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
 
@@ -365,8 +371,8 @@ export default function ServiceSelectorLuxury({
               <Sparkles className="w-3 h-3 text-[#C5A059]" />
               <span>
                 {isEs
-                  ? "Máximo 3 citas privadas por día en Brooklyn"
-                  : "Strict limit of 3 private clients daily"}
+                  ? "Atelier privado en Bay Ridge · Solo 2 a 3 clientas al día"
+                  : "Private Bay Ridge atelier · Max 2-3 clients daily"}
               </span>
             </div>
           </div>
