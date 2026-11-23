@@ -31,6 +31,7 @@ import CalendlyModal from "@/app/components/CalendlyModal";
 import ServiceSelectorLuxury from "@/app/components/ServiceSelectorLuxury";
 import LookbookFilterable from "@/app/components/LookbookFilterable";
 import LocalSeoSchema from "@/app/components/LocalSeoSchema";
+import { getSavedSiteContent, SiteContent } from "@/lib/contentStore";
 
 // Contador animado. Escribe directo en el DOM (sin re-render por frame) y siempre
 // termina en el valor final, aunque el navegador pause requestAnimationFrame.
@@ -258,6 +259,15 @@ export default function Home() {
   const [lang, setLang] = useState<"en" | "es">("en");
   const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
   const [calendlyService, setCalendlyService] = useState("");
+  const [siteContent, setSiteContent] = useState<SiteContent | null>(null);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSiteContent(getSavedSiteContent());
+    const handler = () => setSiteContent(getSavedSiteContent());
+    window.addEventListener("iva-content-updated", handler);
+    return () => window.removeEventListener("iva-content-updated", handler);
+  }, []);
 
   const openBooking = (serviceName?: string) => {
     setCalendlyService(serviceName || "");
@@ -364,6 +374,7 @@ export default function Home() {
         secondaryCtaUrl="https://ig.me/m/iva_nailart_nyc"
         secondaryCtaText={lang === "en" ? "Instagram DM" : "Mensaje por Instagram"}
         onBookClick={() => openBooking()}
+        customScenes={siteContent?.heroScenes}
       />
       <PhotoMarquee lang={lang} />
 

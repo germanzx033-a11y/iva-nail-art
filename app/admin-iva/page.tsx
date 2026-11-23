@@ -11,7 +11,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import AdminWhatsAppScripts from "@/app/components/AdminWhatsAppScripts";
 import AdminClientCRM from "@/app/components/AdminClientCRM";
 import AdminGoogleMapsKit from "@/app/components/AdminGoogleMapsKit";
+import AdminContentEditor from "@/app/components/AdminContentEditor";
 import {
+  LayoutTemplate,
   Moon,
   Sun,
   Calendar,
@@ -140,7 +142,7 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"dashboard" | "clients" | "portal" | "gmaps" | "scripts" | "waitlist" | "analytics" | "ezra">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "content" | "clients" | "portal" | "gmaps" | "scripts" | "waitlist" | "analytics" | "ezra">("dashboard");
   const [copiedPortalLink, setCopiedPortalLink] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -499,6 +501,7 @@ export default function AdminPage() {
           <div className="flex gap-1 overflow-x-auto pb-2 scrollbar-none">
             {[
               { id: "dashboard", label: "Command Center", icon: Zap },
+              { id: "content", label: "Editor Web & Fotos", icon: LayoutTemplate },
               { id: "clients", label: "Client CRM & Refills", icon: Users },
               { id: "portal", label: "Portal VIP Clientas", icon: Sparkles },
               { id: "gmaps", label: "Google Maps & SEO", icon: MapPin },
@@ -594,7 +597,25 @@ export default function AdminPage() {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {/* Launchpad Card 0: Editor Web */}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("content")}
+                  className="text-left p-4 rounded-xl border border-[#722F37]/30 bg-gradient-to-br from-[#FDF8F6] to-white hover:border-[#722F37] transition-all group shadow-sm"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="w-8 h-8 rounded-lg bg-rose-100 text-[#722F37] flex items-center justify-center group-hover:scale-105 transition-transform">
+                      <LayoutTemplate className="w-4 h-4" />
+                    </span>
+                    <span className="text-[10px] uppercase font-bold text-[#722F37] bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">
+                      CMS Web
+                    </span>
+                  </div>
+                  <h4 className="font-medium text-sm text-[#1A1A1A]">Editor Web & Fotos</h4>
+                  <p className="text-xs text-[#7A7A7A] mt-1">Cambia fotos de portada, textos de acrílico, nombres y teléfonos en 1 toque.</p>
+                </button>
+
                 {/* Launchpad Card 1: CRM */}
                 <button
                   type="button"
@@ -881,6 +902,13 @@ export default function AdminPage() {
               </motion.button>
             </div>
           </div>
+        )}
+
+        {/* ==================== WEB CONTENT EDITOR (CMS) TAB ==================== */}
+        {activeTab === "content" && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <AdminContentEditor />
+          </motion.div>
         )}
 
         {/* ==================== CLIENT CRM TAB ==================== */}

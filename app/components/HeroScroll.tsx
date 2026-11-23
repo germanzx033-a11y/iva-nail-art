@@ -11,6 +11,13 @@ interface HeroScrollProps {
   secondaryCtaUrl?: string;
   secondaryCtaText?: string;
   onBookClick?: () => void;
+  customScenes?: {
+    src: string;
+    en: string[];
+    es: string[];
+    noteEn: string;
+    noteEs: string;
+  }[];
 }
 
 const SCENES = [
@@ -49,10 +56,12 @@ export default function HeroScroll({
   secondaryCtaUrl,
   secondaryCtaText,
   onBookClick,
+  customScenes,
 }: HeroScrollProps) {
   const trackRef = useRef<HTMLElement>(null);
   const [progress, setProgress] = useState(0);
   const isEn = lang === "en";
+  const scenes = customScenes && customScenes.length === 3 ? customScenes : SCENES;
 
   useEffect(() => {
     let frame = 0;
@@ -77,15 +86,15 @@ export default function HeroScroll({
     };
   }, []);
 
-  const active = Math.min(SCENES.length - 1, Math.floor(progress * SCENES.length));
+  const active = Math.min(scenes.length - 1, Math.floor(progress * scenes.length));
   // 0 → 1 inside the current scene, used for the slow push-in on the photo
-  const local = Math.min(progress * SCENES.length - active, 1);
+  const local = Math.min(progress * scenes.length - active, 1);
 
   return (
-    <section ref={trackRef} className="relative bg-[#0E0706]" style={{ height: `${SCENES.length * 100}svh` }}>
+    <section ref={trackRef} className="relative bg-[#0E0706]" style={{ height: `${scenes.length * 100}svh` }}>
       <div className="sticky top-0 h-[100svh] overflow-hidden text-[#F4EBE1]">
         {/* Blurred full-bleed backdrops */}
-        {SCENES.map((scene, i) => (
+        {scenes.map((scene, i) => (
           <div
             key={scene.src}
             aria-hidden
@@ -105,7 +114,7 @@ export default function HeroScroll({
         <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-end gap-6 px-6 pb-10 pt-24 md:px-10 lg:flex-row lg:items-end lg:justify-between lg:gap-12 lg:pb-16">
           {/* Framed photo — always shown whole */}
           <div className="relative order-1 mx-auto min-h-0 w-full max-w-[min(72vw,22rem)] flex-1 lg:order-2 lg:mx-0 lg:h-[76svh] lg:max-w-none lg:flex-none lg:basis-[42%]">
-            {SCENES.map((scene, i) => (
+            {scenes.map((scene, i) => (
               <div
                 key={scene.src}
                 className="absolute inset-0 transition-opacity duration-1000 ease-out"
@@ -137,7 +146,7 @@ export default function HeroScroll({
             </p>
 
             <div className="relative h-[8.5rem] sm:h-[11rem] lg:h-[15rem]">
-              {SCENES.map((scene, i) => {
+              {scenes.map((scene, i) => {
                 const [top, bottom] = isEn ? scene.en : scene.es;
                 // One real <h1> for search engines; the other scenes are decorative headings
                 const Heading = i === 0 ? "h1" : "p";
@@ -163,7 +172,7 @@ export default function HeroScroll({
             </div>
 
             <p className="mt-5 min-h-[3rem] max-w-md text-sm leading-relaxed text-[#F4EBE1]/75 md:text-base">
-              {isEn ? SCENES[active].noteEn : SCENES[active].noteEs}
+              {isEn ? scenes[active]?.noteEn : scenes[active]?.noteEs}
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-4">
