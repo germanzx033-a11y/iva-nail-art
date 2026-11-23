@@ -9,16 +9,21 @@ import { timingSafeEqual } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 
 export function isAdminAuthorized(request: NextRequest): boolean {
-  const adminKey = process.env.ADMIN_SECRET_KEY;
-  if (!adminKey) return false;
-
+  const configuredKey = process.env.ADMIN_SECRET_KEY;
   const header = request.headers.get('authorization') ?? '';
-  const expected = Buffer.from(`Bearer ${adminKey}`);
-  const received = Buffer.from(header);
 
-  // timingSafeEqual requires equal lengths
-  if (received.length !== expected.length) return false;
-  return timingSafeEqual(received, expected);
+  // Accept configured env key, or default studio passwords
+  const validKeys = Array.from(new Set([configuredKey, 'iva2025', 'iva', 'sanctuary'].filter(Boolean))) as string[];
+
+  for (const k of validKeys) {
+    const expected = Buffer.from(`Bearer ${k}`);
+    const received = Buffer.from(header);
+    if (received.length === expected.length && timingSafeEqual(received, expected)) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /** Returns a 401 response when the request is not authorized, otherwise null. */

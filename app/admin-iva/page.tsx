@@ -147,6 +147,27 @@ export default function AdminPage() {
     return () => clearInterval(timer);
   }, []);
 
+  // Check persisted admin key on mount
+  useEffect(() => {
+    try {
+      const savedKey = localStorage.getItem("iva_admin_key");
+      if (savedKey) {
+        setAdminKey(savedKey);
+        setIsAuthenticated(true);
+      }
+    } catch {}
+  }, []);
+
+  const handleLogin = (keyToUse?: string) => {
+    const key = (keyToUse || adminKey || "iva2025").trim();
+    setAdminKey(key);
+    try {
+      localStorage.setItem("iva_admin_key", key);
+    } catch {}
+    triggerHaptic("medium");
+    setIsAuthenticated(true);
+  };
+
   // =============================================
   // FETCH DATA
   // =============================================
@@ -324,37 +345,42 @@ export default function AdminPage() {
                 type="password"
                 value={adminKey}
                 onChange={(e) => setAdminKey(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && adminKey && setIsAuthenticated(true)}
-                className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-[#B76E79] focus:bg-white/10 transition-all text-white placeholder-white/30"
-                placeholder="Enter your sanctuary key"
+                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-[#B76E79] focus:bg-white/10 transition-all text-white placeholder-white/40"
+                placeholder="Ingresa clave (ej. iva2025)"
               />
             </div>
 
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                triggerHaptic("medium");
-                setIsAuthenticated(true);
-              }}
-              disabled={!adminKey}
-              className="w-full py-4 bg-gradient-to-r from-[#B76E79] via-[#722F37] to-[#5A252C] text-white text-sm uppercase tracking-widest font-medium rounded-xl disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-[#722F37]/30 transition-all"
+              onClick={() => handleLogin()}
+              className="w-full py-4 bg-gradient-to-r from-[#B76E79] via-[#722F37] to-[#5A252C] text-white text-sm uppercase tracking-widest font-medium rounded-xl hover:shadow-lg hover:shadow-[#722F37]/30 transition-all"
             >
               Enter Sanctuary
             </motion.button>
 
             {/* Quick 1-Tap Access for WhatsApp Scripts on Mobile */}
-            <div className="mt-4 pt-4 border-t border-white/10 text-center">
+            <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-2.5 text-center">
+              <button
+                type="button"
+                onClick={() => handleLogin("iva2025")}
+                className="py-2.5 px-4 bg-white/10 hover:bg-white/20 text-[#E8B4B8] hover:text-white rounded-xl text-xs font-semibold transition-all border border-white/10 flex items-center justify-center gap-2"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                <span>Acceso Rápido con clave predeterminada (iva2025)</span>
+              </button>
+
               <button
                 type="button"
                 onClick={() => {
                   setActiveTab("scripts");
-                  setIsAuthenticated(true);
+                  handleLogin("iva2025");
                 }}
-                className="text-xs text-[#E8B4B8] hover:text-white underline underline-offset-4 transition-colors font-medium flex items-center justify-center gap-1.5 mx-auto"
+                className="text-xs text-white/60 hover:text-white underline underline-offset-4 transition-colors font-medium flex items-center justify-center gap-1.5 mx-auto mt-1"
               >
                 <MessageCircle className="w-3.5 h-3.5" />
-                <span>Open WhatsApp Quick Reply Concierge →</span>
+                <span>Abrir WhatsApp Concierge Directo →</span>
               </button>
             </div>
           </motion.div>
@@ -451,6 +477,9 @@ export default function AdminPage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => {
+                try {
+                  localStorage.removeItem("iva_admin_key");
+                } catch {}
                 setIsAuthenticated(false);
                 setAdminKey("");
               }}
