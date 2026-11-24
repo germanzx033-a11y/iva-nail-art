@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { Sparkles, MoveHorizontal, ArrowRight, ShieldCheck } from "lucide-react";
 import {
   BeforeAfterConfig,
@@ -209,11 +210,13 @@ export default function BeforeAfterSlider({
           style={{ willChange: "transform" }}
         >
           {/* Bottom Layer: After Image (Full background) */}
-          <img
+          <Image
             src={config.afterImage}
             alt={isEn ? "Transformed Russian Manicure After State" : "Resultado Después - Manicura Rusa Transformada"}
-            className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
-            loading="lazy"
+            fill
+            sizes="(max-width: 768px) 100vw, 896px"
+            unoptimized={config.afterImage.startsWith("data:")}
+            className="object-cover select-none pointer-events-none"
             draggable={false}
           />
 
@@ -225,11 +228,13 @@ export default function BeforeAfterSlider({
               willChange: "clip-path",
             }}
           >
-            <img
+            <Image
               src={config.beforeImage}
               alt={isEn ? "Natural Nail Before State" : "Estado Antes - Uña Natural"}
-              className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
-              loading="lazy"
+              fill
+              sizes="(max-width: 768px) 100vw, 896px"
+              unoptimized={config.beforeImage.startsWith("data:")}
+              className="object-cover select-none pointer-events-none"
               draggable={false}
             />
           </div>

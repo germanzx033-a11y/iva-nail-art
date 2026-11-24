@@ -3,6 +3,7 @@ import { Inter, Playfair_Display, Syncopate } from "next/font/google";
 import "./globals.css";
 import PWAProvider from "./components/PWAProvider";
 import Analytics from "./components/Analytics";
+import HtmlLangSync from "./components/HtmlLangSync";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -120,6 +121,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable} ${syncopate.variable}`}>
       <body className="antialiased bg-[#0E0706] text-[#F4EBE1]">
+        <HtmlLangSync />
         <Analytics />
         <PWAProvider>
           {children}

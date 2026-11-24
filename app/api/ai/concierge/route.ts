@@ -15,7 +15,7 @@ interface RecommendationResult {
   artTierName: string;
   designConcept: string;
   colorPalette: string[];
-  estimatedPrice: number;
+  estimatedPrice: string;
   estimatedDuration: string;
   curatorEditorialNote: string;
 }
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
         artTierName: "Nail Art Tier 1 (Minimalist)",
         designConcept: "Porcelain Soft Blush with Micro-Pearl French Arc",
         colorPalette: ["#F9F6F0", "#EAD8B1", "#FFFFFF"],
-        estimatedPrice: 160,
+        estimatedPrice: "Cotización personalizada con Ivannía (WhatsApp)",
         estimatedDuration: "2h 05m",
         curatorEditorialNote: "For weddings, we prioritize impeccable cuticle contouring and chip-free strength that photographs flawlessly under macro flash photography."
       };
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
         artTierName: "Nail Art Tier 3 (Haute Couture 3D)",
         designConcept: "Sculpted Molten Gold Drops with Liquid Chrome Inlay",
         colorPalette: ["#111111", "#C5A059", "#D4AF37"],
-        estimatedPrice: 245,
+        estimatedPrice: "Cotización personalizada con Ivannía (WhatsApp)",
         estimatedDuration: "3h 00m",
         curatorEditorialNote: "Command the room with architectural stiletto or soft-almond extensions accented by light-reflecting metallic textures."
       };
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
         artTierName: "Nail Art Tier 1 (Minimalist)",
         designConcept: "Clean Girl High-Gloss Buff with Bare Negative Space Accent",
         colorPalette: ["#FAF8F5", "#F4EBE1", "#4A4A4A"],
-        estimatedPrice: 140,
+        estimatedPrice: "Cotización personalizada con Ivannía (WhatsApp)",
         estimatedDuration: "1h 50m",
         curatorEditorialNote: "Subtle, immaculate, and timeless. Complements bespoke tailoring and fine jewelry without distraction."
       };
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
         artTierName: "Nail Art Tier 2 (Artisan Hand-Painted)",
         designConcept: "Bespoke Glazed Chrome Aura with Fine Line Geometry",
         colorPalette: ["#EAD8B1", "#FAF8F5", "#C5A059"],
-        estimatedPrice: 195,
+        estimatedPrice: "Cotización personalizada con Ivannía (WhatsApp)",
         estimatedDuration: "2h 30m",
         curatorEditorialNote: "Our most coveted salon formula: reinforced natural nail architecture with subtle light-catching dimension."
       };

@@ -22,16 +22,18 @@ function checkRateLimit(ip: string): boolean {
 }
 
 const SERVICE_PRICES: Record<string, { name: string; price: number; duration: number }> = {
-  "russian-mani": { name: "The Signature Russian Dry Mani", price: 110, duration: 90 },
-  "builder-gel-biab": { name: "Aureate Structured Gel (BIAB)", price: 130, duration: 105 },
-  "gel-x-extensions": { name: "Apothecary Full Set Gel-X", price: 150, duration: 120 },
+  "russian-mani": { name: "The Signature Russian Dry Mani", price: 0, duration: 90 },
+  "builder-gel-biab": { name: "Aureate Structured Gel (BIAB)", price: 0, duration: 105 },
+  "gel-x-extensions": { name: "Apothecary Full Set Gel-X", price: 0, duration: 120 },
+  "acrylic-fullset": { name: "Sculpted Acrylic Full Set", price: 0, duration: 120 },
+  "acrylic-refill": { name: "Acrylic Refill & Apex Balance", price: 0, duration: 90 },
 };
 
 const ADDON_PRICES: Record<string, { name: string; price: number; duration: number }> = {
-  "art-tier-1": { name: "Nail Art Tier 1 (Minimalist)", price: 30, duration: 20 },
-  "art-tier-2": { name: "Nail Art Tier 2 (Artisan Hand-Painted)", price: 65, duration: 45 },
-  "art-tier-3": { name: "Nail Art Tier 3 (Haute Couture 3D)", price: 95, duration: 60 },
-  "safe-removal": { name: "Safe E-File Removal & Care", price: 35, duration: 30 },
+  "art-tier-1": { name: "Nail Art Tier 1 (Minimalist)", price: 0, duration: 20 },
+  "art-tier-2": { name: "Nail Art Tier 2 (Artisan Hand-Painted)", price: 0, duration: 45 },
+  "art-tier-3": { name: "Nail Art Tier 3 (Haute Couture 3D)", price: 0, duration: 60 },
+  "safe-removal": { name: "Safe E-File Removal & Care", price: 0, duration: 30 },
 };
 
 export async function POST(request: Request) {
@@ -61,18 +63,13 @@ export async function POST(request: Request) {
 
     const data = validationResult.data;
 
-    // 3. Calculate authoritative pricing & duration
-    const baseService = SERVICE_PRICES[data.serviceId];
-    const addonsTotal = (data.addons || []).reduce(
-      (sum, addonKey) => sum + (ADDON_PRICES[addonKey]?.price || 0),
-      0
-    );
+    // 3. Calculate duration & bespoke quote model (pricing quoted manually by Ivannía)
+    const baseService = SERVICE_PRICES[data.serviceId] || { name: data.serviceId, price: 0, duration: 90 };
     const addonsDuration = (data.addons || []).reduce(
       (sum, addonKey) => sum + (ADDON_PRICES[addonKey]?.duration || 0),
       0
     );
 
-    const totalPrice = baseService.price + addonsTotal;
     const totalDurationMin = baseService.duration + addonsDuration;
     const depositAmount = 35.0; // Standard non-refundable salon deposit
 
@@ -89,7 +86,8 @@ export async function POST(request: Request) {
       addons: data.addons,
       appointmentDate: data.appointmentDate,
       startTime: data.startTime,
-      totalPrice,
+      pricingModel: "custom_quote",
+      totalPrice: null,
       totalDurationMin,
       depositAmount,
       depositStatus: "pending",
@@ -98,15 +96,16 @@ export async function POST(request: Request) {
       createdAt: new Date().toISOString(),
     };
 
-    // 4. Trigger n8n Automation Webhook if configured
+    // 4. Trigger n8n Automation Webhook if configured with valid secret
     const n8nWebhookUrl = process.env.N8N_BOOKING_WEBHOOK_URL;
-    if (n8nWebhookUrl) {
+    const n8nWebhookSecret = process.env.N8N_WEBHOOK_SECRET;
+    if (n8nWebhookUrl && n8nWebhookSecret) {
       try {
         await fetch(n8nWebhookUrl, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-signature": process.env.N8N_WEBHOOK_SECRET || "default-secret",
+            "x-signature": n8nWebhookSecret,
           },
           body: JSON.stringify({
             event: "booking.created",
