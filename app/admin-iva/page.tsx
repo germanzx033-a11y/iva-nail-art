@@ -140,6 +140,8 @@ const LUXURY_METRICS = {
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [adminKey, setAdminKey] = useState("");
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [brief, setBrief] = useState<DailyBrief | null>(null);
   const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([]);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
@@ -158,25 +160,67 @@ export default function AdminPage() {
     return () => clearInterval(timer);
   }, []);
 
-  // Check persisted admin key on mount
+  // Check persisted session via cookie/token on mount
   useEffect(() => {
-    try {
-      const savedKey = localStorage.getItem("iva_admin_key");
-      if (savedKey) {
-        setAdminKey(savedKey);
-        setIsAuthenticated(true);
+    const checkAuth = async () => {
+      try {
+        const savedToken = localStorage.getItem("iva_admin_key") || "";
+        const res = await fetch("/api/admin/brief", {
+          headers: savedToken ? { Authorization: `Bearer ${savedToken}` } : {},
+        });
+        if (res.ok) {
+          if (savedToken) setAdminKey(savedToken);
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+          try {
+            localStorage.removeItem("iva_admin_key");
+          } catch {}
+        }
+      } catch {
+        setIsAuthenticated(false);
       }
-    } catch {}
+    };
+    checkAuth();
   }, []);
 
-  const handleLogin = (keyToUse?: string) => {
-    const key = (keyToUse || adminKey || "iva2025").trim();
-    setAdminKey(key);
+  const handleLogin = async () => {
+    const key = adminKey.trim();
+    if (!key) {
+      setLoginError("Por favor ingresa la clave de administradora.");
+      return;
+    }
+
+    setIsLoggingIn(true);
+    setLoginError(null);
+
     try {
-      localStorage.setItem("iva_admin_key", key);
-    } catch {}
-    triggerHaptic("medium");
-    setIsAuthenticated(true);
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: key }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        triggerHaptic("medium");
+        setIsAuthenticated(true);
+        const token = data.token || key;
+        setAdminKey(token);
+        try {
+          localStorage.setItem("iva_admin_key", token);
+        } catch {}
+      } else {
+        triggerHaptic("heavy");
+        setLoginError(data.error || "Clave de acceso incorrecta.");
+      }
+    } catch (err) {
+      console.error("Login request error:", err);
+      setLoginError("Error de conexión al validar credenciales.");
+    } finally {
+      setIsLoggingIn(false);
+    }
   };
 
   // =============================================
@@ -345,58 +389,60 @@ export default function AdminPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="bg-white/10 backdrop-blur-xl p-8 rounded-3xl border border-white/20 shadow-2xl"
+            className="bg-white/10 backdrop-blur-xl p-8 rounded-3xl border border-white/20 shadow-2xl space-y-6"
           >
-            <div className="mb-6">
-              <label className="text-xs uppercase tracking-widest text-white/50 block mb-3 flex items-center gap-2">
-                <Shield className="w-3.5 h-3.5" />
-                Secret Key
+            <div>
+              <label className="text-xs uppercase tracking-widest text-white/70 block mb-3 flex items-center gap-2">
+                <Shield className="w-3.5 h-3.5 text-[#E8C9A8]" />
+                Clave Secreta de Administradora
               </label>
               <input
                 type="password"
                 value={adminKey}
-                onChange={(e) => setAdminKey(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-                className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:border-[#B76E79] focus:bg-white/10 transition-all text-white placeholder-white/40"
-                placeholder="Ingresa clave (ej. iva2025)"
+                onChange={(e) => {
+                  setAdminKey(e.target.value);
+                  if (loginError) setLoginError(null);
+                }}
+                onKeyDown={(e) => e.key === "Enter" && !isLoggingIn && handleLogin()}
+                className="w-full px-5 py-4 bg-white/5 border border-white/20 rounded-xl focus:outline-none focus:border-[#E8C9A8] focus:bg-white/10 transition-all text-white placeholder-white/30 text-sm"
+                placeholder="Introduce tu clave privada..."
+                disabled={isLoggingIn}
+                autoFocus
               />
             </div>
 
+            {loginError && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-3.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-200 text-xs flex items-center gap-2.5"
+              >
+                <AlertTriangle className="w-4 h-4 shrink-0 text-rose-400" />
+                <span>{loginError}</span>
+              </motion.div>
+            )}
+
             <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => handleLogin()}
-              className="w-full py-4 bg-gradient-to-r from-[#B76E79] via-[#722F37] to-[#5A252C] text-white text-sm uppercase tracking-widest font-medium rounded-xl hover:shadow-lg hover:shadow-[#722F37]/30 transition-all"
+              whileHover={{ scale: isLoggingIn ? 1 : 1.02 }}
+              whileTap={{ scale: isLoggingIn ? 1 : 0.98 }}
+              onClick={() => !isLoggingIn && handleLogin()}
+              disabled={isLoggingIn}
+              className="w-full py-4 bg-gradient-to-r from-[#B76E79] via-[#722F37] to-[#5A252C] text-white text-xs sm:text-sm uppercase tracking-widest font-semibold rounded-xl hover:shadow-lg hover:shadow-[#722F37]/30 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70"
             >
-              Enter Sanctuary
+              {isLoggingIn ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>Verificando...</span>
+                </>
+              ) : (
+                <span>Ingresar al Santuario</span>
+              )}
             </motion.button>
-
-            {/* Quick 1-Tap Access for WhatsApp Scripts on Mobile */}
-            <div className="mt-4 pt-4 border-t border-white/10 flex flex-col gap-2.5 text-center">
-              <button
-                type="button"
-                onClick={() => handleLogin("iva2025")}
-                className="py-2.5 px-4 bg-white/10 hover:bg-white/20 text-[#E8B4B8] hover:text-white rounded-xl text-xs font-semibold transition-all border border-white/10 flex items-center justify-center gap-2"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                <span>Acceso Rápido con clave predeterminada (iva2025)</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab("scripts");
-                  handleLogin("iva2025");
-                }}
-                className="text-xs text-white/60 hover:text-white underline underline-offset-4 transition-colors font-medium flex items-center justify-center gap-1.5 mx-auto mt-1"
-              >
-                <MessageCircle className="w-3.5 h-3.5" />
-                <span>Abrir WhatsApp Concierge Directo →</span>
-              </button>
-            </div>
           </motion.div>
 
-          <p className="text-center text-white/30 text-xs mt-8 tracking-wide">Protected by The IVA Standard</p>
+          <p className="text-center text-white/40 text-xs mt-8 tracking-wide font-mono">
+            Acceso Privado y Cifrado • Atelier Bay Ridge
+          </p>
         </motion.div>
       </main>
     );
@@ -487,14 +533,18 @@ export default function AdminPage() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => {
+              onClick={async () => {
+                try {
+                  await fetch("/api/admin/logout", { method: "POST" });
+                } catch {}
                 try {
                   localStorage.removeItem("iva_admin_key");
                 } catch {}
                 setIsAuthenticated(false);
                 setAdminKey("");
               }}
-              className="p-2 sm:p-2.5 bg-white rounded-xl border border-[#EBE8E2] hover:shadow-md transition-all"
+              title="Cerrar Sesión Segura"
+              className="p-2 sm:p-2.5 bg-white rounded-xl border border-[#EBE8E2] hover:shadow-md transition-all cursor-pointer"
             >
               <LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-[#7A7A7A]" />
             </motion.button>

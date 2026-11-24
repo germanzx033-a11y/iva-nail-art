@@ -36,6 +36,7 @@ interface ClientData {
   name: string;
   phone: string;
   pin?: string;
+  token?: string;
   email?: string;
   preferredShape: "Almond" | "Coffin" | "Square" | "Oval" | "Stiletto";
   service: string;
@@ -94,13 +95,19 @@ export default function ClientPortalDashboard({ lang }: ClientPortalProps) {
         if (parsed && parsed.phone) {
           // Auto login with saved session
           setClient(parsed);
-          // Refresh data in background
-          fetch(`/api/clients/portal?phone=${parsed.phone}`)
+          // Refresh data in background with session authorization
+          fetch(`/api/clients/portal?phone=${parsed.phone}`, {
+            headers: {
+              ...(parsed.token ? { "x-client-session": parsed.token } : {}),
+              ...(parsed.pin ? { "x-client-pin": parsed.pin } : {}),
+            },
+          })
             .then((res) => res.json())
             .then((data) => {
               if (data.success && data.client) {
-                setClient(data.client);
-                localStorage.setItem("iva_client_portal_session", JSON.stringify(data.client));
+                const refreshed = { ...data.client, token: data.token || parsed.token };
+                setClient(refreshed);
+                localStorage.setItem("iva_client_portal_session", JSON.stringify(refreshed));
               }
             })
             .catch(() => {});
@@ -197,6 +204,7 @@ export default function ClientPortalDashboard({ lang }: ClientPortalProps) {
           action: "update_preferences",
           phone: client.phone,
           preferredShape: newShape,
+          token: client.token,
         }),
       });
       setSaveSuccessMsg(isEs ? "¡Forma preferida actualizada!" : "Preferred shape updated!");

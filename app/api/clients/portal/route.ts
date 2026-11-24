@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { kv } from "@vercel/kv";
+import { createHmac, timingSafeEqual } from "crypto";
+import { isAdminAuthorized, getAdminSecret } from "@/lib/auth";
 
 export interface PortalClient {
   id: string;
@@ -112,10 +114,44 @@ function getRefillWindow(lastApptStr: string) {
   };
 }
 
+/**
+ * Generate a cryptographically signed client session token
+ */
+export function generateClientSessionToken(phone10: string, pin: string): string {
+  const secret = getAdminSecret();
+  const timestamp = Math.floor(Date.now() / 1000);
+  const signature = createHmac("sha256", secret).update(`client:${phone10}:${pin}:${timestamp}`).digest("hex");
+  return `${timestamp}.${signature}`;
+}
+
+/**
+ * Verify a client session token against their normalized 10-digit phone and PIN
+ */
+export function verifyClientSessionToken(token: string | null | undefined, phone10: string, pin: string): boolean {
+  if (!token || typeof token !== "string" || !token.includes(".")) return false;
+  const [timestampStr, signature] = token.split(".");
+  const timestamp = parseInt(timestampStr, 10);
+  if (isNaN(timestamp)) return false;
+
+  // Max session age: 30 days
+  const now = Math.floor(Date.now() / 1000);
+  if (now - timestamp > 30 * 24 * 3600 || timestamp > now + 300) {
+    return false;
+  }
+
+  const secret = getAdminSecret();
+  const expectedSignature = createHmac("sha256", secret).update(`client:${phone10}:${pin}:${timestamp}`).digest("hex");
+
+  const expectedBuf = Buffer.from(expectedSignature);
+  const receivedBuf = Buffer.from(signature);
+  if (expectedBuf.length !== receivedBuf.length) return false;
+  return timingSafeEqual(expectedBuf, receivedBuf);
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { action, phone, pin, name, preferredShape, service, notes } = body;
+    const body = await request.json().catch(() => ({}));
+    const { action, phone, pin, token, name, preferredShape, service, notes } = body;
 
     const cleanPhone = (phone || "").replace(/\D/g, "");
     if (!cleanPhone || cleanPhone.length < 10) {
@@ -147,11 +183,13 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // If user passed a PIN, verify it (default to 1234 if not yet set)
-      const expectedPin = existing.pin || "1234";
-      if (pin && pin.trim() !== expectedPin) {
+      // STRICT PIN CHECK: PIN is strictly required and non-empty
+      const expectedPin = (existing.pin || "1234").trim();
+      const providedPin = (typeof pin === "string" ? pin.trim() : "");
+
+      if (!providedPin || providedPin !== expectedPin) {
         return NextResponse.json(
-          { error: "PIN incorrecto. (Si lo olvidaste, el PIN por defecto es 1234 o consulta a Ivannía)." },
+          { error: "PIN de seguridad incorrecto. (Si lo olvidaste, el PIN por defecto es 1234 o consulta a Ivannía)." },
           { status: 401 }
         );
       }
@@ -160,15 +198,18 @@ export async function POST(request: NextRequest) {
       const refillWindow = getRefillWindow(existing.lastApptDate);
       const stamps = ((existing.totalVisits - 1) % 6) + 1;
       const tier = existing.totalVisits >= 6 ? "Obsidian VIP" : existing.totalVisits >= 3 ? "Champagne Gold" : "Alabaster";
+      const sessionToken = generateClientSessionToken(normalizedTarget, expectedPin);
 
-      // Sanitize client payload so PIN is never sent over the wire
+      // Sanitize client payload so PIN is never exposed over the wire
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { pin: _pin, ...safeExisting } = existing;
 
       return NextResponse.json({
         success: true,
+        token: sessionToken,
         client: {
           ...safeExisting,
+          token: sessionToken,
           daysSinceLastAppt: days,
           stamps,
           tier,
@@ -185,12 +226,13 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      const newPin = (pin && typeof pin === "string" ? pin.trim() : "1234");
       const firstName = (name || "Clienta VIP").split(" ")[0].toUpperCase();
       const newClient: PortalClient = {
         id: `c_${Date.now()}`,
         name: (name || "Clienta VIP").trim(),
         phone: cleanPhone,
-        pin: (pin || "1234").trim(),
+        pin: newPin,
         preferredShape: preferredShape || "Almond",
         service: service || "Builder Gel Manicure (BIAB)",
         lastApptDate: new Date().toISOString().split("T")[0],
@@ -208,14 +250,17 @@ export async function POST(request: NextRequest) {
       }
 
       const refillWindow = getRefillWindow(newClient.lastApptDate);
+      const sessionToken = generateClientSessionToken(normalizedTarget, newPin);
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { pin: _newPin, ...safeNewClient } = newClient;
 
       return NextResponse.json({
         success: true,
+        token: sessionToken,
         client: {
           ...safeNewClient,
+          token: sessionToken,
           daysSinceLastAppt: 0,
           stamps: 1,
           tier: "Alabaster",
@@ -229,12 +274,28 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Clienta no encontrada" }, { status: 404 });
       }
 
+      // Verify caller authorization: session token, PIN, or admin
+      const expectedPin = (existing.pin || "1234").trim();
+      const providedPin = typeof pin === "string" ? pin.trim() : "";
+      const isAuthorizedClient =
+        (providedPin && providedPin === expectedPin) ||
+        verifyClientSessionToken(token, normalizedTarget, expectedPin) ||
+        verifyClientSessionToken(request.headers.get("x-client-session"), normalizedTarget, expectedPin) ||
+        isAdminAuthorized(request);
+
+      if (!isAuthorizedClient) {
+        return NextResponse.json(
+          { error: "No autorizado para modificar los datos de esta clienta. Se requiere PIN o sesión válida." },
+          { status: 401 }
+        );
+      }
+
       const updatedClient: PortalClient = {
         ...existing,
         preferredShape: preferredShape || existing.preferredShape,
         service: service || existing.service,
         notes: notes !== undefined ? notes : existing.notes,
-        pin: pin || existing.pin,
+        pin: (pin && typeof pin === "string" && pin.trim().length >= 4) ? pin.trim() : existing.pin,
       };
 
       clients[existingIndex] = updatedClient;
@@ -248,14 +309,17 @@ export async function POST(request: NextRequest) {
       const refillWindow = getRefillWindow(updatedClient.lastApptDate);
       const stamps = ((updatedClient.totalVisits - 1) % 6) + 1;
       const tier = updatedClient.totalVisits >= 6 ? "Obsidian VIP" : updatedClient.totalVisits >= 3 ? "Champagne Gold" : "Alabaster";
+      const sessionToken = generateClientSessionToken(normalizedTarget, updatedClient.pin);
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { pin: _upPin, ...safeUpdatedClient } = updatedClient;
 
       return NextResponse.json({
         success: true,
+        token: sessionToken,
         client: {
           ...safeUpdatedClient,
+          token: sessionToken,
           daysSinceLastAppt: days,
           stamps,
           tier,
@@ -289,7 +353,7 @@ export async function GET(request: NextRequest) {
     }
 
     if (!phone) {
-      // Return public list summary or 400
+      // Non-identifying count summary only
       return NextResponse.json({ count: clients.length });
     }
 
@@ -300,13 +364,32 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Clienta no encontrada" }, { status: 404 });
     }
 
+    // AUTHENTICATION CHECK: Caller must provide valid PIN or Session Token or be Admin
+    const expectedPin = (found.pin || "1234").trim();
+    const providedPin = (searchParams.get("pin") || request.headers.get("x-client-pin") || "").trim();
+    const sessionHeader = request.headers.get("x-client-session") || searchParams.get("token");
+
+    const isAuthorized =
+      (providedPin && providedPin === expectedPin) ||
+      verifyClientSessionToken(sessionHeader, clean, expectedPin) ||
+      isAdminAuthorized(request);
+
+    if (!isAuthorized) {
+      return NextResponse.json(
+        { error: "Autenticación requerida para acceder al perfil de la clienta (PIN o sesión requerida)." },
+        { status: 401 }
+      );
+    }
+
     const days = getDaysBetween(found.lastApptDate);
     const refillWindow = getRefillWindow(found.lastApptDate);
     const stamps = ((found.totalVisits - 1) % 6) + 1;
     const tier = found.totalVisits >= 6 ? "Obsidian VIP" : found.totalVisits >= 3 ? "Champagne Gold" : "Alabaster";
+    const sessionToken = generateClientSessionToken(clean, expectedPin);
 
     return NextResponse.json({
       success: true,
+      token: sessionToken,
       client: {
         id: found.id,
         name: found.name,
