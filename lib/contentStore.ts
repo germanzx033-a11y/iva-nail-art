@@ -494,6 +494,24 @@ export function sanitizeSiteContent(raw: unknown): SiteContent {
     bioEs: typeof rawAbout.bioEs === "string" && rawAbout.bioEs.trim() ? rawAbout.bioEs : base.aboutIva.bioEs,
   };
 
+  const rawServiceTexts = input.serviceTexts && typeof input.serviceTexts === "object"
+    ? { ...base.serviceTexts, ...(input.serviceTexts as Record<string, ServiceCustomText>) }
+    : { ...base.serviceTexts };
+
+  // Auto-migrate obsolete pedicure labels on hand photos if present from previous sessions
+  if (rawServiceTexts.p1 && (rawServiceTexts.p1.nameEs === "Pedicura Clásica" || !rawServiceTexts.p1.nameEs)) {
+    rawServiceTexts.p1 = { name: "Artisan Floral Manicure", nameEs: "Manicura Floral Artesanal" };
+  }
+  if (rawServiceTexts.p2 && (rawServiceTexts.p2.nameEs === "Pedicura en Gel" || rawServiceTexts.p2.nameEs === "Pedicura Gel" || !rawServiceTexts.p2.nameEs)) {
+    rawServiceTexts.p2 = { name: "Glazed Porcelain Gel", nameEs: "Manicura Gel Porcelana Glaseada" };
+  }
+  if (rawServiceTexts.p3 && (rawServiceTexts.p3.nameEs === "Pedicura Builder Gel" || !rawServiceTexts.p3.nameEs)) {
+    rawServiceTexts.p3 = { name: "Bridal Opal Crystal Mani", nameEs: "Manicura Bridal Ópalo" };
+  }
+  if (rawServiceTexts.p4 && (rawServiceTexts.p4.nameEs === "Pedicura Spa de Lujo" || !rawServiceTexts.p4.nameEs)) {
+    rawServiceTexts.p4 = { name: "Baby Boomer Ombré Nails", nameEs: "Set Baby Boomer Ombré" };
+  }
+
   return {
     ...base,
     businessName: typeof input.businessName === "string" && input.businessName.trim()
@@ -529,9 +547,7 @@ export function sanitizeSiteContent(raw: unknown): SiteContent {
     serviceImages: input.serviceImages && typeof input.serviceImages === "object"
       ? { ...base.serviceImages, ...(input.serviceImages as Record<string, string>) }
       : base.serviceImages,
-    serviceTexts: input.serviceTexts && typeof input.serviceTexts === "object"
-      ? { ...base.serviceTexts, ...(input.serviceTexts as Record<string, ServiceCustomText>) }
-      : base.serviceTexts,
+    serviceTexts: rawServiceTexts,
     galleryItems: Array.isArray(input.galleryItems) && input.galleryItems.length > 0
       ? (input.galleryItems as GalleryItemContent[])
       : base.galleryItems,

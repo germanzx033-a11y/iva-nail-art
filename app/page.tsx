@@ -145,11 +145,11 @@ const SERVICES: Service[] = [
   { id: "m3", name: "Builder Gel Manicure", nameEs: "Manicura Builder Gel", category: "manicure" },
   { id: "m4", name: "Structured Gel Manicure", nameEs: "Manicura Gel Estructurado", category: "manicure" },
   { id: "m5", name: "Gel-X Extensions", nameEs: "Extensiones Gel-X", category: "manicure" },
-  // Pedicure
-  { id: "p1", name: "Classic Pedicure", nameEs: "Pedicura Clásica", category: "pedicure" },
-  { id: "p2", name: "Gel Pedicure", nameEs: "Pedicura Gel", category: "pedicure" },
-  { id: "p3", name: "Builder Gel Pedicure", nameEs: "Pedicura Builder Gel", category: "pedicure" },
-  { id: "p4", name: "Luxury Spa Pedicure", nameEs: "Pedicura Spa de Lujo", category: "pedicure" },
+  // Manicuras Especiales y Diseños de Manos (antes p1-p4)
+  { id: "p1", name: "Artisan Floral Manicure", nameEs: "Manicura Floral Artesanal", category: "pedicure" },
+  { id: "p2", name: "Glazed Porcelain Gel", nameEs: "Manicura Gel Porcelana", category: "pedicure" },
+  { id: "p3", name: "Bridal Opal Crystal Mani", nameEs: "Manicura Bridal Ópalo", category: "pedicure" },
+  { id: "p4", name: "Baby Boomer Ombré Nails", nameEs: "Set Baby Boomer Ombré", category: "pedicure" },
   // Acrylic
   { id: "a1", name: "Full Set Acrylic", nameEs: "Set Completo Acrílico", category: "acrylic" },
   { id: "a2", name: "Acrylic Fill", nameEs: "Relleno Acrílico", category: "acrylic" },
