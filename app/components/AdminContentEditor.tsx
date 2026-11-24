@@ -22,11 +22,14 @@ import {
   Plus,
   Eye,
   Grid,
+  Search,
 } from "lucide-react";
 import {
   SiteContent,
   DEFAULT_SITE_CONTENT,
   DEFAULT_SERVICE_IMAGES,
+  DEFAULT_SERVICE_TEXTS,
+  ServiceCustomText,
   getSavedSiteContent,
   saveSiteContent,
   resetSiteContent,
@@ -54,27 +57,27 @@ const PRESET_STUDIO_PHOTOS = [
   { label: "Liquid Gold French Smile", src: "/gallery/0252121b-f561-4b19-bf43-11cdd5a1f36a.jpg", cat: "editorial" },
 ];
 
-const SERVICE_TITLES: Record<string, string> = {
-  a1: "Set Completo de Acrílico (Esculpido)",
-  a2: "Relleno de Acrílico & Mantenimiento",
-  a3: "Remoción de Acrílico Seguro",
-  m1: "Manicura Clásica en Seco",
-  m2: "Manicura en Gel de Larga Duración",
-  m3: "Manicura Rusa Signature",
-  m4: "Gel Estructurado de Alta Gama",
-  m5: "Extensiones Esculpidas",
-  p1: "Pedicura Clásica",
-  p2: "Pedicura en Gel",
-  p3: "Pedicura Builder Gel",
-  p4: "Pedicura Spa de Lujo",
-  n1: "Nail Art Nivel 1 (Minimalista)",
-  n2: "Nail Art Nivel 2 (Pintado a Mano)",
-  n3: "Nail Art Nivel 3 (Haute Couture 3D)",
-  n4: "Efecto Cromo / Cat-Eye Velvet",
-  n5: "Líneas Francesas & Perlas",
-  e1: "Retiro Seguro con Fresas",
-  e2: "Reparación de Uña Individual",
-  e3: "Remojo y Nutrición de Queratina",
+const SERVICE_META: Record<string, { cat: string; catLabel: string }> = {
+  a1: { cat: "acrylic", catLabel: "Acrílico Esculpido" },
+  a2: { cat: "acrylic", catLabel: "Acrílico Mantenimiento" },
+  a3: { cat: "acrylic", catLabel: "Acrílico Remoción" },
+  m1: { cat: "manicure", catLabel: "Manicura en Seco" },
+  m2: { cat: "manicure", catLabel: "Manicura en Gel" },
+  m3: { cat: "manicure", catLabel: "Manicura Rusa" },
+  m4: { cat: "manicure", catLabel: "Gel Estructurado" },
+  m5: { cat: "manicure", catLabel: "Extensiones Soft Gel" },
+  p1: { cat: "pedicure", catLabel: "Pedicura / Diseños" },
+  p2: { cat: "pedicure", catLabel: "Pedicura / Diseños" },
+  p3: { cat: "pedicure", catLabel: "Pedicura / Diseños" },
+  p4: { cat: "pedicure", catLabel: "Pedicura / Diseños" },
+  n1: { cat: "nailart", catLabel: "Nail Art Nivel 1" },
+  n2: { cat: "nailart", catLabel: "Nail Art Nivel 2" },
+  n3: { cat: "nailart", catLabel: "Nail Art Nivel 3" },
+  n4: { cat: "nailart", catLabel: "Nail Art Efectos" },
+  n5: { cat: "nailart", catLabel: "Nail Art Francesa" },
+  e1: { cat: "extras", catLabel: "Servicio Extra" },
+  e2: { cat: "extras", catLabel: "Servicio Extra" },
+  e3: { cat: "extras", catLabel: "Servicio Extra" },
 };
 
 export default function AdminContentEditor() {
@@ -84,6 +87,10 @@ export default function AdminContentEditor() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadToast, setUploadToast] = useState<string | null>(null);
 
+  // Filter for services tab
+  const [serviceCategoryFilter, setServiceCategoryFilter] = useState<string>("all");
+  const [serviceSearch, setServiceSearch] = useState<string>("");
+
   // Photo picker state
   const [pickerTarget, setPickerTarget] = useState<{
     type: "hero" | "gallery" | "service";
@@ -92,6 +99,22 @@ export default function AdminContentEditor() {
   const [pickerCategory, setPickerCategory] = useState<"all" | "studio" | "uploaded" | "editorial">("all");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleServiceTextChange = (svcKey: string, langKey: "name" | "nameEs", val: string) => {
+    setContent((prev) => {
+      const existing = prev.serviceTexts?.[svcKey] || DEFAULT_SERVICE_TEXTS[svcKey] || { name: "", nameEs: "" };
+      return {
+        ...prev,
+        serviceTexts: {
+          ...(prev.serviceTexts || {}),
+          [svcKey]: {
+            ...existing,
+            [langKey]: val,
+          },
+        },
+      };
+    });
+  };
 
   useEffect(() => {
     setContent(getSavedSiteContent());
@@ -340,7 +363,7 @@ export default function AdminContentEditor() {
       <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
         {[
           { id: "hero", label: "Fotos de Portada (3 Escenas)", icon: ImageIcon },
-          { id: "serviceCards", label: "Fotos de Servicios", icon: Layers },
+          { id: "serviceCards", label: "Fotos y Nombres de Servicios", icon: Layers },
           { id: "gallery", label: "Galería & Lookbook", icon: Grid },
           { id: "texts", label: "Textos & Biografía", icon: Type },
           { id: "contact", label: "Teléfonos & Redes", icon: Phone },
@@ -460,53 +483,150 @@ export default function AdminContentEditor() {
       )}
 
       {/* ========================================================================= */}
-      {/* TAB 2: FOTOS DE CADA SERVICIO */}
+      {/* TAB 2: FOTOS Y NOMBRES DE CADA SERVICIO */}
       {/* ========================================================================= */}
       {activeTab === "serviceCards" && (
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-3xl border border-[#EBE8E2] shadow-sm space-y-4">
-            <div>
-              <h3 className="font-serif text-lg text-stone-900">Fotos de Cada Servicio en la Portada</h3>
-              <p className="text-xs text-stone-500 mt-1">
-                Personaliza la foto que representa a cada servicio (Acrílico Esculpido, Manicura Rusa, Pedicura Spa, etc.).
-              </p>
+          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#EBE8E2] shadow-sm space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-stone-200 pb-5">
+              <div>
+                <h3 className="font-serif text-xl text-stone-900">Fotos y Nombres de Cada Servicio</h3>
+                <p className="text-xs sm:text-sm text-stone-500 mt-1 max-w-xl">
+                  Cambia la foto y edita el nombre en español e inglés de cualquier servicio. Si una imagen muestra manos en vez de pies (como en las tarjetas de pedicura), puedes escribir el nombre correcto aquí mismo.
+                </p>
+              </div>
+
+              {/* Quick Search */}
+              <div className="relative w-full md:w-72 shrink-0">
+                <Search className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Buscar servicio o ID (ej: p1)..."
+                  value={serviceSearch}
+                  onChange={(e) => setServiceSearch(e.target.value)}
+                  className="w-full text-xs pl-9 pr-3 py-2.5 bg-stone-50 rounded-xl border border-stone-300 text-stone-900 focus:outline-none focus:border-[#722F37] focus:ring-1 focus:ring-[#722F37]"
+                />
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {Object.entries(SERVICE_TITLES).map(([svcKey, title]) => {
-                const currentImg =
-                  content.serviceImages?.[svcKey] ||
-                  DEFAULT_SERVICE_IMAGES[svcKey] ||
-                  "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg";
+            {/* Category Filter Pills */}
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+              {[
+                { id: "all", label: "Todos (20)" },
+                { id: "manicure", label: "Manicura (5)" },
+                { id: "acrylic", label: "Acrílico (3)" },
+                { id: "pedicure", label: "Pedicura / Diseños (4)" },
+                { id: "nailart", label: "Nail Art (5)" },
+                { id: "extras", label: "Extras (3)" },
+              ].map((f) => (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => setServiceCategoryFilter(f.id)}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer shrink-0 ${
+                    serviceCategoryFilter === f.id
+                      ? "bg-[#722F37] text-white shadow-sm"
+                      : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
 
-                return (
-                  <div key={svcKey} className="p-3 bg-stone-50 rounded-2xl border border-stone-200 flex items-center gap-3">
-                    <div className="relative w-16 h-20 rounded-xl overflow-hidden bg-stone-900 shrink-0 border border-stone-300">
-                      <img
-                        src={currentImg}
-                        alt={title}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = "/trabajo1.jpg";
-                        }}
-                      />
-                    </div>
+            {/* Service Cards Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+              {Object.keys(DEFAULT_SERVICE_TEXTS)
+                .filter((svcKey) => {
+                  const meta = SERVICE_META[svcKey];
+                  const texts = content.serviceTexts?.[svcKey] || DEFAULT_SERVICE_TEXTS[svcKey];
+                  if (serviceCategoryFilter !== "all" && meta?.cat !== serviceCategoryFilter) {
+                    return false;
+                  }
+                  if (serviceSearch.trim()) {
+                    const q = serviceSearch.toLowerCase().trim();
+                    const matchKey = svcKey.toLowerCase().includes(q);
+                    const matchEs = (texts?.nameEs || "").toLowerCase().includes(q);
+                    const matchEn = (texts?.name || "").toLowerCase().includes(q);
+                    return matchKey || matchEs || matchEn;
+                  }
+                  return true;
+                })
+                .map((svcKey) => {
+                  const meta = SERVICE_META[svcKey] || { cat: "general", catLabel: "Servicio" };
+                  const texts = content.serviceTexts?.[svcKey] || DEFAULT_SERVICE_TEXTS[svcKey] || { name: "", nameEs: "" };
+                  const currentImg =
+                    content.serviceImages?.[svcKey] ||
+                    DEFAULT_SERVICE_IMAGES[svcKey] ||
+                    "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg";
 
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-xs font-semibold text-stone-900 truncate">{title}</h4>
-                      <p className="text-[10px] text-stone-500 mb-2 truncate">ID: {svcKey}</p>
-                      <button
-                        type="button"
-                        onClick={() => setPickerTarget({ type: "service", indexOrKey: svcKey })}
-                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#722F37] hover:underline cursor-pointer"
-                      >
-                        <ImageIcon className="w-3 h-3" />
-                        <span>Cambiar Foto</span>
-                      </button>
+                  return (
+                    <div
+                      key={svcKey}
+                      className="p-4 sm:p-5 bg-stone-50/80 rounded-2xl border border-stone-200/90 hover:border-stone-300 transition-all flex flex-col sm:flex-row gap-4 items-start shadow-xs"
+                    >
+                      {/* Photo Thumbnail + Change Button */}
+                      <div className="flex sm:flex-col items-center gap-3 shrink-0 w-full sm:w-auto justify-between sm:justify-start">
+                        <div className="relative w-20 h-24 sm:w-24 sm:h-28 rounded-xl overflow-hidden bg-stone-900 border border-stone-300 shadow-sm shrink-0">
+                          <img
+                            src={currentImg}
+                            alt={texts.nameEs || svcKey}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "/trabajo1.jpg";
+                            }}
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setPickerTarget({ type: "service", indexOrKey: svcKey })}
+                          className="px-3 py-1.5 rounded-lg bg-white border border-stone-300 hover:border-[#722F37] text-[11px] font-semibold text-[#722F37] hover:bg-stone-50 transition-all shadow-xs flex items-center gap-1.5 cursor-pointer shrink-0"
+                        >
+                          <ImageIcon className="w-3.5 h-3.5" />
+                          <span>Cambiar Foto</span>
+                        </button>
+                      </div>
+
+                      {/* Manual Editable Fields */}
+                      <div className="flex-1 w-full space-y-3">
+                        <div className="flex items-center justify-between gap-2 border-b border-stone-200/60 pb-1.5">
+                          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-stone-600 bg-stone-200/70 px-2 py-0.5 rounded">
+                            ID: {svcKey}
+                          </span>
+                          <span className="text-[10px] uppercase tracking-wider font-semibold text-[#722F37]">
+                            {meta.catLabel}
+                          </span>
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-semibold text-stone-800 mb-1">
+                            Nombre en Español (se ve en la página)
+                          </label>
+                          <input
+                            type="text"
+                            value={texts.nameEs || ""}
+                            onChange={(e) => handleServiceTextChange(svcKey, "nameEs", e.target.value)}
+                            placeholder="Ej: Manicura Floral Artesanal"
+                            className="w-full text-xs sm:text-sm px-3 py-2 bg-white rounded-lg border border-stone-300 text-stone-900 font-medium focus:outline-none focus:border-[#722F37] focus:ring-1 focus:ring-[#722F37]"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-semibold text-stone-600 mb-1">
+                            Nombre en Inglés
+                          </label>
+                          <input
+                            type="text"
+                            value={texts.name || ""}
+                            onChange={(e) => handleServiceTextChange(svcKey, "name", e.target.value)}
+                            placeholder="E.g. Artisan Floral Manicure"
+                            className="w-full text-xs sm:text-sm px-3 py-2 bg-white rounded-lg border border-stone-300 text-stone-900 font-medium focus:outline-none focus:border-[#722F37] focus:ring-1 focus:ring-[#722F37]"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </div>
         </div>

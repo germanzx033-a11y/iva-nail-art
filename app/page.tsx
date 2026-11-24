@@ -505,6 +505,11 @@ export default function Home() {
                 SERVICE_EXACT_IMAGE_MAP[service.id] ||
                 "/gallery/c61db860-4810-473d-9af3-90ea78e17226.jpg";
 
+              const customText = siteContent?.serviceTexts?.[service.id];
+              const serviceDisplayName = lang === "en"
+                ? (customText?.name || service.name)
+                : (customText?.nameEs || service.nameEs);
+
               return (
                 <article
                   key={service.id}
@@ -514,7 +519,7 @@ export default function Home() {
                   <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#140B0A]">
                     <Image
                       src={serviceImage}
-                      alt={lang === "en" ? service.name : service.nameEs}
+                      alt={serviceDisplayName}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -528,7 +533,7 @@ export default function Home() {
                   <div className="flex flex-1 flex-col gap-5 p-6">
                     <div>
                       <h3 className="font-serif text-2xl leading-tight text-[#F4EBE1]">
-                        {lang === "en" ? service.name : service.nameEs}
+                        {serviceDisplayName}
                       </h3>
                       <p className="mt-2 text-sm text-[#F4EBE1]/70">
                         {lang === "en" ? "Personal quote by message" : "Cotización personalizada por mensaje"}
@@ -547,9 +552,9 @@ export default function Home() {
                       })()}
                     </div>
                     <button
-                      onClick={() => openBooking(lang === "en" ? service.name : service.nameEs)}
+                      onClick={() => openBooking(serviceDisplayName)}
                       className="mt-auto flex w-full items-center justify-center gap-3 rounded-full border border-[#E8C9A8]/60 px-6 py-4 text-sm font-semibold tracking-wide text-[#E8C9A8] transition-colors hover:bg-[#E8C9A8] hover:text-[#0E0706] cursor-pointer"
-                      aria-label={`${lang === "en" ? "Book appointment for" : "Reservar cita para"} ${lang === "en" ? service.name : service.nameEs}`}
+                      aria-label={`${lang === "en" ? "Book appointment for" : "Reservar cita para"} ${serviceDisplayName}`}
                     >
                       <Sparkles className="h-4 w-4" />
                       {lang === "en" ? "Book & Get Quote" : "Reservar y Cotizar"}

@@ -33,6 +33,11 @@ export interface GalleryItemContent {
   category: string;
 }
 
+export interface ServiceCustomText {
+  name: string;
+  nameEs: string;
+}
+
 export interface SiteContent {
   businessName: string;
   phone: string;
@@ -53,6 +58,7 @@ export interface SiteContent {
   };
   services: ServiceContentItem[];
   serviceImages: Record<string, string>;
+  serviceTexts: Record<string, ServiceCustomText>;
   galleryItems: GalleryItemContent[];
   uploadedImages: UploadedImageItem[];
 }
@@ -78,6 +84,29 @@ export const DEFAULT_SERVICE_IMAGES: Record<string, string> = {
   e1: "/gallery/5a9cfad8-1d83-41a9-adbc-5e4b6b5895e1.jpg",
   e2: "/gallery/c2bba6fb-d001-4658-bda3-2c78d8d59011.jpg",
   e3: "/gallery/fbec4b74-7503-47de-9cd8-d78bc318cc18.jpg",
+};
+
+export const DEFAULT_SERVICE_TEXTS: Record<string, ServiceCustomText> = {
+  m1: { name: "Classic Dry Manicure", nameEs: "Manicura Clásica en Seco" },
+  m2: { name: "Long-Wear Gel Manicure", nameEs: "Manicura en Gel de Larga Duración" },
+  m3: { name: "The Signature Russian Dry Mani", nameEs: "Manicura Rusa Signature" },
+  m4: { name: "Structured Builder Gel", nameEs: "Gel Estructurado de Alta Gama" },
+  m5: { name: "Sculpted Extensions", nameEs: "Extensiones Esculpidas" },
+  p1: { name: "Artisan Floral Manicure", nameEs: "Manicura Floral Artesanal" },
+  p2: { name: "Glazed Porcelain Gel", nameEs: "Manicura Gel Porcelana Glaseada" },
+  p3: { name: "Bridal Opal Crystal Mani", nameEs: "Manicura Bridal Ópalo" },
+  p4: { name: "Baby Boomer Ombré Nails", nameEs: "Set Baby Boomer Ombré" },
+  a1: { name: "Sculpted Acrylic Full Set", nameEs: "Set Completo de Acrílico (Esculpido)" },
+  a2: { name: "Acrylic Refill & Apex Balance", nameEs: "Relleno de Acrílico & Mantenimiento" },
+  a3: { name: "Safe Acrylic Removal", nameEs: "Remoción de Acrílico Seguro" },
+  n1: { name: "Minimalist Nail Art (Tier 1)", nameEs: "Nail Art Nivel 1 (Minimalista)" },
+  n2: { name: "Artisan Hand-Painted (Tier 2)", nameEs: "Nail Art Nivel 2 (Pintado a Mano)" },
+  n3: { name: "Haute Couture 3D (Tier 3)", nameEs: "Nail Art Nivel 3 (Haute Couture 3D)" },
+  n4: { name: "Velvet Cat Eye / Chrome", nameEs: "Efecto Cromo / Cat-Eye Velvet" },
+  n5: { name: "French Tips & Micro-Pearls", nameEs: "Líneas Francesas & Perlas" },
+  e1: { name: "Safe E-File Removal", nameEs: "Retiro Seguro con Fresas" },
+  e2: { name: "Single Nail Repair", nameEs: "Reparación de Uña Individual" },
+  e3: { name: "Keratin Soak & Nourish", nameEs: "Remojo y Nutrición de Queratina" },
 };
 
 export const DEFAULT_GALLERY_ITEMS: GalleryItemContent[] = [
@@ -174,6 +203,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     },
   ],
   serviceImages: DEFAULT_SERVICE_IMAGES,
+  serviceTexts: DEFAULT_SERVICE_TEXTS,
   galleryItems: DEFAULT_GALLERY_ITEMS,
   uploadedImages: [],
 };
@@ -196,6 +226,7 @@ export function getSavedSiteContent(): SiteContent {
       aboutIva: { ...DEFAULT_SITE_CONTENT.aboutIva, ...(parsed.aboutIva || {}) },
       services: Array.isArray(parsed.services) && parsed.services.length ? parsed.services : DEFAULT_SITE_CONTENT.services,
       serviceImages: { ...DEFAULT_SITE_CONTENT.serviceImages, ...(parsed.serviceImages || {}) },
+      serviceTexts: { ...DEFAULT_SERVICE_TEXTS, ...(parsed.serviceTexts || {}) },
       galleryItems: Array.isArray(parsed.galleryItems) && parsed.galleryItems.length ? parsed.galleryItems : DEFAULT_SITE_CONTENT.galleryItems,
       uploadedImages: Array.isArray(parsed.uploadedImages) ? parsed.uploadedImages : [],
     };
