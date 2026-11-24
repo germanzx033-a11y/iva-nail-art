@@ -135,8 +135,10 @@ export default function AdminBeforeAfterEditor() {
       const formData = new FormData();
       formData.append("file", file);
 
+      const token = typeof window !== "undefined" ? localStorage.getItem("iva_admin_key") : null;
       const res = await fetch("/api/admin/upload", {
         method: "POST",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
         body: formData,
       });
 
@@ -214,9 +216,13 @@ export default function AdminBeforeAfterEditor() {
 
       // 2. Sync to server fallback endpoint
       try {
+        const token = typeof window !== "undefined" ? localStorage.getItem("iva_admin_key") : null;
         await fetch("/api/admin/content", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
           body: JSON.stringify(updatedSite),
         });
       } catch (apiErr) {

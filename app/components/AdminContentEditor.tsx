@@ -116,9 +116,13 @@ export default function AdminContentEditor() {
   const handleSave = async () => {
     saveSiteContent(content);
     try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("iva_admin_key") : null;
       await fetch("/api/admin/content", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify(content),
       });
     } catch (e) {
@@ -187,9 +191,13 @@ export default function AdminContentEditor() {
       const compressedDataUrl = await compressImage(file);
 
       // 2. Upload to server
+      const token = typeof window !== "undefined" ? localStorage.getItem("iva_admin_key") : null;
       const res = await fetch("/api/admin/upload", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify({
           dataUrl: compressedDataUrl,
           name: file.name,
@@ -438,7 +446,7 @@ export default function AdminContentEditor() {
                           scenes[idx].es = [e.target.value, scene.es[1]];
                           setContent({ ...content, heroScenes: scenes });
                         }}
-                        className="w-full p-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-900 font-medium focus:bg-white focus:border-[#722F37]"
+                        className="w-full p-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-900 placeholder:text-stone-500 font-medium focus:bg-white focus:border-[#722F37]"
                         placeholder="Uñas acrílicas"
                       />
                       <input
@@ -449,7 +457,7 @@ export default function AdminContentEditor() {
                           scenes[idx].es = [scene.es[0], e.target.value];
                           setContent({ ...content, heroScenes: scenes });
                         }}
-                        className="w-full p-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-900 font-medium focus:bg-white focus:border-[#722F37]"
+                        className="w-full p-2.5 bg-stone-50 border border-stone-300 rounded-xl text-stone-900 placeholder:text-stone-500 font-medium focus:bg-white focus:border-[#722F37]"
                         placeholder="en Bay Ridge"
                       />
                     </div>
@@ -600,7 +608,7 @@ export default function AdminContentEditor() {
                             value={texts.nameEs || ""}
                             onChange={(e) => handleServiceTextChange(svcKey, "nameEs", e.target.value)}
                             placeholder="Ej: Manicura Floral Artesanal"
-                            className="w-full text-xs sm:text-sm px-3 py-2 bg-white rounded-lg border border-stone-300 text-stone-900 font-medium focus:outline-none focus:border-[#722F37] focus:ring-1 focus:ring-[#722F37]"
+                            className="w-full text-xs sm:text-sm px-3 py-2 bg-white rounded-lg border border-stone-300 text-stone-900 placeholder:text-stone-500 font-medium focus:outline-none focus:border-[#722F37] focus:ring-1 focus:ring-[#722F37]"
                           />
                         </div>
 
@@ -613,7 +621,7 @@ export default function AdminContentEditor() {
                             value={texts.name || ""}
                             onChange={(e) => handleServiceTextChange(svcKey, "name", e.target.value)}
                             placeholder="E.g. Artisan Floral Manicure"
-                            className="w-full text-xs sm:text-sm px-3 py-2 bg-white rounded-lg border border-stone-300 text-stone-900 font-medium focus:outline-none focus:border-[#722F37] focus:ring-1 focus:ring-[#722F37]"
+                            className="w-full text-xs sm:text-sm px-3 py-2 bg-white rounded-lg border border-stone-300 text-stone-900 placeholder:text-stone-500 font-medium focus:outline-none focus:border-[#722F37] focus:ring-1 focus:ring-[#722F37]"
                           />
                         </div>
                       </div>
