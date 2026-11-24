@@ -38,6 +38,128 @@ export interface ServiceCustomText {
   nameEs: string;
 }
 
+export type DayStatus = "Cupos Libres" | "Solo 1 Cupo" | "Lleno" | "Cerrado";
+
+export interface DayAvailability {
+  day: "Lunes" | "Martes" | "Miércoles" | "Jueves" | "Viernes" | "Sábado" | "Domingo";
+  key: "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun";
+  status: DayStatus;
+}
+
+export interface WeeklyAvailabilityConfig {
+  days: DayAvailability[];
+  customUrgencyMessageEn?: string;
+  customUrgencyMessageEs?: string;
+}
+
+export interface UrgencyBannerResult {
+  availableSlotsCount: number;
+  bannerText: string;
+  isUrgent: boolean;
+  custom?: boolean;
+  allBooked?: boolean;
+}
+
+/**
+ * Calculates Weekly Availability Urgency Banner based on configured slots and studio rules.
+ */
+export function calculateUrgencyBanner(
+  weeklyConfig?: WeeklyAvailabilityConfig | null,
+  lang: "es" | "en" = "es"
+): UrgencyBannerResult {
+  if (!weeklyConfig || !Array.isArray(weeklyConfig.days)) {
+    return {
+      availableSlotsCount: 0,
+      bannerText: lang === "es" ? "Consulta disponibilidad por WhatsApp" : "Inquire availability on WhatsApp",
+      isUrgent: false,
+    };
+  }
+
+  // Count days with available spots
+  const availableDays = weeklyConfig.days.filter(
+    (d) => d.status === "Cupos Libres" || d.status === "Solo 1 Cupo"
+  );
+  const singleCupoDays = weeklyConfig.days.filter((d) => d.status === "Solo 1 Cupo");
+  const count = availableDays.length;
+
+  // Custom overrides
+  if (lang === "es" && weeklyConfig.customUrgencyMessageEs && weeklyConfig.customUrgencyMessageEs.trim()) {
+    return {
+      availableSlotsCount: count,
+      bannerText: weeklyConfig.customUrgencyMessageEs.trim(),
+      isUrgent: true,
+      custom: true,
+    };
+  }
+  if (lang === "en" && weeklyConfig.customUrgencyMessageEn && weeklyConfig.customUrgencyMessageEn.trim()) {
+    return {
+      availableSlotsCount: count,
+      bannerText: weeklyConfig.customUrgencyMessageEn.trim(),
+      isUrgent: true,
+      custom: true,
+    };
+  }
+
+  if (count === 0) {
+    return {
+      availableSlotsCount: 0,
+      bannerText:
+        lang === "es"
+          ? "✨ Agenda completa para esta semana en Bay Ridge — Reserva anticipada disponible"
+          : "✨ Fully booked this week in Bay Ridge — Advance booking available",
+      isUrgent: false,
+      allBooked: true,
+    };
+  }
+
+  if (count <= 2 || singleCupoDays.length > 0) {
+    return {
+      availableSlotsCount: count,
+      bannerText:
+        lang === "es"
+          ? `✨ Solo ${count} ${count === 1 ? "cupo disponible" : "cupos disponibles"} para esta semana en Bay Ridge`
+          : `✨ Only ${count} ${count === 1 ? "slot available" : "slots available"} this week in Bay Ridge`,
+      isUrgent: true,
+    };
+  }
+
+  return {
+    availableSlotsCount: count,
+    bannerText:
+      lang === "es"
+        ? `✨ Agenda abierta esta semana en Bay Ridge — Reserva tu momento exclusivo`
+        : `✨ Booking open this week in Bay Ridge — Reserve your bespoke session`,
+    isUrgent: false,
+  };
+}
+
+export interface AnnouncementBarConfig {
+  enabled: boolean;
+  textEn: string;
+  textEs: string;
+  badgeEn?: string;
+  badgeEs?: string;
+  linkUrl?: string;
+}
+
+export interface BeforeAfterConfig {
+  enabled: boolean;
+  beforeImage: string;
+  afterImage: string;
+  titleEn: string;
+  titleEs: string;
+  subtitleEn?: string;
+  subtitleEs?: string;
+}
+
+export interface StudioBackupPayload {
+  version: 1;
+  app: "iva-nail-art";
+  exportedAt: string;
+  siteContent: SiteContent;
+  crmClients?: unknown[];
+}
+
 export interface SiteContent {
   businessName: string;
   phone: string;
@@ -61,6 +183,9 @@ export interface SiteContent {
   serviceTexts: Record<string, ServiceCustomText>;
   galleryItems: GalleryItemContent[];
   uploadedImages: UploadedImageItem[];
+  weeklyAvailability: WeeklyAvailabilityConfig;
+  announcementBar: AnnouncementBarConfig;
+  beforeAfter: BeforeAfterConfig;
 }
 
 export const DEFAULT_SERVICE_IMAGES: Record<string, string> = {
@@ -123,6 +248,39 @@ export const DEFAULT_GALLERY_ITEMS: GalleryItemContent[] = [
   { id: "img-11", src: "/trabajo2.jpg", alt: "Hand-Painted Nail Art Masterpiece", altEs: "Obra de Arte Pintada a Mano", category: "french", styleTag: "Bespoke Art" },
   { id: "img-12", src: "/trabajo3.jpg", alt: "Holiday Red & Gold Ribbon Velvet Nails", altEs: "Uñas de Terciopelo con Lazos Rojos y Dorados", category: "3dart", styleTag: "Holiday Velvet" },
 ];
+
+export const DEFAULT_WEEKLY_AVAILABILITY: WeeklyAvailabilityConfig = {
+  days: [
+    { day: "Lunes", key: "mon", status: "Cerrado" },
+    { day: "Martes", key: "tue", status: "Cupos Libres" },
+    { day: "Miércoles", key: "wed", status: "Cupos Libres" },
+    { day: "Jueves", key: "thu", status: "Cupos Libres" },
+    { day: "Viernes", key: "fri", status: "Solo 1 Cupo" },
+    { day: "Sábado", key: "sat", status: "Solo 1 Cupo" },
+    { day: "Domingo", key: "sun", status: "Cerrado" },
+  ],
+  customUrgencyMessageEn: "✨ Only 2 VIP slots remaining this week in Bay Ridge",
+  customUrgencyMessageEs: "✨ Solo 2 cupos disponibles para esta semana en Bay Ridge",
+};
+
+export const DEFAULT_ANNOUNCEMENT_BAR: AnnouncementBarConfig = {
+  enabled: true,
+  textEn: "Holiday & VIP Booking Calendar is now open — Reserve your bespoke set in advance.",
+  textEs: "Agenda Navideña & Temporada VIP abierta — Reserva tu set exclusivo con anticipación.",
+  badgeEn: "VIP ACCESS",
+  badgeEs: "ACCESO VIP",
+  linkUrl: "/#booking",
+};
+
+export const DEFAULT_BEFORE_AFTER: BeforeAfterConfig = {
+  enabled: true,
+  beforeImage: "/gallery/afb39b9f-63de-4281-9d62-57670fc5f3b5.jpg",
+  afterImage: "/trabajo1.jpg",
+  titleEn: "Signature Transformation",
+  titleEs: "Transformación Signature",
+  subtitleEn: "Russian dry manicure prep & sculpted acrylic apex architecture.",
+  subtitleEs: "Manicura rusa profunda y arquitectura escultural en acrílico.",
+};
 
 export const DEFAULT_SITE_CONTENT: SiteContent = {
   businessName: "IVA Nail Art NY",
@@ -206,32 +364,198 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   serviceTexts: DEFAULT_SERVICE_TEXTS,
   galleryItems: DEFAULT_GALLERY_ITEMS,
   uploadedImages: [],
+  weeklyAvailability: DEFAULT_WEEKLY_AVAILABILITY,
+  announcementBar: DEFAULT_ANNOUNCEMENT_BAR,
+  beforeAfter: DEFAULT_BEFORE_AFTER,
 };
 
 export const SITE_CONTENT_STORAGE_KEY = "iva_site_content_custom_v1";
 
 /**
+ * Deep-clones the studio default content so that returned objects never share
+ * mutable object or array references with singleton defaults in process memory.
+ */
+function cloneDefaultSiteContent(): SiteContent {
+  if (typeof structuredClone === "function") {
+    return structuredClone(DEFAULT_SITE_CONTENT);
+  }
+  return JSON.parse(JSON.stringify(DEFAULT_SITE_CONTENT));
+}
+
+/**
+ * Safely sanitizes and validates arbitrary or restored content against the SiteContent schema.
+ * Replaces missing or corrupted fields with graceful defaults.
+ */
+export function sanitizeSiteContent(raw: unknown): SiteContent {
+  const base = cloneDefaultSiteContent();
+  if (!raw || typeof raw !== "object") {
+    return base;
+  }
+  const input = raw as Partial<SiteContent> & Record<string, unknown>;
+
+  // Validate weekly availability
+  const defaultDays = base.weeklyAvailability.days.map((d) => ({ ...d }));
+  const validStatuses: DayStatus[] = ["Cupos Libres", "Solo 1 Cupo", "Lleno", "Cerrado"];
+
+  let days: DayAvailability[] = defaultDays.map((d) => ({ ...d }));
+  if (Array.isArray(input.weeklyAvailability?.days) && input.weeklyAvailability.days.length === 7) {
+    days = (input.weeklyAvailability.days as unknown[]).map((d: unknown, idx: number) => {
+      const defaultDay = defaultDays[idx] || { day: "Lunes", key: "mon", status: "Cupos Libres" };
+      const item = (d && typeof d === "object" ? d : {}) as Record<string, unknown>;
+      const statusCandidate = typeof item.status === "string" ? (item.status as DayStatus) : defaultDay.status;
+      const status: DayStatus = validStatuses.includes(statusCandidate) ? statusCandidate : defaultDay.status;
+      return {
+        day: typeof item.day === "string" ? (item.day as DayAvailability["day"]) : defaultDay.day,
+        key: typeof item.key === "string" ? (item.key as DayAvailability["key"]) : defaultDay.key,
+        status,
+      };
+    });
+  }
+
+  const weeklyAvailability: WeeklyAvailabilityConfig = {
+    days,
+    customUrgencyMessageEn: typeof input.weeklyAvailability?.customUrgencyMessageEn === "string"
+      ? input.weeklyAvailability.customUrgencyMessageEn
+      : base.weeklyAvailability.customUrgencyMessageEn,
+    customUrgencyMessageEs: typeof input.weeklyAvailability?.customUrgencyMessageEs === "string"
+      ? input.weeklyAvailability.customUrgencyMessageEs
+      : base.weeklyAvailability.customUrgencyMessageEs,
+  };
+
+  // Validate announcement bar
+  const announcementBar: AnnouncementBarConfig = {
+    enabled: typeof input.announcementBar?.enabled === "boolean"
+      ? input.announcementBar.enabled
+      : base.announcementBar.enabled,
+    textEn: typeof input.announcementBar?.textEn === "string" && input.announcementBar.textEn.trim()
+      ? input.announcementBar.textEn
+      : base.announcementBar.textEn,
+    textEs: typeof input.announcementBar?.textEs === "string" && input.announcementBar.textEs.trim()
+      ? input.announcementBar.textEs
+      : base.announcementBar.textEs,
+    badgeEn: typeof input.announcementBar?.badgeEn === "string"
+      ? input.announcementBar.badgeEn
+      : base.announcementBar.badgeEn,
+    badgeEs: typeof input.announcementBar?.badgeEs === "string"
+      ? input.announcementBar.badgeEs
+      : base.announcementBar.badgeEs,
+    linkUrl: typeof input.announcementBar?.linkUrl === "string"
+      ? input.announcementBar.linkUrl
+      : base.announcementBar.linkUrl,
+  };
+
+  // Validate before / after
+  const beforeAfter: BeforeAfterConfig = {
+    enabled: typeof input.beforeAfter?.enabled === "boolean"
+      ? input.beforeAfter.enabled
+      : base.beforeAfter.enabled,
+    beforeImage: typeof input.beforeAfter?.beforeImage === "string" && input.beforeAfter.beforeImage.trim()
+      ? input.beforeAfter.beforeImage
+      : base.beforeAfter.beforeImage,
+    afterImage: typeof input.beforeAfter?.afterImage === "string" && input.beforeAfter.afterImage.trim()
+      ? input.beforeAfter.afterImage
+      : base.beforeAfter.afterImage,
+    titleEn: typeof input.beforeAfter?.titleEn === "string" && input.beforeAfter.titleEn.trim()
+      ? input.beforeAfter.titleEn
+      : base.beforeAfter.titleEn,
+    titleEs: typeof input.beforeAfter?.titleEs === "string" && input.beforeAfter.titleEs.trim()
+      ? input.beforeAfter.titleEs
+      : base.beforeAfter.titleEs,
+    subtitleEn: typeof input.beforeAfter?.subtitleEn === "string"
+      ? input.beforeAfter.subtitleEn
+      : base.beforeAfter.subtitleEn,
+    subtitleEs: typeof input.beforeAfter?.subtitleEs === "string"
+      ? input.beforeAfter.subtitleEs
+      : base.beforeAfter.subtitleEs,
+  };
+
+  // Validate hours arrays against null / non-array primitives
+  const hoursEn = Array.isArray(input.hoursEn) && input.hoursEn.length > 0 && input.hoursEn.every((h) => h && typeof h === "object")
+    ? (input.hoursEn as { days: string; time: string }[]).map((h) => ({
+        days: typeof h.days === "string" ? h.days : "Mon – Fri",
+        time: typeof h.time === "string" ? h.time : "5:30 PM – 10:00 PM",
+      }))
+    : base.hoursEn;
+
+  const hoursEs = Array.isArray(input.hoursEs) && input.hoursEs.length > 0 && input.hoursEs.every((h) => h && typeof h === "object")
+    ? (input.hoursEs as { days: string; time: string }[]).map((h) => ({
+        days: typeof h.days === "string" ? h.days : "Lun – Vie",
+        time: typeof h.time === "string" ? h.time : "5:30 PM – 10:00 PM",
+      }))
+    : base.hoursEs;
+
+  // Validate aboutIva
+  const rawAbout = input.aboutIva && typeof input.aboutIva === "object" ? (input.aboutIva as Record<string, unknown>) : {};
+  const aboutIva = {
+    name: typeof rawAbout.name === "string" && rawAbout.name.trim() ? rawAbout.name : base.aboutIva.name,
+    titleEn: typeof rawAbout.titleEn === "string" && rawAbout.titleEn.trim() ? rawAbout.titleEn : base.aboutIva.titleEn,
+    titleEs: typeof rawAbout.titleEs === "string" && rawAbout.titleEs.trim() ? rawAbout.titleEs : base.aboutIva.titleEs,
+    bioEn: typeof rawAbout.bioEn === "string" && rawAbout.bioEn.trim() ? rawAbout.bioEn : base.aboutIva.bioEn,
+    bioEs: typeof rawAbout.bioEs === "string" && rawAbout.bioEs.trim() ? rawAbout.bioEs : base.aboutIva.bioEs,
+  };
+
+  return {
+    ...base,
+    businessName: typeof input.businessName === "string" && input.businessName.trim()
+      ? input.businessName
+      : base.businessName,
+    phone: typeof input.phone === "string" && input.phone.trim()
+      ? input.phone
+      : base.phone,
+    whatsappNumber: typeof input.whatsappNumber === "string" && input.whatsappNumber.trim()
+      ? input.whatsappNumber
+      : base.whatsappNumber,
+    instagram: typeof input.instagram === "string" && input.instagram.trim()
+      ? input.instagram
+      : base.instagram,
+    tiktok: typeof input.tiktok === "string" && input.tiktok.trim()
+      ? input.tiktok
+      : base.tiktok,
+    location: typeof input.location === "string" && input.location.trim()
+      ? input.location
+      : base.location,
+    deposit: typeof input.deposit === "number" && !isNaN(input.deposit) && input.deposit >= 0
+      ? input.deposit
+      : base.deposit,
+    hoursEn,
+    hoursEs,
+    heroScenes: Array.isArray(input.heroScenes) && input.heroScenes.length === 3
+      ? (input.heroScenes as HeroSceneContent[])
+      : base.heroScenes,
+    aboutIva,
+    services: Array.isArray(input.services) && input.services.length > 0
+      ? (input.services as ServiceContentItem[])
+      : base.services,
+    serviceImages: input.serviceImages && typeof input.serviceImages === "object"
+      ? { ...base.serviceImages, ...(input.serviceImages as Record<string, string>) }
+      : base.serviceImages,
+    serviceTexts: input.serviceTexts && typeof input.serviceTexts === "object"
+      ? { ...base.serviceTexts, ...(input.serviceTexts as Record<string, ServiceCustomText>) }
+      : base.serviceTexts,
+    galleryItems: Array.isArray(input.galleryItems) && input.galleryItems.length > 0
+      ? (input.galleryItems as GalleryItemContent[])
+      : base.galleryItems,
+    uploadedImages: Array.isArray(input.uploadedImages)
+      ? (input.uploadedImages as UploadedImageItem[])
+      : [],
+    weeklyAvailability,
+    announcementBar,
+    beforeAfter,
+  };
+}
+
+/**
  * Returns content from localStorage if available (client-side), or defaults.
  */
 export function getSavedSiteContent(): SiteContent {
-  if (typeof window === "undefined") return DEFAULT_SITE_CONTENT;
+  if (typeof window === "undefined") return sanitizeSiteContent(null);
   try {
     const raw = localStorage.getItem(SITE_CONTENT_STORAGE_KEY);
-    if (!raw) return DEFAULT_SITE_CONTENT;
+    if (!raw) return sanitizeSiteContent(null);
     const parsed = JSON.parse(raw);
-    return {
-      ...DEFAULT_SITE_CONTENT,
-      ...parsed,
-      heroScenes: Array.isArray(parsed.heroScenes) && parsed.heroScenes.length === 3 ? parsed.heroScenes : DEFAULT_SITE_CONTENT.heroScenes,
-      aboutIva: { ...DEFAULT_SITE_CONTENT.aboutIva, ...(parsed.aboutIva || {}) },
-      services: Array.isArray(parsed.services) && parsed.services.length ? parsed.services : DEFAULT_SITE_CONTENT.services,
-      serviceImages: { ...DEFAULT_SITE_CONTENT.serviceImages, ...(parsed.serviceImages || {}) },
-      serviceTexts: { ...DEFAULT_SERVICE_TEXTS, ...(parsed.serviceTexts || {}) },
-      galleryItems: Array.isArray(parsed.galleryItems) && parsed.galleryItems.length ? parsed.galleryItems : DEFAULT_SITE_CONTENT.galleryItems,
-      uploadedImages: Array.isArray(parsed.uploadedImages) ? parsed.uploadedImages : [],
-    };
+    return sanitizeSiteContent(parsed);
   } catch {
-    return DEFAULT_SITE_CONTENT;
+    return sanitizeSiteContent(null);
   }
 }
 

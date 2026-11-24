@@ -9,9 +9,14 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import AdminWhatsAppScripts from "@/app/components/AdminWhatsAppScripts";
+import AdminQuoteBuilder from "@/app/components/AdminQuoteBuilder";
 import AdminClientCRM from "@/app/components/AdminClientCRM";
 import AdminGoogleMapsKit from "@/app/components/AdminGoogleMapsKit";
 import AdminContentEditor from "@/app/components/AdminContentEditor";
+import AdminBackupRestore from "@/app/components/AdminBackupRestore";
+import AdminWeeklyAvailability from "@/app/components/AdminWeeklyAvailability";
+import AdminAnnouncementEditor from "@/app/components/AdminAnnouncementEditor";
+import AdminBeforeAfterEditor from "@/app/components/AdminBeforeAfterEditor";
 import {
   LayoutTemplate,
   Moon,
@@ -882,6 +887,21 @@ export default function AdminPage() {
               </div>
             </motion.div>
 
+            {/* Cotizador Express para WhatsApp (R1 & R4) */}
+            <AdminQuoteBuilder />
+
+            {/* Semáforo de Disponibilidad Semanal (R2) */}
+            <AdminWeeklyAvailability />
+
+            {/* Barra de Avisos & Temporadas (R3) */}
+            <AdminAnnouncementEditor />
+
+            {/* Módulo Antes y Después (R5) */}
+            <AdminBeforeAfterEditor />
+
+            {/* Studio Backup & Restore */}
+            <AdminBackupRestore />
+
             {/* Quick Actions */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <motion.a whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} href="/" target="_blank" className="flex items-center justify-center gap-3 p-4 bg-white rounded-xl border border-[#EBE8E2] hover:shadow-lg transition-all">
@@ -906,8 +926,12 @@ export default function AdminPage() {
 
         {/* ==================== WEB CONTENT EDITOR (CMS) TAB ==================== */}
         {activeTab === "content" && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+            <AdminAnnouncementEditor />
+            <AdminWeeklyAvailability />
+            <AdminBeforeAfterEditor />
             <AdminContentEditor />
+            <AdminBackupRestore />
           </motion.div>
         )}
 
@@ -1089,7 +1113,8 @@ export default function AdminPage() {
 
         {/* ==================== SCRIPTS TAB (WHATSAPP CONCIERGE) ==================== */}
         {activeTab === "scripts" && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+            <AdminQuoteBuilder />
             <AdminWhatsAppScripts />
           </motion.div>
         )}

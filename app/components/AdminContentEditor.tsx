@@ -1,26 +1,20 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
 import {
   Save,
   RotateCcw,
   ExternalLink,
   Check,
-  Copy,
   Image as ImageIcon,
   Type,
   Sparkles,
   Phone,
-  Shield,
   Layers,
   Upload,
   Camera,
   X,
-  Edit2,
-  Trash2,
   Plus,
-  Eye,
   Grid,
   Search,
 } from "lucide-react";
@@ -29,7 +23,6 @@ import {
   DEFAULT_SITE_CONTENT,
   DEFAULT_SERVICE_IMAGES,
   DEFAULT_SERVICE_TEXTS,
-  ServiceCustomText,
   getSavedSiteContent,
   saveSiteContent,
   resetSiteContent,
@@ -216,9 +209,9 @@ export default function AdminContentEditor() {
       const updatedUploads = [newUpload, ...(content.uploadedImages || [])];
 
       // If pickerTarget was active, assign directly
-      let updatedHero = [...content.heroScenes];
-      let updatedServiceImages = { ...(content.serviceImages || {}) };
-      let updatedGallery = [...(content.galleryItems || [])];
+      const updatedHero = [...content.heroScenes];
+      const updatedServiceImages = { ...(content.serviceImages || {}) };
+      const updatedGallery = [...(content.galleryItems || [])];
 
       if (pickerTarget) {
         if (pickerTarget.type === "hero" && typeof pickerTarget.indexOrKey === "number") {
@@ -858,7 +851,7 @@ export default function AdminContentEditor() {
                 ].map((f) => (
                   <button
                     key={f.id}
-                    onClick={() => setPickerCategory(f.id as any)}
+                    onClick={() => setPickerCategory(f.id as "all" | "studio" | "uploaded" | "editorial")}
                     className={`px-3 py-1.5 rounded-lg font-medium transition-colors cursor-pointer ${
                       pickerCategory === f.id
                         ? "bg-[#722F37] text-white"

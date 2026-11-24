@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { ArrowLeft, Sparkles } from "lucide-react";
 import { PRESETS, designLabel, drawPreview, type NailPreset } from "@/lib/nails";
 import { track } from "@/lib/track";

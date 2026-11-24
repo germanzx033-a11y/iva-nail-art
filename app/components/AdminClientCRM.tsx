@@ -36,7 +36,7 @@ function daysAgoDate(days: number): string {
   return d.toISOString().split("T")[0];
 }
 
-const DEFAULT_CLIENTS: ClientProfile[] = [
+export const DEFAULT_CLIENTS: ClientProfile[] = [
   {
     id: "c1",
     name: "Camila Ramos",
@@ -101,18 +101,27 @@ export default function AdminClientCRM() {
 
   // Load clients from localStorage or initialize with defaults
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect -- initial browser-only client sync from localStorage
-        setClients(JSON.parse(stored));
-      } else {
+    const loadClients = () => {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          setClients(JSON.parse(stored));
+        } else {
+          setClients(DEFAULT_CLIENTS);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_CLIENTS));
+        }
+      } catch {
         setClients(DEFAULT_CLIENTS);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_CLIENTS));
       }
-    } catch {
-      setClients(DEFAULT_CLIENTS);
-    }
+    };
+
+    loadClients();
+    window.addEventListener("iva-clients-updated", loadClients);
+    window.addEventListener("storage", loadClients);
+    return () => {
+      window.removeEventListener("iva-clients-updated", loadClients);
+      window.removeEventListener("storage", loadClients);
+    };
   }, []);
 
   const saveClients = (updated: ClientProfile[]) => {

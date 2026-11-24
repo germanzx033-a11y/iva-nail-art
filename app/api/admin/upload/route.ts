@@ -87,8 +87,8 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ error: "Unsupported content type" }, { status: 400 });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Upload error:", err);
-    return NextResponse.json({ error: err?.message || "Upload failed" }, { status: 500 });
+    return NextResponse.json({ error: err instanceof Error ? err.message : "Upload failed" }, { status: 500 });
   }
 }

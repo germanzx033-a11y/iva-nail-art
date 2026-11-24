@@ -1,0 +1,114 @@
+{
+  "name": "IVA Nail Art NY - WhatsApp Concierge & Auto-Responder",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-concierge-responder",
+        "options": {
+          "responseMode": "onReceived",
+          "responseData": "{\"received\": true, \"source\": \"whatsapp-cloud-api\", \"atelier\": \"IVA Nail Art NY Bay Ridge\"}"
+        }
+      },
+      "name": "WhatsApp Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [100, 300],
+      "id": "node-webhook-whatsapp-inbound"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ==============================================================================\n// IVA NAIL ART NY — BOUTIQUE WHATSAPP CONCIERGE & AUTO-RESPONDER PARSER\n// Atelier Privado en Bay Ridge, Brooklyn (11209) — Master Artist Ivannía Rodríguez\n// ==============================================================================\n\nconst body = $input.item.json.body || $input.item.json;\n\n// WhatsApp Cloud API / Twilio payload extraction\nlet fromPhone = '';\nlet incomingText = '';\nlet senderName = 'Hermosa';\n\nif (body.entry && body.entry[0] && body.entry[0].changes && body.entry[0].changes[0]) {\n  const value = body.entry[0].changes[0].value || {};\n  const contact = (value.contacts && value.contacts[0]) || {};\n  const message = (value.messages && value.messages[0]) || {};\n  fromPhone = message.from || contact.wa_id || '';\n  senderName = (contact.profile && contact.profile.name) ? contact.profile.name.trim() : 'Hermosa';\n  if (message.text && message.text.body) {\n    incomingText = message.text.body;\n  } else if (message.type === 'interactive') {\n    incomingText = (message.interactive && message.interactive.button_reply && message.interactive.button_reply.title) || '';\n  }\n} else {\n  fromPhone = body.from || body.phone || body.sender || '';\n  incomingText = body.text || body.message || body.body || '';\n  senderName = body.name || body.clientName || 'Hermosa';\n}\n\n// Normalize phone (E.164 digits)\nlet cleanPhone = (fromPhone || '').replace(/\\D/g, '');\nif (cleanPhone.length === 10) cleanPhone = `1${cleanPhone}`;\n\nconst rawQuery = (incomingText || '').trim();\nconst query = rawQuery.toLowerCase();\n\n// Studio Constants\nconst STUDIO_LOCATION = 'Bay Ridge, Brooklyn, NY 11209';\nconst STUDIO_DEPOSIT = 35;\nconst STUDIO_PHONE = '+1 (929) 625-7273';\nconst STUDIO_WHATSAPP_NUMBER = '19296257273';\nconst STUDIO_PAYMENTS = 'Zelle / Apple Pay: 929-625-7273 (Ivannia Rodriguez) | Venmo: @iva_nailart_nyc';\n\n// Intent Classification\nlet intent = 'general_inquiry';\nlet autoReply = '';\nlet notifyOwner = false;\n\nif (!rawQuery) {\n  intent = 'empty_message';\n  autoReply = `¡Hola ${senderName}! 🤍 Gracias por escribir al santuario privado de IVA Nail Art NY en Bay Ridge. ¿Cómo podemos consentirte hoy? (Pregúntanos por cotizaciones, disponibilidad semanal, depósito o ubicación). ✨`;\n} else if (\n  query.includes('pedicur') ||\n  query.includes('pie') ||\n  query.includes('cabello') ||\n  query.includes('hair') ||\n  query.includes('corte') ||\n  query.includes('masaje') ||\n  query.includes('tinte')\n) {\n  intent = 'out_of_scope';\n  autoReply = `¡Hola ${senderName}! 🤍 En IVA Nail Art NY nos especializamos exclusivamente en acrílico esculpido de alta gama, manicura rusa y nail art artesanal en nuestro santuario privado de Bay Ridge. No realizamos pedicuras ni otros servicios generales.\\n\\nSi deseas un servicio exclusivo de uñas de manos o restaurar tu set, ¡estaremos encantadas de atenderte! 💅`;\n} else if (\n  query.includes('deposito') ||\n  query.includes('depósito') ||\n  query.includes('deposit') ||\n  query.includes('zelle') ||\n  query.includes('venmo') ||\n  query.includes('apple pay') ||\n  query.includes('apartar') ||\n  query.includes('reserva')\n) {\n  intent = 'deposit_faq';\n  autoReply = `✨ *IVA NAIL ART NY — Política de Depósito* ✨\\nAtelier Privado en Bay Ridge, Brooklyn\\n\\n¡Hola ${senderName}! 🤍 Para asegurar tu fecha y horario exclusivo en nuestro atelier, requerimos un depósito no reembolsable de $${STUDIO_DEPOSIT} USD (este monto se deduce de tu total el día de tu cita).\\n\\n💳 *Métodos de Pago:*\\n• Zelle / Apple Pay: 929-625-7273 (Ivannia Rodriguez)\\n• Venmo: @iva_nailart_nyc\\n\\n🔒 Cuidamos tu tiempo y el nuestro: atendemos solo 2 a 3 clientas por día para garantizar máxima dedicación y esterilización de grado hospitalario.\\n\\nEnvíanos tu comprobante aquí para confirmar tu espacio. ✨`;\n} else if (\n  query.includes('donde') ||\n  query.includes('dónde') ||\n  query.includes('ubicacion') ||\n  query.includes('ubicación') ||\n  query.includes('direccion') ||\n  query.includes('dirección') ||\n  query.includes('location') ||\n  query.includes('address') ||\n  query.includes('metro') ||\n  query.includes('subway') ||\n  query.includes('bay ridge')\n) {\n  intent = 'location_faq';\n  autoReply = `📍 *IVA NAIL ART NY — Ubicación del Santuario*\\n\\n¡Hola ${senderName}! 🤍 Estamos ubicadas en el corazón de Bay Ridge, Brooklyn, NY 11209, a pasos de la estación 86th St del tren R. Hay estacionamiento cómodo y gratuito en la calle.\\n\\nAl ser un atelier residencial privado 1 a 1, te enviaremos el número exacto y código de acceso 15 minutos antes de tu cita para tu total privacidad y seguridad. 💅\\n\\n¿Deseas consultar disponibilidad para esta semana? ✨`;\n} else if (\n  query.includes('cotiz') ||\n  query.includes('precio') ||\n  query.includes('cuanto') ||\n  query.includes('cuánto') ||\n  query.includes('costo') ||\n  query.includes('quote') ||\n  query.includes('price') ||\n  query.includes('set') ||\n  query.includes('diseño') ||\n  query.includes('acrilic') ||\n  query.includes('acrílic') ||\n  query.includes('rusa') ||\n  query.includes('biab') ||\n  query.includes('relleno')\n) {\n  intent = 'quote_inquiry';\n  notifyOwner = true;\n  autoReply = `✨ *IVA NAIL ART NY — Cotización de Autor* ✨\\nAtelier Privado en Bay Ridge, Brooklyn\\n\\n¡Hola ${senderName}! 🤍 Con gusto preparamos tu cotización personalizada. En nuestro estudio cada set es una pieza única realizada por Ivannía Rodríguez.\\n\\nPara darte el valor exacto, compártenos:\\n1. 💅 *Servicio Base:* Acrílico esculpido, Relleno, Manicura rusa o Gel estructurado (BIAB).\\n2. 📏 *Largo deseado:* Corto, Medio, Largo o XL.\\n3. 🎨 *Nivel de Arte:* Minimalista, Mano alzada o 3D/Cristales.\\n4. 🔄 *Retiro:* ¿Traes producto anterior de otro lugar? (Sí / No).\\n5. 📸 *Foto de referencia:* ¡Adjúntanos tu diseño soñado!\\n\\nIvannía revisará tu diseño y te enviará la cotización personalizada enseguida. 💖`;\n} else {\n  intent = 'general_concierge';\n  autoReply = `✨ *IVA NAIL ART NY — Santuario Privado* ✨\\nBay Ridge, Brooklyn\\n\\n¡Hola ${senderName}! 🤍 Gracias por comunicarte con nosotras. Ivannía está atendiendo a una clienta en este momento en el santuario 💅.\\n\\nRevisaremos tu mensaje con mucho amor y te responderemos en un lapso de 1 a 2 horas.\\n\\nPara agendar tu cita directa en línea o ver nuestro lookbook:\\n🌐 https://ivanailartny.com\\n📸 Instagram: @iva_nailart_nyc\\n\\n¡Que tengas un día radiante! ✨`;\n}\n\nreturn {\n  json: {\n    senderName,\n    fromPhone,\n    cleanPhone,\n    incomingText: rawQuery,\n    intent,\n    autoReply,\n    notifyOwner,\n    studioLocation: STUDIO_LOCATION,\n    studioDeposit: STUDIO_DEPOSIT,\n    studioPhone: STUDIO_PHONE,\n    studioWhatsappNumber: STUDIO_WHATSAPP_NUMBER,\n    timestamp: new Date().toISOString()\n  }\n};",
+        "language": "javascript"
+      },
+      "name": "Studio Tone Concierge",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [340, 300],
+      "id": "node-code-tone-concierge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.notifyOwner }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "name": "Check If Owner Alert Needed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [580, 300],
+      "id": "node-if-notify-owner"
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $env.STUDIO_OWNER_TELEGRAM_OR_PHONE }}",
+        "text": "=💬 *NUEVA CONSULTA DE COTIZACIÓN EN WHATSAPP*\n\n• *Clienta:* {{ $json.senderName }}\n• *Teléfono:* +{{ $json.cleanPhone }}\n• *Mensaje recibido:* \"{{ $json.incomingText }}\"\n• *Intención detectada:* {{ $json.intent }}\n• *Atelier:* Bay Ridge, Brooklyn\n\n👉 [Abrir chat de WhatsApp para cotizar](https://wa.me/{{ $json.cleanPhone }})"
+      },
+      "name": "Alert Ivannía: Inbound Inquiry",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [820, 180],
+      "id": "node-alert-ivannia-inquiry"
+    },
+    {
+      "parameters": {
+        "message": "={{ $json.autoReply }}",
+        "phoneNumber": "={{ $json.cleanPhone }}"
+      },
+      "name": "Respond to WhatsApp",
+      "type": "n8n-nodes-base.whatsapp",
+      "typeVersion": 1,
+      "position": [820, 380],
+      "id": "node-send-whatsapp-auto-reply"
+    }
+  ],
+  "connections": {
+    "WhatsApp Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Studio Tone Concierge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Studio Tone Concierge": {
+      "main": [
+        [
+          {
+            "node": "Check If Owner Alert Needed",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Respond to WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Owner Alert Needed": {
+      "main": [
+        [
+          {
+            "node": "Alert Ivannía: Inbound Inquiry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

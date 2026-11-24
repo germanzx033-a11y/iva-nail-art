@@ -31,6 +31,9 @@ import CalendlyModal from "@/app/components/CalendlyModal";
 import ServiceSelectorLuxury from "@/app/components/ServiceSelectorLuxury";
 import LookbookFilterable from "@/app/components/LookbookFilterable";
 import LocalSeoSchema from "@/app/components/LocalSeoSchema";
+import AnnouncementBar from "@/app/components/AnnouncementBar";
+import WeeklyAvailabilityBanner from "@/app/components/WeeklyAvailabilityBanner";
+import BeforeAfterSlider from "@/app/components/BeforeAfterSlider";
 import { getSavedSiteContent, SiteContent } from "@/lib/contentStore";
 
 // Contador animado. Escribe directo en el DOM (sin re-render por frame) y siempre
@@ -325,10 +328,12 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#0E0706] relative overflow-x-clip">
       <LocalSeoSchema />
+      {/* Barra de Avisos & Temporadas (R3) */}
+      <AnnouncementBar lang={lang} />
       {/* ================================================================== */}
       {/* HEADER */}
       {/* ================================================================== */}
-      <header className="fixed top-0 left-0 right-0 z-40 bg-[#0E0706]/70 backdrop-blur-md border-b border-[#F4EBE1]/10">
+      <header className="sticky top-0 left-0 right-0 z-40 bg-[#0E0706]/70 backdrop-blur-md border-b border-[#F4EBE1]/10">
         <nav className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
           <a href="#" className="font-display inline-block py-3 text-sm tracking-[0.3em] text-[#F4EBE1]">
             IVA <span className="font-light">Nail Art</span>
@@ -377,6 +382,11 @@ export default function Home() {
         customScenes={siteContent?.heroScenes}
       />
       <PhotoMarquee lang={lang} />
+
+      {/* ================================================================== */}
+      {/* SEMÁFORO DE DISPONIBILIDAD SEMANAL (R2) */}
+      {/* ================================================================== */}
+      <WeeklyAvailabilityBanner lang={lang} onBookClick={() => openBooking()} />
 
       {/* ================================================================== */}
       {/* STATISTICS SECTION PREMIUM */}
@@ -588,6 +598,16 @@ export default function Home() {
         onBookClick={() => openBooking()}
       />
       <Reviews lang={lang} />
+
+      {/* ================================================================== */}
+      {/* BEFORE & AFTER TRANSFORMATION MODULE (R5) */}
+      {/* ================================================================== */}
+      <section className="max-w-7xl mx-auto px-4 md:px-6 my-20">
+        <BeforeAfterSlider
+          lang={lang}
+          onBookClick={() => openBooking()}
+        />
+      </section>
 
       {/* ================================================================== */}
       {/* GALLERY & LOOKBOOK SECTION */}

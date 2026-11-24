@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { DEFAULT_SITE_CONTENT, SiteContent } from "@/lib/contentStore";
+import { DEFAULT_SITE_CONTENT, SiteContent, sanitizeSiteContent } from "@/lib/contentStore";
 
 // In-memory runtime cache for server persistence
 let currentServerContent: SiteContent = { ...DEFAULT_SITE_CONTENT };
@@ -18,13 +18,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
     }
 
-    currentServerContent = {
+    currentServerContent = sanitizeSiteContent({
       ...currentServerContent,
       ...body,
-      heroScenes: Array.isArray(body.heroScenes) && body.heroScenes.length === 3 ? body.heroScenes : currentServerContent.heroScenes,
-      aboutIva: { ...currentServerContent.aboutIva, ...(body.aboutIva || {}) },
-      services: Array.isArray(body.services) && body.services.length ? body.services : currentServerContent.services,
-    };
+    });
 
     return NextResponse.json({
       success: true,
